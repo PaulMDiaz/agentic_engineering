@@ -33,6 +33,8 @@ Work style: direct, no filler. Minimal tokens. Security-first.
 - Branch changes require Paul's consent.
 - Multi-agent: check `git status/diff` before edits; ship small commits.
 - Commit helper: use `scripts/committer` if present.
+- Always use non-interactive diff: `git --no-pager diff` or `git diff | cat`.
+- Prefer non-interactive commands with explicit flags over interactive ones.
 
 ## Commits (Conventional Commits)
 Format: `type(scope): description`
@@ -57,11 +59,20 @@ Rules:
 - Split unrelated changes into separate commits
 - Keep commits atomic and focused
 
+## Planning
+- Before non-trivial changes: create a plan in `/tmp/<feature>.md`.
+- Plan structure: current state, final state, files to change, task checklist.
+- Keep plans minimal — only essential changes.
+
 ## Code Quality
+- Read related files and understand the codebase before suggesting changes.
+- Check if logic already exists before writing new code.
 - Files: keep under ~500 LOC; split/refactor as needed.
 - Tests: write in the same context as implementation — don't waste context switching.
 - Bigger changes always get tests.
 - Fix root cause, not band-aid.
+- Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
+- Comments in English only.
 - CI: `gh run list/view`, fix until green before handoff.
 - Before handoff: run full gate (lint/typecheck/tests).
 
@@ -107,6 +118,19 @@ See `tools.md` for the full tool catalog.
 - `gh` — GitHub operations
 - `trash` — safe file deletion
 - `git` — version control (safe ops only by default)
+
+## Error Handling
+- Raise specific exceptions with descriptive, actionable messages.
+- Use specific error types that clearly indicate what went wrong.
+- Error messages must say what failed and why — not just "operation failed".
+
+## Typing
+- Use strict typing everywhere: function returns, parameters, variables, collections.
+- Avoid `Any`, `unknown`, `object`, and `List[Dict[str, Any]]` — use specific types.
+- Prefer structured data models over loose dicts — Pydantic, dataclasses, or interfaces.
+- Leverage language-specific type features: discriminated unions, enums, literal types.
+- Create proper type definitions for complex data structures rather than annotating inline.
+- `run date` when you need the current date — never hardcode or guess.
 
 ## Language/Stack Notes
 - Python: use `uv` or `pip`; keep `requirements.txt` or `pyproject.toml` current.
