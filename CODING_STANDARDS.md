@@ -73,8 +73,7 @@ Rules:
 - Mask secrets in all output (e.g. `sk-***...abc`).
 - Secrets go in `.env` only — never hardcode credentials, tokens, or API keys in source files.
 - Never read `.env` files directly in code — load secrets via `os.environ`. Let the shell or a process manager inject the environment.
-- Never commit `.env` — always gitignore it. Provide `.env.example` as a template instead.
-- `.gitignore` must cover: `.env`, `.env/`, `.env.*` — with `!.env.example` to keep the template.
+- Never commit `.env` — always gitignore it.
 
 ## Permissions
 
