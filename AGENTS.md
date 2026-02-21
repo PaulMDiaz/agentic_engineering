@@ -132,6 +132,8 @@ See `tools.md` for the full tool catalog.
 - Error messages must say what failed and why — not just "operation failed".
 - Avoid catch-all `except Exception` handlers inside business logic — use specific types.
 - Exception: outer resilience loops (e.g. per-item processing) may use `except Exception` to prevent one bad item from killing the loop — but everything *inside* the loop must raise specifically.
+- No silent fallbacks — never return a fake default when a dependency fails. Let it propagate. Failures must be visible.
+- Security-clamping (constraining valid-but-injected LLM output to safe enum values) is not a fallback — it is a required validation layer and must be kept.
 
 ## Typing
 - Use strict typing everywhere: function returns, parameters, variables, collections.
