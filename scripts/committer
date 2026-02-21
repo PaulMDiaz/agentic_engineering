@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# committer — stage specific files and commit with a message
+# Usage: committer "commit message" file1 [file2 ...]
+# Enforces: non-empty message, at least one file
+
+set -euo pipefail
+
+usage() {
+  printf 'Usage: %s "commit message" file1 [file2 ...]\n' "$(basename "$0")" >&2
+  exit 2
+}
+
+[[ "$#" -lt 2 ]] && usage
+
+message="$1"
+shift
+
+[[ -z "$message" ]] && { echo "Error: commit message cannot be empty" >&2; exit 1; }
+
+# Stage only the listed files
+git add -- "$@"
+
+# Check something is staged
+if git diff --cached --quiet; then
+  echo "Error: nothing staged after adding listed files" >&2
+  exit 1
+fi
+
+git commit -m "$message"
