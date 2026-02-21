@@ -130,6 +130,8 @@ See `tools.md` for the full tool catalog.
 - Raise specific exceptions with descriptive, actionable messages.
 - Use specific error types that clearly indicate what went wrong.
 - Error messages must say what failed and why — not just "operation failed".
+- Avoid catch-all `except Exception` handlers inside business logic — use specific types.
+- Exception: outer resilience loops (e.g. per-item processing) may use `except Exception` to prevent one bad item from killing the loop — but everything *inside* the loop must raise specifically.
 
 ## Typing
 - Use strict typing everywhere: function returns, parameters, variables, collections.
