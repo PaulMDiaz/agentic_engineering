@@ -12,6 +12,8 @@ read_when: "You want to know what slash commands are available"
 | `/implement` | Methodical task implementation |
 | `/pr` | Create a pull request |
 | `/security-check` | Review for security issues |
+| `/agent-review` | Review current branch or PR for bugs, inconsistencies, and refactor opportunities |
+| `/diff-summary` | Walk through a diff — what it's trying to accomplish and the approach |
 | `/init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
 | `/load-second-brain` | Load full project context at session start |
 | `/update-second-brain` | Record what was worked on this session |
