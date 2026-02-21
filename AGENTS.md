@@ -71,6 +71,7 @@ Rules:
 - Tests: write in the same context as implementation — don't waste context switching.
 - Bigger changes always get tests.
 - Fix root cause, not band-aid.
+- Make minimal, focused changes — solve the problem, nothing extra.
 - Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
 - Comments in English only.
 - CI: `gh run list/view`, fix until green before handoff.
@@ -118,6 +119,12 @@ See `tools.md` for the full tool catalog.
 - `gh` — GitHub operations
 - `trash` — safe file deletion
 - `git` — version control (safe ops only by default)
+
+## Design
+- Prefer functional programming over OOP for new code — pure functions by default.
+- Use OOP classes only for connectors and interfaces to external systems (APIs, DBs, queues).
+- Write pure functions: only modify return values, never input parameters or global state.
+- Never use default parameter values — make all parameters explicit.
 
 ## Error Handling
 - Raise specific exceptions with descriptive, actionable messages.
