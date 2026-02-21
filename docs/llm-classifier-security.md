@@ -29,33 +29,40 @@ prompt hardening (see `prompt-injection-defense.md`).
 ### Implementation
 
 ```python
+from typing import Any
+
 VALID_EVENT_TYPES = {e.value for e in EventType}  # from your enum
 VALID_PRIORITIES = {p.value for p in Priority}
 
-def _validate_llm_output(raw: dict) -> dict:
-    # Enums: reject invalid values → safe default
-    if raw.get("event_type") not in VALID_EVENT_TYPES:
-        raw["event_type"] = "UNKNOWN"
-    if raw.get("priority") not in VALID_PRIORITIES:
-        raw["priority"] = "LOW"
+def _validate_llm_output(raw: dict[str, Any]) -> dict[str, Any]:
+    """Clamp LLM output to safe values. Pure function — never mutates input."""
+    event_type = raw.get("event_type")
+    priority = raw.get("priority")
+    confidence = raw.get("confidence")
+    objects_mentioned = raw.get("objects_mentioned")
+    norad_ids = raw.get("norad_ids")
 
-    # Numerics: clamp to valid range
-    raw["confidence"] = max(0.0, min(1.0, float(raw.get("confidence", 0.0))))
+    return {
+        # Enums: reject invalid values → safe default
+        "event_type": event_type if event_type in VALID_EVENT_TYPES else "UNKNOWN",
+        "priority": priority if priority in VALID_PRIORITIES else "LOW",
 
-    # Collections: coerce to correct types, filter invalid entries
-    raw["objects_mentioned"] = list(raw.get("objects_mentioned") or [])
-    raw["norad_ids"] = [int(n) for n in (raw.get("norad_ids") or []) if str(n).isdigit()]
+        # Numerics: clamp to valid range
+        "confidence": max(0.0, min(1.0, float(confidence) if confidence is not None else 0.0)),
 
-    # Strings: truncate to prevent runaway outputs
-    raw["title"] = str(raw.get("title", ""))[:200]
-    raw["summary"] = str(raw.get("summary", ""))[:500]
-    raw["priority_rationale"] = str(raw.get("priority_rationale", ""))[:300]
+        # Collections: coerce to correct types, filter invalid entries
+        "objects_mentioned": list(objects_mentioned) if objects_mentioned else [],
+        "norad_ids": [int(n) for n in (norad_ids or []) if str(n).isdigit()],
 
-    # Booleans: explicit coercion
-    raw["is_space_event"] = bool(raw.get("is_space_event", False))
-    raw["is_watchlist_object"] = bool(raw.get("is_watchlist_object", False))
+        # Strings: truncate to prevent runaway outputs
+        "title": str(raw.get("title") or "")[:200],
+        "summary": str(raw.get("summary") or "")[:500],
+        "priority_rationale": str(raw.get("priority_rationale") or "")[:300],
 
-    return raw
+        # Booleans: explicit coercion
+        "is_space_event": bool(raw.get("is_space_event")),
+        "is_watchlist_object": bool(raw.get("is_watchlist_object")),
+    }
 ```
 
 ### Testing the validator
@@ -176,9 +183,14 @@ text = (
 return json.loads(text)
 ```
 
-If parsing fails entirely, return a safe default extraction (all fields at
-lowest-risk values) rather than raising. The classifier should never crash
-the processing pipeline.
+If parsing fails entirely, let the exception propagate. The outer processing
+loop (per-item try/except) catches it, logs it, and skips the item. Failures
+must be visible.
+
+> **Note:** This is distinct from security-clamping. Clamping valid-but-injected
+> field values to safe enum ranges is required and must be kept (see the
+> `_validate_llm_output` pattern above). Swallowing JSON parse failures is the
+> banned pattern — they indicate a broken LLM response, not an injection attempt.
 
 ---
 

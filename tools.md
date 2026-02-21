@@ -47,9 +47,10 @@ Stage specific files + commit. Enforces non-empty message.
 ### Python
 - Package manager: `uv` (preferred) or `pip`
 - Linting: `ruff check .`
+- Format check: `ruff format --check .`
 - Types: `mypy .`
 - Tests: `pytest`
-- Format: `ruff format .`
+- Format (apply): `ruff format .`
 
 ### Node/TypeScript
 - Package manager: `pnpm` (preferred), `npm`, `yarn`

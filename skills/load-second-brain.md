@@ -41,10 +41,7 @@ Read all of these files in a single parallel batch — do not read them one at a
 | CONVENTIONS.md | Code style, patterns, gatekeeping rules | Medium — follow when editing |
 
 Also check for:
-- `settings.json` — project metadata and model preferences
-- `agents/` — specialist agent personas (read if relevant to the task)
-- `skills/` — project-specific skills (read if relevant to the task)
-- `commands/` — quick-reference command docs (read if relevant to the task)
+- `commands/` — slash commands (read if about to use one)
 
 Skip any files that don't exist — the knowledge base may be partial.
 

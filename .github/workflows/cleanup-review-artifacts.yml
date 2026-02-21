@@ -1,0 +1,43 @@
+name: Cleanup review artifacts
+
+# Fires when a review file lands in main (e.g. agent_review.md merged via PR).
+# Auto-deletes matching files and commits the cleanup.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'agent_review.md'
+      - '*_review.md'
+      - 'reviews/**'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove review artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          found=false
+          for f in agent_review.md *_review.md; do
+            if [ -f "$f" ]; then
+              git rm "$f"
+              echo "Removed: $f"
+              found=true
+            fi
+          done
+
+          if [ "$found" = true ]; then
+            git commit -m "chore: remove review artifacts post-merge"
+            git push
+          else
+            echo "No review artifacts found — nothing to clean up."
+          fi

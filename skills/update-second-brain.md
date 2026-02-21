@@ -35,7 +35,7 @@ Review the full conversation to identify:
 7. **Convention changes** — new patterns established, rules changed?
 8. **Backlog updates** — items completed (check them off), new items discovered, priorities shifted?
 
-If $ARGUMENTS is provided, incorporate that context too.
+If the user provided additional notes or a focus area when invoking this skill, incorporate that context too.
 
 ### Step 3: Update NOTES.md
 

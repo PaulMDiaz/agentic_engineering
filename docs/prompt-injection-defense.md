@@ -62,28 +62,37 @@ Layer 2 is required.
 Never trust LLM output directly. Validate every field before acting on it.
 
 ```python
-def _validate_llm_output(raw: dict) -> dict:
-    # Enforce enum membership — fall back to safe defaults
-    if raw.get("event_type") not in VALID_EVENT_TYPES:
-        logger.warning("Invalid event_type %r — defaulting to UNKNOWN", raw.get("event_type"))
-        raw["event_type"] = "UNKNOWN"
+from typing import Any
 
-    if raw.get("priority") not in VALID_PRIORITIES:
-        logger.warning("Invalid priority %r — defaulting to LOW", raw.get("priority"))
-        raw["priority"] = "LOW"
+def _validate_llm_output(raw: dict[str, Any]) -> dict[str, Any]:
+    """Clamp LLM output to safe values. Pure function — never mutates input."""
+    event_type = raw.get("event_type")
+    priority = raw.get("priority")
+    confidence = raw.get("confidence")
+    objects_mentioned = raw.get("objects_mentioned")
+    norad_ids = raw.get("norad_ids")
 
-    # Clamp numeric ranges
-    raw["confidence"] = max(0.0, min(1.0, float(raw.get("confidence", 0.0))))
+    if event_type not in VALID_EVENT_TYPES:
+        logger.warning("Invalid event_type %r — clamping to UNKNOWN", event_type)
+    if priority not in VALID_PRIORITIES:
+        logger.warning("Invalid priority %r — clamping to LOW", priority)
 
-    # Coerce types — wrong types are a signal of injection
-    raw["objects_mentioned"] = list(raw.get("objects_mentioned") or [])
-    raw["norad_ids"] = [int(n) for n in (raw.get("norad_ids") or []) if str(n).isdigit()]
+    return {
+        # Enforce enum membership — clamp invalid values to safe defaults
+        "event_type": event_type if event_type in VALID_EVENT_TYPES else "UNKNOWN",
+        "priority": priority if priority in VALID_PRIORITIES else "LOW",
 
-    # Truncate free-text fields
-    raw["title"] = str(raw.get("title", ""))[:200]
-    raw["summary"] = str(raw.get("summary", ""))[:500]
+        # Clamp numeric ranges
+        "confidence": max(0.0, min(1.0, float(confidence) if confidence is not None else 0.0)),
 
-    return raw
+        # Coerce types — wrong types are a signal of injection
+        "objects_mentioned": list(objects_mentioned) if objects_mentioned else [],
+        "norad_ids": [int(n) for n in (norad_ids or []) if str(n).isdigit()],
+
+        # Truncate free-text fields
+        "title": str(raw.get("title") or "")[:200],
+        "summary": str(raw.get("summary") or "")[:500],
+    }
 ```
 
 **What this catches:**
