@@ -29,7 +29,9 @@ agentic_engineering/
 ├── skills/                          # Reusable agent skill prompts
 │   ├── init-second-brain.md         # Bootstrap .claude/ for a project
 │   ├── load-second-brain.md         # Load .claude/ context at session start
-│   └── update-second-brain.md       # Record session work into .claude/
+│   ├── update-second-brain.md       # Record session work into .claude/
+│   ├── agent-review.md              # Review a branch/PR — inline findings, no file output
+│   └── diff-summary.md              # Walk through a diff — what it does and how
 │
 ├── docs/
 │   ├── llm-classifier-security.md   # Validated output pattern, model selection for classifiers
