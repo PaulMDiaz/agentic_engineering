@@ -17,6 +17,19 @@ shift
 
 [[ -z "$message" ]] && { echo "Error: commit message cannot be empty" >&2; exit 1; }
 
+# Warn if message doesn't follow Conventional Commits format
+# Expected: type(scope)?: description  e.g. feat(auth): add login
+cc_pattern='^(feat|fix|docs|refactor|style|perf|test|chore|wip|remove|security)(\(.+\))?: .+'
+if ! echo "$message" | grep -qE "$cc_pattern"; then
+  printf 'Warning: commit message does not follow Conventional Commits format.\n' >&2
+  printf '  Expected: type(scope)?: description\n' >&2
+  printf '  Types: feat fix docs refactor style perf test chore wip remove security\n' >&2
+  printf '  Example: feat(auth): add login flow\n' >&2
+  printf 'Proceed anyway? [y/N] ' >&2
+  read -r answer
+  [[ "$answer" =~ ^[Yy]$ ]] || { echo "Aborted." >&2; exit 1; }
+fi
+
 # Stage only the listed files
 git add -- "$@"
 

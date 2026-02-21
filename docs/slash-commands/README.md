@@ -11,5 +11,7 @@ read_when: "You want to know what slash commands are available"
 | `/check` | Run full code quality gate |
 | `/implement` | Methodical task implementation |
 | `/pr` | Create a pull request |
-| `/context-prime` | Load project context |
 | `/security-check` | Review for security issues |
+| `/init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
+| `/load-second-brain` | Load full project context at session start |
+| `/update-second-brain` | Record what was worked on this session |

@@ -1,5 +1,5 @@
 ---
-summary: "How to wire session-start and session-end hooks for the second brain across Claude Code, Cursor, and OpenClaw"
+summary: "How to wire session-start and session-end hooks for the second brain across Claude Code and Cursor"
 read_when: "Setting up second brain automation for a new tool or environment"
 ---
 
@@ -7,14 +7,14 @@ read_when: "Setting up second brain automation for a new tool or environment"
 
 The second brain skills (`init-second-brain`, `load-second-brain`, `update-second-brain`) are
 tool-agnostic — plain markdown, no platform APIs. This doc covers how to wire session-start
-and session-end automation for each platform.
+and session-end automation for Claude Code and Cursor.
 
 ## How it works
 
-| Event | Mechanism | All platforms |
-|---|---|---|
-| Session start | Instruction file auto-loaded | CLAUDE.md (Claude Code / Cursor) or AGENTS.md (OpenClaw) |
-| Session end | Platform-specific (see below) | — |
+| Event | Mechanism |
+|---|---|
+| Session start | `CLAUDE.md` auto-loaded by Claude Code / Cursor |
+| Session end | Platform-specific (see below) |
 
 Session start is already handled: `init-second-brain` creates a `CLAUDE.md` that tells the
 agent to load `.claude/` files at the start of every non-trivial session. No hook needed.
@@ -143,56 +143,14 @@ pick it up correctly next session. No conflict.
 
 ---
 
-## OpenClaw
-
-### Session start — `agent:bootstrap`
-
-Enable the bundled `bootstrap-extra-files` hook to inject `.claude/` knowledge files
-into the agent context automatically:
-
-```bash
-openclaw hooks enable bootstrap-extra-files
-```
-
-Then configure it in `openclaw.json` to include the project's `.claude/` files:
-
-```json
-{
-  "hooks": {
-    "bootstrapExtraFiles": {
-      "patterns": [".claude/ARCHITECTURE.md", ".claude/NOTES.md", ".claude/BACKLOG.md"]
-    }
-  }
-}
-```
-
-### Session end — `command:new`
-
-Wire the `session-memory` hook (already bundled) to trigger update-second-brain when
-`/new` is issued:
-
-```bash
-openclaw hooks enable session-memory
-```
-
-This fires on `command:new` — when you type `/new` to reset the session, it saves context
-before clearing.
-
-### Future: `session:start` / `session:end`
-
-These events are listed as **planned** in the OpenClaw docs. When they ship, replace
-the `agent:bootstrap` + `command:new` pair with direct event bindings.
-
----
-
 ## Platform comparison
 
-| Feature | Claude Code | Cursor | OpenClaw |
-|---|---|---|---|
-| Auto-load on start | ✅ CLAUDE.md | ✅ CLAUDE.md / .cursorrules | ✅ AGENTS.md |
-| Automatic end-of-session update | ✅ Stop hook + marker | ❌ Manual / slash command | ⚠️ `/new` only |
-| Zero-config start | ✅ | ✅ | ✅ |
-| True session:end event | Not needed (Stop works) | ❌ | 🗓 Planned |
+| Feature | Claude Code | Cursor |
+|---|---|---|
+| Auto-load on start | ✅ CLAUDE.md | ✅ CLAUDE.md / .cursorrules |
+| Automatic end-of-session update | ✅ Stop hook + marker | ❌ Manual / slash command |
+| Zero-config start | ✅ | ✅ |
+| True session:end event | Not needed (Stop works) | ❌ |
 
 ---
 
@@ -203,4 +161,3 @@ commands/). The only global one-time setup is:
 
 - **Claude Code**: add the Stop hook to `~/.claude/settings.json` once
 - **Cursor**: add the `.cursorrules` reminder once per project
-- **OpenClaw**: `openclaw hooks enable bootstrap-extra-files session-memory` once
