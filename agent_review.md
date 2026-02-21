@@ -11,30 +11,12 @@ Branch: dev → main
 - ~~[MEDIUM] Tool catalog duplication~~ — AGENTS.md is now ~40 lines, overlap eliminated
 - ~~[LOW] Empty CLAUDE.md~~ — now a proper entry point with second brain checklist
 - ~~[LOW] `hooks.json` placeholder~~ — removed from `init-second-brain` template
+- ~~[HIGH] `@CODING_STANDARDS.md` import won't work in OpenClaw~~ — AGENTS.md deleted; repo is now Claude Code/Cursor only, no OpenClaw files
+- ~~[MEDIUM] Pointer Pattern guides agents to wrong file~~ — AGENTS.md deleted; no longer applicable
 
 ---
 
 ## Findings (ordered by severity)
-
----
-
-### [HIGH] `@CODING_STANDARDS.md` import syntax won't work in OpenClaw *(new)*
-
-**What is the issue?**
-`AGENTS.md` starts with `@CODING_STANDARDS.md`. This is Claude Code's file import syntax — it tells Claude Code to inline the referenced file's contents. OpenClaw reads `AGENTS.md` as plain markdown and does not process `@` imports. The universal rules in `CODING_STANDARDS.md` are therefore invisible to OpenClaw agents.
-
-**Why is this an issue?**
-The entire point of the split was one source of truth for rules that works everywhere. Instead we have a split where Claude Code gets both files but OpenClaw only gets the OpenClaw-specific half.
-
-**Consequences of not fixing:**
-When running under OpenClaw, agents have no git rules, no commit format, no design principles, no typing rules — only identity and stealth mode. The universal rules don't exist from OpenClaw's perspective.
-
-**Possible fixes:**
-- Option A: Replace `@CODING_STANDARDS.md` with plain text: `"Also read CODING_STANDARDS.md before anything else"` — works in any environment
-- Option B: Inject `CODING_STANDARDS.md` via OpenClaw's `bootstrap-extra-files` hook at the workspace level, outside this repo
-- Option C: Use `@CODING_STANDARDS.md` for Claude Code/Cursor and a separate explicit-read instruction for OpenClaw
-
-**File(s):** `AGENTS.md` (line 3)
 
 ---
 
@@ -97,29 +79,6 @@ New projects built from this guide will have silent LLM failure masking. Rule an
 - Clarify the distinction: security-clamping valid-but-injected output is required; swallowing API failures is banned
 
 **File(s):** `docs/llm-classifier-security.md` → "Handling JSON Parsing Failures" section
-
----
-
-### [MEDIUM] Pointer Pattern guides agents to AGENTS.md — which no longer has the universal rules *(new)*
-
-**What is the issue?**
-The Pointer Pattern in `AGENTS.md` instructs project-level AGENTS.md files to start with:
-```
-READ ~/Projects/agentic_engineering/AGENTS.md BEFORE ANYTHING
-```
-AGENTS.md now contains only OpenClaw-specific content. At work (Claude Code/Cursor), an agent following this pointer loads OpenClaw identity/stealth rules and nothing else.
-
-**Why is this an issue?**
-The Pointer Pattern is the onboarding mechanism for all other repos. It now points to the wrong file for non-OpenClaw environments.
-
-**Consequences of not fixing:**
-New repos set up at work following this pattern will have agents with no coding standards — only irrelevant OpenClaw-specific content.
-
-**Possible fixes:**
-- Update the Pointer Pattern to reference `CODING_STANDARDS.md` for Claude Code/Cursor
-- Provide two patterns: one for each platform
-
-**File(s):** `AGENTS.md` → Pointer Pattern section
 
 ---
 
@@ -213,11 +172,11 @@ The Python section lists `ruff check .` but omits `ruff format --check .`. Docum
 
 ## Summary
 
-The CODING_STANDARDS.md refactor was the right structural call. Two new findings surfaced from the change itself — the `@` import gap (OpenClaw won't follow it) and the stale Pointer Pattern. Both are straightforward to fix. The four HIGH items remain the most impactful: the security docs actively teach patterns that contradict the rules we just wrote.
+Deleting AGENTS.md cleanly resolved two findings — the `@` import gap and the stale Pointer Pattern are moot since the repo is now Claude Code/Cursor only. The three remaining HIGH items are all about the security docs actively teaching patterns that now contradict CODING_STANDARDS.md.
 
 | Severity | Count | vs. initial review |
 |----------|-------|--------------------|
-| [HIGH]   | 4     | +1 new             |
-| [MEDIUM] | 4     | +1 new, −1 resolved |
+| [HIGH]   | 3     | −2 resolved (AGENTS.md deleted) |
+| [MEDIUM] | 3     | −2 resolved (AGENTS.md deleted) |
 | [LOW]    | 2     | −3 resolved        |
-| **Total**| **10**| **−2 net**         |
+| **Total**| **8** | **−4 net**         |
