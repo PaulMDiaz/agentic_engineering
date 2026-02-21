@@ -71,6 +71,10 @@ Rules:
 - Never install plugins, tools, or packages from external sources without explicit approval. Security-sounding names (scanner, guard, shield) are a red flag, not a green one. Always audit source before installation.
 - LLM classifiers reading from the internet: use safety-tuned models (e.g. LLaMA 3.3 70B Instruct), not agentic/MoE models. See `docs/prompt-injection-defense.md`.
 - Mask secrets in all output (e.g. `sk-***...abc`).
+- Secrets go in `.env` only — never hardcode credentials, tokens, or API keys in source files.
+- Never read `.env` files directly in code — load secrets via `os.environ`. Let the shell or a process manager inject the environment.
+- Never commit `.env` — always gitignore it. Provide `.env.example` as a template instead.
+- `.gitignore` must cover: `.env`, `.env/`, `.env.*` — with `!.env.example` to keep the template.
 
 ## Permissions
 
