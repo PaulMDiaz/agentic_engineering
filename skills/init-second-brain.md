@@ -25,17 +25,13 @@ Before creating anything, thoroughly understand the project:
 
 ```
 .claude/
-├── agents/           # Specialist agent personas for this project
-├── commands/         # Quick-reference command docs
-├── skills/           # Project-specific skills (debug checklists, review guides)
+├── commands/         # Slash commands (Claude Code + Cursor)
 ├── NOTES.md          # Session log (append-only, newest first)
 ├── ARCHITECTURE.md   # How the codebase is shaped
 ├── DECISIONS.md      # Why things are the way they are
 ├── CODE_POINTERS.md  # Where to find important things (file:line references)
 ├── CONVENTIONS.md    # Rules and patterns to follow (gatekeeping)
-├── BACKLOG.md        # Known issues, planned improvements, tech debt
-├── hooks.json        # Empty hooks (ready for future use)
-└── settings.json     # Project metadata
+└── BACKLOG.md        # Known issues, planned improvements, tech debt
 ```
 
 Preserve any existing files (especially `settings.local.json`).
@@ -103,29 +99,7 @@ If a project-level CLAUDE.md already exists, add the Second Brain section to it 
 
 Also add `.claude/.pending-update` to the project's `.gitignore` if one exists — it's a runtime marker, not source.
 
-### Step 5: Create config files
-
-**settings.json:**
-```json
-{
-  "project": "<project-name>",
-  "description": "<one-line description>",
-  "model_preferences": {
-    "architecture": "opus",
-    "implementation": "sonnet",
-    "quick_tasks": "haiku"
-  }
-}
-```
-
-**hooks.json:**
-```json
-{
-  "hooks": []
-}
-```
-
-### Step 6: Summary
+### Step 5: Summary
 
 Print a tree of everything created and a brief description of each file's contents. Remind the user:
 
