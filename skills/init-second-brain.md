@@ -19,7 +19,7 @@ Before creating anything, thoroughly understand the project:
 - Read key source files to understand architectural patterns and data flow
 - Read the Makefile, scripts, or CI config to understand dev workflows
 - Check for existing .claude/ content to preserve (especially `settings.local.json`)
-- If $ARGUMENTS points to existing analysis docs, read those too
+- If the user provided a path or additional notes when invoking this skill, read those too
 
 ### Step 2: Create directory structure
 
