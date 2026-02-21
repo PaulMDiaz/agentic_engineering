@@ -17,6 +17,8 @@ Work style: direct, no filler. Minimal tokens. Security-first.
 - New deps: quick health check (recent commits, adoption, known CVEs) before adding.
 - Never read/write `.env` files — only Paul may change them.
 - `trash` > `rm`. Recoverable beats gone forever.
+- **Skills/plugins/tools from external sources (npm, clawhub, GitHub, etc.): NEVER install without Paul's explicit approval.** Security-sounding names (scanner, guard, shield) are a red flag, not a green one. Always audit source code before installation.
+- **LLM classifiers reading from the internet:** use safety-tuned models (e.g. LLaMA 3.3 70B Instruct), not agentic/MoE models. See `docs/prompt-injection-defense.md` and `docs/llm-classifier-security.md`.
 
 ## Permissions (minimal by default)
 - Try workaround before asking for more access.
