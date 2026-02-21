@@ -17,11 +17,12 @@ read_when: "Before starting new work — check if it's already planned"
   instead of `trash`. The Shell section should note: prefer `trash`; if `rm` is unavoidable,
   use `-i`. (`CODING_STANDARDS.md`)
 
-- [ ] **Second brain slash commands have no command files** — `docs/slash-commands/README.md`
-  lists `/init-second-brain`, `/load-second-brain`, `/update-second-brain` but there are
-  no corresponding files in `docs/slash-commands/`. Agents following the index will find
-  nothing. Either add thin command files that delegate to `skills/`, or note in the index
-  that these are invoked as skills, not slash commands.
+- [ ] **5 skills listed in slash command index have no backing command files** —
+  `/agent-review`, `/diff-summary`, `/init-second-brain`, `/load-second-brain`,
+  `/update-second-brain` are all in the index but have no files in `docs/slash-commands/`
+  or `.claude/commands/`. Agents invoking them as slash commands will find nothing.
+  Either add thin command files that delegate to `skills/`, or add a note to the index
+  clarifying they are invoked as skills, not slash commands.
 
 - [ ] **Verify Claude Code `settings.json` stop hook schema** — `docs/second-brain-hooks.md`
   shows the hook registration format but it should be tested against a real project to
@@ -46,3 +47,5 @@ read_when: "Before starting new work — check if it's already planned"
 - [x] Delete AGENTS.md — repo is Claude Code/Cursor only
 - [x] Refactor AGENTS.md → CODING_STANDARDS.md
 - [x] Bootstrap `.claude/` second brain
+- [x] Port `agent-review` skill from OpenClaw — inline output, no file creation, self-contained
+- [x] Add `diff-summary` skill — conversational diff walkthrough
