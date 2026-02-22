@@ -7,9 +7,9 @@ read_when: "Before starting new work — check if it's already planned"
 
 ## Open
 
-- [ ] **Fix stale `AGENTS.md` row in `CLAUDE.md`** — Structure table still references
-  `AGENTS.md` which was deleted. Misleads any agent or developer reading the entry point.
-  (`CLAUDE.md` → Structure section)
+- [x] **Fix stale `AGENTS.md` row in `CLAUDE.md`** — Updated description to reflect that
+  `AGENTS.md` is now the global entry point for Codex and AGENTS.md-aware agents, not an
+  OpenClaw-specific file. (`CLAUDE.md` → Structure section)
 
 - [ ] **Reconcile `trash > rm` vs `-i` flag rule** — `CODING_STANDARDS.md` Security section
   says "trash > rm", but the Shell section says use `rm -i`. These don't contradict but
