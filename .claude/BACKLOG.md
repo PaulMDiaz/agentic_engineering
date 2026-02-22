@@ -11,11 +11,9 @@ read_when: "Before starting new work — check if it's already planned"
   `AGENTS.md` is now the global entry point for Codex and AGENTS.md-aware agents, not an
   OpenClaw-specific file. (`CLAUDE.md` → Structure section)
 
-- [ ] **Reconcile `trash > rm` vs `-i` flag rule** — `CODING_STANDARDS.md` Security section
-  says "trash > rm", but the Shell section says use `rm -i`. These don't contradict but
-  don't cross-reference either. An agent reading only the Shell section will use `rm -i`
-  instead of `trash`. The Shell section should note: prefer `trash`; if `rm` is unavoidable,
-  use `-i`. (`CODING_STANDARDS.md`)
+- [x] **Reconcile `trash > rm` vs `-i` flag rule** — Shell section now leads with `trash`
+  preference and falls back to `rm -i` only if `trash` is unavailable. Cross-reference
+  established; both sections are consistent. (`CODING_STANDARDS.md`)
 
 - [x] **5 skills listed in slash command index have no backing command files** —
   Resolved by moving the 5 actual commands (`/check`, `/commit`, `/implement`, `/pr`,
