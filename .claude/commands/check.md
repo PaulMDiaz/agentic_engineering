@@ -1,8 +1,3 @@
----
-summary: "Run full code quality gate — lint, types, tests, security"
-read_when: "Before committing or creating a PR"
----
-
 # /check
 
 Run full quality gate. Fix all issues. Do NOT commit during this process.

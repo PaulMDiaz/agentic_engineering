@@ -17,12 +17,11 @@ read_when: "Before starting new work — check if it's already planned"
   instead of `trash`. The Shell section should note: prefer `trash`; if `rm` is unavoidable,
   use `-i`. (`CODING_STANDARDS.md`)
 
-- [ ] **5 skills listed in slash command index have no backing command files** —
-  `/agent-review`, `/diff-summary`, `/init-second-brain`, `/load-second-brain`,
-  `/update-second-brain` are all in the index but have no files in `docs/slash-commands/`
-  or `.claude/commands/`. Agents invoking them as slash commands will find nothing.
-  Either add thin command files that delegate to `skills/`, or add a note to the index
-  clarifying they are invoked as skills, not slash commands.
+- [x] **5 skills listed in slash command index have no backing command files** —
+  Resolved by moving the 5 actual commands (`/check`, `/commit`, `/implement`, `/pr`,
+  `/security-check`) from `docs/slash-commands/` to `.claude/commands/` (where Claude Code
+  scans). The README index now clearly separates slash commands from skills, and the 5
+  skill-based entries are labeled as "invoke by name, not slash command".
 
 - [ ] **Verify Claude Code `settings.json` stop hook schema** — `docs/second-brain-hooks.md`
   shows the hook registration format but it should be tested against a real project to

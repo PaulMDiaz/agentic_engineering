@@ -1,8 +1,3 @@
----
-summary: "Create a pull request with good description"
-read_when: "Ready to open a PR"
----
-
 # /pr
 
 Create a well-described pull request.

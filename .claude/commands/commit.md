@@ -1,8 +1,3 @@
----
-summary: "Create a well-formatted conventional commit"
-read_when: "You need to commit changes"
----
-
 # /commit
 
 Create well-formatted conventional commit. Runs checks by default.
@@ -22,7 +17,7 @@ Create well-formatted conventional commit. Runs checks by default.
 
 ## Types
 - ✨ feat / 🐛 fix / 📝 docs / ♻️ refactor / 🎨 style
-- ⚡️ perf / ✅ test / 🧑‍💻 chore / 🚧 wip / 🔥 remove / 🔒 security
+- ⚡️ perf / ✅ test / 🧑💻 chore / 🚧 wip / 🔥 remove / 🔒 security
 
 ## Rules
 - Imperative mood

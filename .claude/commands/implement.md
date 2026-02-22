@@ -1,8 +1,3 @@
----
-summary: "Methodical task implementation with planning and testing"
-read_when: "Starting a non-trivial implementation task"
----
-
 # /implement
 
 Approach tasks methodically. Think before coding.
