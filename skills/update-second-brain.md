@@ -31,7 +31,7 @@ For each entry in **DECISIONS.md**, **ARCHITECTURE.md**, **CONVENTIONS.md**, **C
 - **Is this still accurate?** — Did a rename, refactor, or dependency change make it wrong?
 - **Is this still relevant?** — Did we remove the feature/module this entry describes?
 
-Flag anything that needs correction. You'll fix it in Step 5.
+Flag anything that needs correction. You'll fix it in Step 5 (NOTES.md in Step 4 is append-only and not subject to staleness correction).
 
 Also check **project-root files** that are in scope but outside `.claude/`:
 - `AGENTS.md` (if it exists) — stack, dev commands, test commands
@@ -49,7 +49,7 @@ Review the full conversation to identify:
 6. **Code pointer updates** — new important files/functions, or did line numbers shift due to edits?
 7. **Convention changes** — new patterns established, rules changed?
 8. **Backlog updates** — items completed (check them off), new items discovered, priorities shifted?
-9. **What became stale?** — which existing entries from the audit in Step 2 are now wrong and need correction?
+9. **Stale carry-forward** — incorporate any entries flagged in Step 2 into your plan for Step 5 corrections.
 
 If the user provided additional notes or a focus area when invoking this skill, incorporate that context too.
 
@@ -87,7 +87,7 @@ For each file, **correct or remove stale entries identified in Step 2 before app
 - Infrastructure changed
 - A significant refactor altered the codebase shape
 
-**DECISIONS.md** — Mark superseded decisions as such (append `> ⚠️ Superseded — [brief reason]`), then append new entries if:
+**DECISIONS.md** — Mark superseded decisions as such (append `> ⚠️ Superseded — [brief reason]` immediately below the superseded entry's last line, before the next `###` heading), then append new entries if:
 - A non-trivial choice was made about approach, tool, pattern, or trade-off
 - Format: `### Title` / **When** / **Why** / **Trade-off**
 
