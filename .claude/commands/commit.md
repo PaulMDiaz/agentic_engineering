@@ -17,7 +17,7 @@ Create well-formatted conventional commit. Runs checks by default.
 
 ## Types
 - ✨ feat / 🐛 fix / 📝 docs / ♻️ refactor / 🎨 style
-- ⚡️ perf / ✅ test / 🧑💻 chore / 🚧 wip / 🔥 remove / 🔒 security
+- ⚡️ perf / ✅ test / 🧑‍💻 chore / 🚧 wip / 🔥 remove / 🔒 security
 
 ## Rules
 - Imperative mood

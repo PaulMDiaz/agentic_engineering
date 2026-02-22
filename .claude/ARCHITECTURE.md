@@ -12,12 +12,14 @@ source of truth for how PaulMDiaz projects are built and how agents operate
 within them.
 
 Two audiences:
-1. **Claude Code / Cursor / Codex** — Claude Code and Cursor load `CLAUDE.md` automatically; Codex reads `AGENTS.md`; both pull in `CODING_STANDARDS.md`
+1. **Claude Code / Cursor / Codex** — Claude Code and Cursor load `CLAUDE.md` automatically; Codex reads `AGENTS.md`; all three reference `CODING_STANDARDS.md`
 2. **Humans** — reference for project conventions, security patterns, and tooling
 
 ---
 
 ## Directory Layout
+
+> Note: this file lives in `.claude/` — the layout below shows the full repo from root.
 
 ```
 agentic_engineering/
