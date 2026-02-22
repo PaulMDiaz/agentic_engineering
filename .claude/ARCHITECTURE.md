@@ -12,21 +12,24 @@ source of truth for how PaulMDiaz projects are built and how agents operate
 within them.
 
 Two audiences:
-1. **Claude Code / Cursor** — loads `CLAUDE.md` automatically; pulls in `CODING_STANDARDS.md` via `@` import
+1. **Claude Code / Cursor / Codex** — Claude Code and Cursor load `CLAUDE.md` automatically; Codex reads `AGENTS.md`; all three reference `CODING_STANDARDS.md`
 2. **Humans** — reference for project conventions, security patterns, and tooling
 
 ---
 
 ## Directory Layout
 
+> Note: this file lives in `.claude/` — the layout below shows the full repo from root.
+
 ```
 agentic_engineering/
 ├── CLAUDE.md                        # Entry point — auto-loaded by Claude Code/Cursor
+├── AGENTS.md                        # Entry point — read by Codex and AGENTS.md-aware agents
 ├── CODING_STANDARDS.md              # Universal rules (git, commits, design, errors, typing, shell...)
 ├── tools.md                         # Tool catalog (gh, git, claude CLI, Python/TS/Shell gates)
 ├── .gitignore
 │
-├── skills/                          # Reusable agent skill prompts
+├── skills/                          # Reusable agent skill prompts (invoke by name, not slash command)
 │   ├── init-second-brain.md         # Bootstrap .claude/ for a project
 │   ├── load-second-brain.md         # Load .claude/ context at session start
 │   ├── update-second-brain.md       # Record session work into .claude/
@@ -38,15 +41,19 @@ agentic_engineering/
 │   ├── prompt-injection-defense.md  # XML delimiters, output clamping, defense-in-depth stack
 │   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)
 │   └── slash-commands/
-│       ├── README.md                # Index of all available slash commands
-│       ├── check.md                 # /check — full quality gate
-│       ├── commit.md                # /commit — conventional commit
-│       ├── implement.md             # /implement — methodical task flow
-│       ├── pr.md                    # /pr — create pull request
-│       └── security-check.md       # /security-check — pre-ship security review
+│       └── README.md                # Index of slash commands and skills
 │
 ├── scripts/
 │   └── committer                    # Stage + commit helper; enforces Conventional Commits
+│
+├── .claude/
+│   ├── commands/                    # Slash commands — auto-loaded by Claude Code/Cursor
+│   │   ├── check.md                 # /check — full quality gate
+│   │   ├── commit.md                # /commit — conventional commit
+│   │   ├── implement.md             # /implement — methodical task flow
+│   │   ├── pr.md                    # /pr — create pull request
+│   │   └── security-check.md       # /security-check — pre-ship security review
+│   └── ...                          # Second brain knowledge files — see this file (.claude/ARCHITECTURE.md)
 │
 └── .github/workflows/
     └── cleanup-review-artifacts.yml # Auto-deletes *_review.md from main after merge

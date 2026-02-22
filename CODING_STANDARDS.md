@@ -140,7 +140,7 @@ Rules:
 - Python: use `uv` or `pip`; keep `pyproject.toml` current; virtual environments only.
 - TypeScript: use repo package manager; keep files small; follow existing patterns.
 - Shell: `set -euo pipefail`; prefer explicit over clever; lint with `shellcheck`.
-- Use `-i` flag for destructive file ops — prompts before overwriting or deleting:
-  - `rm -i` — prompts before deleting each file
+- Prefer `trash` over `rm` — recoverable beats gone forever. If `trash` is unavailable, use `rm -i`.
+- Use `-i` flag for overwrite ops — prompts before clobbering:
   - `cp -i` — prompts before overwriting an existing file
   - `mv -i` — prompts before overwriting at the destination

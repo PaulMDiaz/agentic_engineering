@@ -14,6 +14,20 @@ not running OpenClaw.
 **Trade-off:** OpenClaw users maintain their own AGENTS.md separately. Worth it for
 true platform-agnosticism.
 
+> ⚠️ Superseded — AGENTS.md added back (2026-02-22) as a global entry point for Codex and other AGENTS.md-aware agents. See decision below.
+
+---
+
+### Repo targets Claude Code, Cursor, and Codex (+ other AGENTS.md-aware agents)
+
+**When:** 2026-02-22
+**Why:** `AGENTS.md` is the native entry point for Codex and any agent that follows the
+AGENTS.md convention. Adding it makes the playbook usable across all major coding agent
+platforms without pulling in any OpenClaw-specific config.
+**Trade-off:** OpenClaw users still maintain their own workspace AGENTS.md separately —
+that file handles identity, stealth mode, and workspace paths which don't belong in a
+public, platform-agnostic repo.
+
 ---
 
 ### Rules live in CODING_STANDARDS.md, not AGENTS.md

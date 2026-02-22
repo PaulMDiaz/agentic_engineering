@@ -1,8 +1,3 @@
----
-summary: "Review code for security issues before shipping"
-read_when: "Before merging anything touching auth, secrets, inputs, or external data"
----
-
 # /security-check
 
 Review for security issues. Flag; don't silently fix.

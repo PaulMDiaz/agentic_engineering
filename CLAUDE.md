@@ -22,9 +22,10 @@ Before ending any session: say "update second brain" to record what we worked on
 | Path | Purpose |
 |---|---|
 | `CODING_STANDARDS.md` | Universal rules — source of truth for all projects |
-| `AGENTS.md` | OpenClaw-specific overrides (identity, stealth mode, workspace paths) |
+| `AGENTS.md` | Global entry point for Codex and other AGENTS.md-aware agents — points to `CODING_STANDARDS.md` |
 | `skills/` | Reusable skill prompts (init/load/update second brain, etc.) |
-| `docs/slash-commands/` | Slash commands for Claude Code and Cursor |
+| `.claude/commands/` | Slash commands — auto-loaded by Claude Code and Cursor |
+| `docs/slash-commands/README.md` | Index of slash commands and skills |
 | `docs/` | Reference docs with `summary` and `read_when` front-matter |
 | `scripts/` | Helper scripts (`committer`, etc.) |
 

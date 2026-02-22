@@ -12,7 +12,7 @@ read_when: "You need to find where something lives"
 | All universal coding rules | `CODING_STANDARDS.md` |
 | Design rules (pure functions, no default params) | `CODING_STANDARDS.md` → Design |
 | Error handling (no silent fallbacks, clamping note) | `CODING_STANDARDS.md` → Error Handling |
-| Shell rules (`set -euo pipefail`, `-i` flag) | `CODING_STANDARDS.md` → Language / Stack |
+| Shell rules (`set -euo pipefail`, `trash` > `rm`, `-i` flag) | `CODING_STANDARDS.md` → Language / Stack |
 | Typing rules (`dict[str, Any]`, no `Any`) | `CODING_STANDARDS.md` → Typing |
 | Git / commit rules | `CODING_STANDARDS.md` → Git + Commits |
 | Security rules (`trash > rm`, no external installs) | `CODING_STANDARDS.md` → Security |
@@ -22,6 +22,7 @@ read_when: "You need to find where something lives"
 | What | Where |
 |---|---|
 | Claude Code / Cursor entry point | `CLAUDE.md` |
+| Codex / AGENTS.md-aware agent entry point | `AGENTS.md` |
 | `@CODING_STANDARDS.md` import | `CLAUDE.md` line 1 |
 | Repo structure table | `CLAUDE.md` → Structure |
 | Quick reference commands | `CLAUDE.md` → Quick Reference |
@@ -41,11 +42,11 @@ read_when: "You need to find where something lives"
 
 | Command | File |
 |---|---|
-| `/check` | `docs/slash-commands/check.md` |
-| `/commit` | `docs/slash-commands/commit.md` |
-| `/implement` | `docs/slash-commands/implement.md` |
-| `/pr` | `docs/slash-commands/pr.md` |
-| `/security-check` | `docs/slash-commands/security-check.md` |
+| `/check` | `.claude/commands/check.md` |
+| `/commit` | `.claude/commands/commit.md` |
+| `/implement` | `.claude/commands/implement.md` |
+| `/pr` | `.claude/commands/pr.md` |
+| `/security-check` | `.claude/commands/security-check.md` |
 | Index | `docs/slash-commands/README.md` |
 
 ## Reference Docs
