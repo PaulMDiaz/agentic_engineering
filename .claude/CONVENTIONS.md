@@ -46,10 +46,10 @@ Use plain English: "If the user provided a path when invoking this skill, use it
 
 ## Slash Command Format
 
-Files under `docs/slash-commands/` must:
-- Have `summary` and `read_when` front-matter
-- Be listed in `docs/slash-commands/README.md`
-- Have a `## Process` section with numbered steps
+Files under `.claude/commands/` are the actual invokable slash commands:
+- Plain markdown — no front-matter (Claude Code uses the filename as the command name)
+- Must have a `# /command-name` heading and a `## Process` section with numbered steps
+- Must be listed in `docs/slash-commands/README.md` (the index)
 
 ---
 
@@ -67,7 +67,7 @@ All commit types: `feat fix docs refactor style perf test chore wip remove secur
 | A universal coding rule | `CODING_STANDARDS.md` |
 | A reference pattern (security, architecture, etc.) | `docs/<topic>.md` with front-matter |
 | A reusable agent workflow | `skills/<name>.md` |
-| A slash command | `docs/slash-commands/<name>.md` + update `README.md` |
+| A slash command | `.claude/commands/<name>.md` + update `docs/slash-commands/README.md` |
 | A project-level convenience script | `scripts/` |
 | A CI automation | `.github/workflows/` |
 

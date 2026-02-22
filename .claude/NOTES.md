@@ -2,6 +2,37 @@
 
 <!-- Append-only. Newest entries at top. -->
 
+## Session: 2026-02-22
+
+### What we worked on
+- Updated `update-second-brain` skill — added staleness audit (read-back) step: before
+  writing, audit existing knowledge files for accuracy; correct stale entries first, then
+  append new. NOTES.md stays append-only (log, not state). Applied to both workspace copy
+  and this repo's `skills/update-second-brain.md`
+- Added `AGENTS.md` — thin global entry point for Codex and AGENTS.md-aware agents,
+  pointing to `CODING_STANDARDS.md`
+- Moved slash commands from `docs/slash-commands/` → `.claude/commands/`, stripped
+  doc front-matter — now invokable as `/command-name` in Claude Code/Cursor
+- Fixed `trash` vs `rm -i` inconsistency in `CODING_STANDARDS.md` — Shell section
+  now leads with `trash` preference, falls back to `rm -i` if unavailable
+- Fixed stale `AGENTS.md` description in `CLAUDE.md` structure table
+- Superseded "Claude Code/Cursor only" decision in `DECISIONS.md`, added updated decision
+- Updated `ARCHITECTURE.md` — audience line, directory layout, added Codex
+- Ran `agent-review` twice; applied all findings (1 MEDIUM, 6 LOW total)
+- Opened PR #4 (`dev` → `main`)
+
+### Decisions made
+- `update-second-brain` is now write-forward AND read-back — staleness audit is mandatory
+- Repo now targets Claude Code, Cursor, AND Codex (+ AGENTS.md-aware agents); OpenClaw excluded
+- Slash commands belong in `.claude/commands/`, not `docs/slash-commands/`
+- Keep second brain in this repo — dogfooding value outweighs the overhead
+- Empty `CONVENTIONS.md` / `CODE_POINTERS.md` are acceptable — redundancy is fine
+
+### Still unresolved
+- Claude Code stop hook schema not yet verified against a real project
+- `.cursorrules` Cursor reference in `second-brain-hooks.md` may be outdated
+- Two-copy skill drift (OpenClaw workspace vs this repo) — to be addressed separately
+
 ## Session: 2026-02-21 (continued)
 
 ### What we worked on
