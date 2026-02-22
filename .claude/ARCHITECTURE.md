@@ -53,7 +53,7 @@ agentic_engineering/
 │   │   ├── implement.md             # /implement — methodical task flow
 │   │   ├── pr.md                    # /pr — create pull request
 │   │   └── security-check.md       # /security-check — pre-ship security review
-│   └── ...                          # Second brain knowledge files (NOTES, DECISIONS, etc.)
+│   └── ...                          # Second brain knowledge files — see this file (.claude/ARCHITECTURE.md)
 │
 └── .github/workflows/
     └── cleanup-review-artifacts.yml # Auto-deletes *_review.md from main after merge

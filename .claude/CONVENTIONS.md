@@ -75,6 +75,6 @@ All commit types: `feat fix docs refactor style perf test chore wip remove secur
 
 ## What Does NOT Belong Here
 
-- OpenClaw-specific config (AGENTS.md, workspace paths, stealth mode)
+- OpenClaw-specific config — these go in the OpenClaw workspace AGENTS.md, not here
 - Project-specific knowledge (`.claude/` content for other repos)
 - Secrets or credentials

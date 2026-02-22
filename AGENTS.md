@@ -1,6 +1,6 @@
 # Global Coding Standards — @PaulMDiaz
 
-This file is referenced by project-level `AGENTS.md` files across all PaulMDiaz repos.
+Points all AGENTS.md-aware agents to CODING_STANDARDS.md.
 Read by Claude Code, Codex, and other AGENTS.md-aware coding agents. Equivalent to `CLAUDE.md` for agents that don't support that convention.
 
 Read `CODING_STANDARDS.md` in this directory before doing any coding work.
