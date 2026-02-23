@@ -10,16 +10,10 @@ read_when: "Before starting new work — check if it's already planned"
 
 ## Known Gaps / Tech Debt
 
-- [ ] **Verify Claude Code `settings.json` stop hook schema** — `docs/second-brain-hooks.md`
-  shows the hook registration format but it should be tested against a real project to
-  confirm the exact key names. Wrong config silently does nothing.
-
-- [ ] **`.cursorrules` reference may be outdated** — `docs/second-brain-hooks.md` references
-  `.cursorrules` for Cursor session-end reminder. Cursor has largely moved to `.cursor/rules/`.
-  Should verify current Cursor convention.
-
 ## Done
 
+- [x] **Stop hook mechanism** — Won't implement. Auto-loading context reduces task success rates and increases inference cost (Gloaguen et al. 2602.11988). Context loaded on demand via `load-second-brain` skill instead. `second-brain-hooks.md` updated accordingly.
+- [x] **`.cursorrules` stop hook reference** — Moot; entire Cursor stop hook section removed alongside the mechanism.
 - [x] **Fix stale `AGENTS.md` row in `CLAUDE.md`** — Updated description to reflect that
   `AGENTS.md` is now the global entry point for Codex and AGENTS.md-aware agents, not an
   OpenClaw-specific file. (`CLAUDE.md` → Structure section)
