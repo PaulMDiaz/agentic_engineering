@@ -2,7 +2,7 @@
 summary: "Structure and layout of the agentic_engineering repo"
 read_when: "You need to understand what lives where or where to add something new"
 ---
-<!-- Format: ## What This System Does → ## Component Map (directory tree in code block) → ## Data Flow (flow diagram in code block) → additional ## sections as needed. Horizontal rules (---) between major sections. -->
+<!-- Format: ## About This Repo → ## Directory Layout (directory tree in code block) → additional ## sections as needed. Horizontal rules (---) between major sections. -->
 
 # Architecture
 
