@@ -109,6 +109,8 @@ read_when: "When a future agent should read this file"
 ```
 Sections: `# Architecture` → `## What This System Does` → `## Component Map` → `## Data Flow` → additional sections. Horizontal rules (`---`) between major sections.
 
+> **Note:** If the file already has a format comment that differs from the spec above, respect it — the project intentionally customized the format for its context (e.g. a docs repo uses `## Directory Layout` instead of `## Component Map`). Never overwrite a customized format comment with the generic default.
+
 *DECISIONS.md*
 ```
 <!-- Format per entry: ### Title / **When:** YYYY-MM-DD / **Why:** ... / **Trade-off:** ... / optional > ⚠️ Superseded — reason (immediately after the entry, before the next ---). Horizontal rule (---) between entries. -->

@@ -8,6 +8,8 @@ read_when: "Before starting new work — check if it's already planned"
 
 ## Next Up
 
+## Known Gaps / Tech Debt
+
 - [ ] **Verify Claude Code `settings.json` stop hook schema** — `docs/second-brain-hooks.md`
   shows the hook registration format but it should be tested against a real project to
   confirm the exact key names. Wrong config silently does nothing.
