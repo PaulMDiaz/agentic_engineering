@@ -1,163 +1,34 @@
 ---
-summary: "How to wire session-start and session-end hooks for the second brain across Claude Code and Cursor"
-read_when: "Setting up second brain automation for a new tool or environment"
+summary: "How the second brain integrates with Claude Code and Cursor session lifecycle"
+read_when: "Setting up second brain for a new project or tool"
 ---
 
 # Second Brain Hooks
 
-The second brain skills (`init-second-brain`, `load-second-brain`, `update-second-brain`) are
-tool-agnostic — plain markdown, no platform APIs. This doc covers how to wire session-start
-and session-end automation for Claude Code and Cursor.
+## Session start
 
-## How it works
+Claude Code and Cursor auto-load `CLAUDE.md` at the start of every session. The
+`init-second-brain` skill creates this file with a note to run `load-second-brain`
+explicitly when context is needed.
 
-| Event | Mechanism |
-|---|---|
-| Session start | `CLAUDE.md` auto-loaded by Claude Code / Cursor |
-| Session end | Platform-specific (see below) |
+**No hook configuration required.** Context is loaded on demand — not automatically.
 
-Session start is already handled: `init-second-brain` creates a `CLAUDE.md` that tells the
-agent to load `.claude/` files at the start of every non-trivial session. No hook needed.
+Research ([Gloaguen et al., 2026](https://arxiv.org/abs/2602.11988)) shows that
+automatically loading repository context files reduces task success rates and
+increases inference cost. Load context explicitly when the session calls for it.
 
-Session end is where platforms diverge.
+## Session end
 
----
+No automated stop hook. At the end of any substantial session, say:
 
-## Claude Code
+> "update second brain"
 
-### Session start (no config needed)
+This triggers `update-second-brain` manually. Human-in-the-loop is intentional.
 
-Claude Code auto-loads `CLAUDE.md` at the start of every session. The `init-second-brain`
-skill creates this file with the load instruction built in. Nothing to configure.
-
-### Session end — Stop hook
-
-Claude Code fires a `Stop` event when the agent finishes responding. Wire it to write a
-marker file; the next session picks it up and runs the update before doing anything else.
-
-**Step 1: Create the hook script**
-
-```bash
-mkdir -p ~/.claude/hooks
-cat > ~/.claude/hooks/second-brain-stop.sh << 'EOF'
-#!/usr/bin/env bash
-# Fires when Claude Code stops. Marks that second brain needs updating.
-CLAUDE_DIR="$(pwd)/.claude"
-if [ -d "$CLAUDE_DIR" ]; then
-  date -u +"%Y-%m-%dT%H:%M:%SZ" > "$CLAUDE_DIR/.pending-update"
-fi
-exit 0
-EOF
-chmod +x ~/.claude/hooks/second-brain-stop.sh
-```
-
-**Step 2: Register in `~/.claude/settings.json`**
-
-Add to your existing settings (merge with `PreToolUse` etc. if already present):
-
-```json
-{
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/second-brain-stop.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-**Step 3: Add pending-update check to `CLAUDE.md` template**
-
-`init-second-brain` already creates a `CLAUDE.md`. Add this section to its template (or
-manually add to existing projects):
-
-```markdown
-## Session Start Checklist
-
-1. If `.claude/.pending-update` exists:
-   - Run the `update-second-brain` skill to record the previous session
-   - Delete `.claude/.pending-update`
-2. If this is a non-trivial session, run `load-second-brain` to load full context
-```
-
-Now the flow is:
-```
-Session ends → Stop hook writes .pending-update
-Next session starts → CLAUDE.md noticed .pending-update → runs update-second-brain → deletes marker
-```
-
-### Fallback — manual
-
-If you prefer not to use the Stop hook, add this reminder to `CLAUDE.md`:
-
-```markdown
-> Before ending any session: say "update second brain" to record what we worked on.
-```
-
----
-
-## Cursor
-
-Cursor auto-loads `.cursorrules` and `CLAUDE.md` from the project root. Session end has
-no native hook.
-
-### Session start (no config needed)
-
-Same as Claude Code — `CLAUDE.md` auto-loads. `init-second-brain` handles this.
-
-### Session end — slash command + cursorrules reminder
-
-**Step 1: Add a reminder to `.cursorrules`**
-
-```
-# Second Brain
-At the end of any substantial work session, always run /update-second-brain
-before closing the conversation.
-```
-
-**Step 2: Add the slash command**
-
-Create `.claude/commands/update-second-brain.md` in your project (the `init-second-brain`
-skill creates the `commands/` directory for this purpose):
-
-```markdown
-Run the update-second-brain skill: review what we worked on this session and
-update .claude/NOTES.md and any other knowledge files that changed.
-```
-
-Cursor picks up slash commands from `.claude/commands/` automatically. Type
-`/update-second-brain` at end of session.
-
-### Note on `.pending-update` marker
-
-If you also use Claude Code on the same project, the Stop hook will write
-`.pending-update`. Cursor will ignore it (no Stop hook) but Claude Code will
-pick it up correctly next session. No conflict.
-
----
-
-## Platform comparison
+## Platform summary
 
 | Feature | Claude Code | Cursor |
 |---|---|---|
-| Auto-load on start | ✅ CLAUDE.md | ✅ CLAUDE.md / .cursorrules |
-| Automatic end-of-session update | ✅ Stop hook + marker | ❌ Manual / slash command |
-| Zero-config start | ✅ | ✅ |
-| True session:end event | Not needed (Stop works) | ❌ |
-
----
-
-## Adding to new projects
-
-`init-second-brain` handles all project-side setup (CLAUDE.md, .claude/ structure,
-commands/). The only global one-time setup is:
-
-- **Claude Code**: add the Stop hook to `~/.claude/settings.json` once
-- **Cursor**: add the `.cursorrules` reminder once per project
+| Auto-load CLAUDE.md on start | ✅ | ✅ |
+| Context loading | On demand (`load-second-brain`) | On demand (`load-second-brain`) |
+| Session end update | Manual ("update second brain") | Manual ("update second brain") |
