@@ -2,6 +2,7 @@
 summary: "Why things are the way they are in agentic_engineering"
 read_when: "Before proposing a structural change or adding a new doc/skill"
 ---
+<!-- Format per entry: ### Title / **When:** YYYY-MM-DD / **Why:** ... / **Trade-off:** ... / optional > ⚠️ Superseded — reason (immediately after the entry, before the next ---). Horizontal rule (---) between entries. -->
 
 # Decisions
 

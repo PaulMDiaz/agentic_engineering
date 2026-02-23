@@ -2,6 +2,7 @@
 summary: "Quick reference to key locations in the repo"
 read_when: "You need to find where something lives"
 ---
+<!-- Format: ## Section headers → | What | Where | tables. Paths as inline code, functions as `file.py` → `FunctionName()`. -->
 
 # Code Pointers
 

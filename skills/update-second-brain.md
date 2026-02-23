@@ -24,14 +24,24 @@ If any file doesn't exist, skip it (the knowledge base may be partial).
 
 ### Step 2: Staleness audit (read-back)
 
-Before writing anything new, review each existing knowledge file against what you know from this session:
+Before writing anything new, audit each knowledge file for accuracy. Two passes are required:
 
+**Pass A — Session-scope audit**
 For each entry in **DECISIONS.md**, **ARCHITECTURE.md**, **CONVENTIONS.md**, **CODE_POINTERS.md**, and **BACKLOG.md**, ask:
 - **Is this still true?** — Did the session reverse, supersede, or contradict it?
 - **Is this still accurate?** — Did a rename, refactor, or dependency change make it wrong?
 - **Is this still relevant?** — Did we remove the feature/module this entry describes?
 
-Flag anything that needs correction. You'll fix it in Step 5 (NOTES.md in Step 4 is append-only and not subject to staleness correction).
+**Pass B — Code-verification audit**
+For any claim that can be checked against the actual codebase, read the relevant source file and verify it. Don't rely on session memory alone — latent inaccuracies from prior sessions won't surface otherwise. Specifically:
+
+- **ARCHITECTURE.md** — verify env var names against the main entry point, component names against the source directory, module descriptions against actual module docstrings, data flow steps against the main processing function
+- **CODE_POINTERS.md** — verify every file path exists, every function name exists in that file; check that status annotations ("not yet wired", "mocked in tests") still match reality
+- **DECISIONS.md** — verify status claims against code (e.g. "removed from X", "replaced by Y", "not yet implemented") by reading the referenced files
+- **CONVENTIONS.md** — verify tool commands still work (check that referenced CLI commands and flags match `pyproject.toml`, `Makefile`, or equivalent)
+- **BACKLOG.md** — for checked-off items `- [x]`, verify the work is actually present in the codebase; for open items, verify descriptions still match current state
+
+Flag anything that needs correction. You'll fix it in Step 5 (NOTES.md in Step 4 is append-only and is not subject to either audit pass).
 
 Also check **project-root files** that are in scope but outside `.claude/`:
 - `AGENTS.md` (if it exists) — stack, dev commands, test commands
@@ -74,10 +84,66 @@ Rules:
 - Use today's date (`run date` to get it)
 - If there's already an entry for today, add a "(continued)" suffix to distinguish
 - Be specific — mention file names, function names, feature names
-- Keep each bullet to one line
 - Decisions should capture the "why" not just the "what"
 
-### Step 5: Update other files (correct stale entries first, then add new)
+### Step 5: Update other files (normalize format, correct stale entries, then add new)
+
+For each file, check its format against the canonical structure below. If it's missing
+front matter, has inconsistent heading levels, or uses a different structure — normalize
+it in the same pass as the staleness corrections. Then append new content.
+
+**Canonical formats:**
+
+*All files except NOTES.md* — must open with YAML front matter, followed immediately by an embedded format comment:
+```
+---
+summary: "One-line description of what this file contains"
+read_when: "When a future agent should read this file"
+---
+<!-- Format: [one-line spec for this file — see per-file specs below] -->
+```
+
+*ARCHITECTURE.md*
+```
+<!-- Format: ## What This System Does → ## Component Map (directory tree in code block) → ## Data Flow (flow diagram in code block) → additional ## sections as needed. Horizontal rules (---) between major sections. -->
+```
+Sections: `# Architecture` → `## What This System Does` → `## Component Map` → `## Data Flow` → additional sections. Horizontal rules (`---`) between major sections.
+
+> **Note:** If the file already has a format comment that differs from the spec above, respect it — the project intentionally customized the format for its context (e.g. a docs repo uses `## Directory Layout` instead of `## Component Map`). Never overwrite a customized format comment with the generic default.
+
+*DECISIONS.md*
+```
+<!-- Format per entry: ### Title / **When:** YYYY-MM-DD / **Why:** ... / **Trade-off:** ... / optional > ⚠️ Superseded — reason (immediately after the entry, before the next ---). Horizontal rule (---) between entries. -->
+```
+Structure: `# Decisions` → one `### Title` block per decision, horizontal rule between entries.
+
+*CODE_POINTERS.md*
+```
+<!-- Format: ## Section headers → | What | Where | tables. Paths as inline code, functions as `file.py` → `FunctionName()`. -->
+```
+Structure: `# Code Pointers` → grouped `## Section` headers → `| What | Where |` tables.
+
+*CONVENTIONS.md*
+```
+<!-- Format: ## Section headers → rules as prose or short bullet lists. No tables. -->
+```
+Structure: `# Conventions` → `## Section` headers → prose or bullets.
+
+*BACKLOG.md*
+```
+<!-- Format: ## Next Up → ## Known Gaps / Tech Debt → ## Done. Items as: - [ ] **Title** — description (open) or - [x] **Title** — description (done). -->
+```
+Structure: `# Backlog` → `## Next Up` → `## Known Gaps / Tech Debt` → `## Done`.
+
+*NOTES.md* — no front matter. Opens with:
+```
+# Notes
+
+<!-- Append-only. Newest entries at top. -->
+<!-- Format per session: ## Session: YYYY-MM-DD (add "(continued)" if second entry same day) → ### What we worked on / ### Decisions made / ### Still unresolved. Never edit or delete past entries. -->
+```
+
+---
 
 For each file, **correct or remove stale entries identified in Step 2 before appending anything new**. Stale entries that survive are worse than no entries — they actively mislead future sessions.
 
@@ -137,9 +203,11 @@ Also updated:
 ## Guidelines
 
 - **Don't skip the staleness audit** — write-forward without read-back lets old entries rot silently. A stale DECISIONS.md entry is actively worse than no entry.
+- **Do the code-verification pass (Pass B)** — session memory only catches regressions introduced this session. Latent inaccuracies from earlier sessions (wrong env vars, stale module descriptions, mismatched function names) only surface when you check the actual files.
 - **Don't fabricate** — only record things that actually happened in the conversation. If unsure, be conservative.
-- **Be concise** — session notes should be scannable, not exhaustive. One line per bullet.
+- **Be concise** — session notes should be scannable, not exhaustive.
 - **Preserve NOTES.md history** — never edit or delete previous session entries in NOTES.md. It's append-only. (Other files *should* be corrected when stale.)
 - **Minimal updates** — don't touch files that didn't change. If the session was just a bug fix with no architectural impact, only NOTES.md and maybe BACKLOG.md need updating.
 - **Accurate pointers** — if updating CODE_POINTERS.md, verify line numbers against the actual files before writing them.
+- **Normalize on first touch** — if a file's format doesn't match the canonical structure, fix it in the same pass. Don't leave old formatting for "later". A poorly formatted second brain is nearly as bad as no second brain.
 - **No busywork entries** — skip trivially obvious things. Focus on what a future session would benefit from knowing.
