@@ -2,6 +2,7 @@
 summary: "Rules specific to contributing to agentic_engineering itself"
 read_when: "Before editing, adding, or restructuring anything in this repo"
 ---
+<!-- Format: ## Section headers → rules as prose or short bullet lists. No tables. -->
 
 # Conventions
 

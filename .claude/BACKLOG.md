@@ -2,6 +2,7 @@
 summary: "Open items, planned improvements, and tech debt"
 read_when: "Before starting new work — check if it's already planned"
 ---
+<!-- Format: ## Next Up → ## Known Gaps / Tech Debt → ## Done. Items as: - [ ] **Title** — description (open) or - [x] **Title** — description (done). -->
 
 # Backlog
 
