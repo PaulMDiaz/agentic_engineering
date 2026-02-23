@@ -139,7 +139,7 @@ Structure: `# Backlog` → `## Next Up` → `## Known Gaps / Tech Debt` → `## 
 # Notes
 
 <!-- Append-only. Newest entries at top. -->
-<!-- Format per session: ## Session: YYYY-MM-DD (add "(continued)" if second entry same day) → ### What we worked on / ### Decisions made / ### Still unresolved. Single-line bullets only. Never edit or delete past entries. -->
+<!-- Format per session: ## Session: YYYY-MM-DD (add "(continued)" if second entry same day) → ### What we worked on / ### Decisions made / ### Still unresolved. Never edit or delete past entries. -->
 ```
 
 ---
