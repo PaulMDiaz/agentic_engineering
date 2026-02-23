@@ -87,7 +87,35 @@ Rules:
 - Keep each bullet to one line
 - Decisions should capture the "why" not just the "what"
 
-### Step 5: Update other files (correct stale entries first, then add new)
+### Step 5: Update other files (normalize format, correct stale entries, then add new)
+
+For each file, check its format against the canonical structure below. If it's missing
+front matter, has inconsistent heading levels, or uses a different structure — normalize
+it in the same pass as the staleness corrections. Then append new content.
+
+**Canonical formats:**
+
+*All files except NOTES.md* — must have YAML front matter:
+```
+---
+summary: "One-line description of what this file contains"
+read_when: "When a future agent should read this file"
+---
+```
+
+*ARCHITECTURE.md* — `# Architecture` → `## What This System Does` → `## Component Map` (directory tree in code block) → `## Data Flow` (flow diagram in code block) → additional sections as needed. Horizontal rules (`---`) between major sections.
+
+*DECISIONS.md* — `# Decisions` → one entry per decision: `### Title` / `**When:** YYYY-MM-DD` / `**Why:** ...` / `**Trade-off:** ...` / optionally `> ⚠️ Superseded — reason`. Horizontal rule between entries.
+
+*CODE_POINTERS.md* — `# Code Pointers` → grouped `## Section` headers → markdown tables with two columns: `| What | Where |`. Paths formatted as inline code, functions as `` `file.py` → `FunctionName()` ``.
+
+*CONVENTIONS.md* — `# Conventions` → `## Section` headers → rule descriptions as prose or short bullet lists. No tables.
+
+*BACKLOG.md* — `# Backlog` → `## Next Up` → `## Known Gaps / Tech Debt` → `## Done`. Items as `- [ ] **Title** — description` (open) or `- [x] **Title** — description` (done).
+
+*NOTES.md* — `# Notes` → `<!-- Append-only. Newest entries at top. -->` → entries as `## Session: YYYY-MM-DD` (or `## Session: YYYY-MM-DD (continued)`) → three subsections: `### What we worked on` / `### Decisions made` / `### Still unresolved`. Single-line bullets only.
+
+---
 
 For each file, **correct or remove stale entries identified in Step 2 before appending anything new**. Stale entries that survive are worse than no entries — they actively mislead future sessions.
 
@@ -153,4 +181,5 @@ Also updated:
 - **Preserve NOTES.md history** — never edit or delete previous session entries in NOTES.md. It's append-only. (Other files *should* be corrected when stale.)
 - **Minimal updates** — don't touch files that didn't change. If the session was just a bug fix with no architectural impact, only NOTES.md and maybe BACKLOG.md need updating.
 - **Accurate pointers** — if updating CODE_POINTERS.md, verify line numbers against the actual files before writing them.
+- **Normalize on first touch** — if a file's format doesn't match the canonical structure, fix it in the same pass. Don't leave old formatting for "later". A poorly formatted second brain is nearly as bad as no second brain.
 - **No busywork entries** — skip trivially obvious things. Focus on what a future session would benefit from knowing.
