@@ -95,25 +95,52 @@ it in the same pass as the staleness corrections. Then append new content.
 
 **Canonical formats:**
 
-*All files except NOTES.md* — must have YAML front matter:
+*All files except NOTES.md* — must open with YAML front matter, followed immediately by an embedded format comment:
 ```
 ---
 summary: "One-line description of what this file contains"
 read_when: "When a future agent should read this file"
 ---
+<!-- Format: [one-line spec for this file — see per-file specs below] -->
 ```
 
-*ARCHITECTURE.md* — `# Architecture` → `## What This System Does` → `## Component Map` (directory tree in code block) → `## Data Flow` (flow diagram in code block) → additional sections as needed. Horizontal rules (`---`) between major sections.
+*ARCHITECTURE.md*
+```
+<!-- Format: ## What This System Does → ## Component Map (directory tree in code block) → ## Data Flow (flow diagram in code block) → additional ## sections as needed. Horizontal rules (---) between major sections. -->
+```
+Sections: `# Architecture` → `## What This System Does` → `## Component Map` → `## Data Flow` → additional sections. Horizontal rules (`---`) between major sections.
 
-*DECISIONS.md* — `# Decisions` → one entry per decision: `### Title` / `**When:** YYYY-MM-DD` / `**Why:** ...` / `**Trade-off:** ...` / optionally `> ⚠️ Superseded — reason`. Horizontal rule between entries.
+*DECISIONS.md*
+```
+<!-- Format per entry: ### Title / **When:** YYYY-MM-DD / **Why:** ... / **Trade-off:** ... / optional > ⚠️ Superseded — reason (immediately after the entry, before the next ---). Horizontal rule (---) between entries. -->
+```
+Structure: `# Decisions` → one `### Title` block per decision, horizontal rule between entries.
 
-*CODE_POINTERS.md* — `# Code Pointers` → grouped `## Section` headers → markdown tables with two columns: `| What | Where |`. Paths formatted as inline code, functions as `` `file.py` → `FunctionName()` ``.
+*CODE_POINTERS.md*
+```
+<!-- Format: ## Section headers → | What | Where | tables. Paths as inline code, functions as `file.py` → `FunctionName()`. -->
+```
+Structure: `# Code Pointers` → grouped `## Section` headers → `| What | Where |` tables.
 
-*CONVENTIONS.md* — `# Conventions` → `## Section` headers → rule descriptions as prose or short bullet lists. No tables.
+*CONVENTIONS.md*
+```
+<!-- Format: ## Section headers → rules as prose or short bullet lists. No tables. -->
+```
+Structure: `# Conventions` → `## Section` headers → prose or bullets.
 
-*BACKLOG.md* — `# Backlog` → `## Next Up` → `## Known Gaps / Tech Debt` → `## Done`. Items as `- [ ] **Title** — description` (open) or `- [x] **Title** — description` (done).
+*BACKLOG.md*
+```
+<!-- Format: ## Next Up → ## Known Gaps / Tech Debt → ## Done. Items as: - [ ] **Title** — description (open) or - [x] **Title** — description (done). -->
+```
+Structure: `# Backlog` → `## Next Up` → `## Known Gaps / Tech Debt` → `## Done`.
 
-*NOTES.md* — `# Notes` → `<!-- Append-only. Newest entries at top. -->` → entries as `## Session: YYYY-MM-DD` (or `## Session: YYYY-MM-DD (continued)`) → three subsections: `### What we worked on` / `### Decisions made` / `### Still unresolved`. Single-line bullets only.
+*NOTES.md* — no front matter. Opens with:
+```
+# Notes
+
+<!-- Append-only. Newest entries at top. -->
+<!-- Format per session: ## Session: YYYY-MM-DD (add "(continued)" if second entry same day) → ### What we worked on / ### Decisions made / ### Still unresolved. Single-line bullets only. Never edit or delete past entries. -->
+```
 
 ---
 
