@@ -2,6 +2,21 @@
 
 <!-- Append-only. Newest entries at top. -->
 
+## Session: 2026-02-22 (continued)
+
+### What we worked on
+- **Pass B added to `update-second-brain`** — staleness audit now has two passes: Pass A (session-scope, existing behaviour) + Pass B (code-verification: read actual source files to catch latent inaccuracies from prior sessions — wrong env vars, stale module descriptions, mismatched function names)
+- **Two-copy skill drift resolved** — OpenClaw workspace `SKILL.md` files for the 4 shared skills (agent-review, init-second-brain, load-second-brain, update-second-brain) replaced with symlinks pointing to `agentic_engineering/skills/*.md`. Single source of truth; Pi auto-reflects dev branch on `git pull`.
+- Dev branch synced with main (two accumulated PR merge commits)
+
+### Decisions made
+- `agentic_engineering/skills/` is the canonical source of truth for shared skills; OpenClaw workspace copies are symlinks, not independent files
+- Pass B (code-verification) is now a required part of the staleness audit — session memory alone misses latent inaccuracies
+
+### Still unresolved
+- Claude Code stop hook schema not yet verified against a real project
+- `.cursorrules` reference in `second-brain-hooks.md` may be outdated
+
 ## Session: 2026-02-22
 
 ### What we worked on
