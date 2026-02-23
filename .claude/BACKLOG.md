@@ -6,21 +6,7 @@ read_when: "Before starting new work — check if it's already planned"
 
 # Backlog
 
-## Open
-
-- [x] **Fix stale `AGENTS.md` row in `CLAUDE.md`** — Updated description to reflect that
-  `AGENTS.md` is now the global entry point for Codex and AGENTS.md-aware agents, not an
-  OpenClaw-specific file. (`CLAUDE.md` → Structure section)
-
-- [x] **Reconcile `trash > rm` vs `-i` flag rule** — Shell section now leads with `trash`
-  preference and falls back to `rm -i` only if `trash` is unavailable. Cross-reference
-  established; both sections are consistent. (`CODING_STANDARDS.md`)
-
-- [x] **5 skills listed in slash command index have no backing command files** —
-  Resolved by moving the 5 actual commands (`/check`, `/commit`, `/implement`, `/pr`,
-  `/security-check`) from `docs/slash-commands/` to `.claude/commands/` (where Claude Code
-  scans). The README index now clearly separates slash commands from skills, and the 5
-  skill-based entries are labeled as "invoke by name, not slash command".
+## Next Up
 
 - [ ] **Verify Claude Code `settings.json` stop hook schema** — `docs/second-brain-hooks.md`
   shows the hook registration format but it should be tested against a real project to
@@ -32,6 +18,13 @@ read_when: "Before starting new work — check if it's already planned"
 
 ## Done
 
+- [x] **Fix stale `AGENTS.md` row in `CLAUDE.md`** — Updated description to reflect that
+  `AGENTS.md` is now the global entry point for Codex and AGENTS.md-aware agents, not an
+  OpenClaw-specific file. (`CLAUDE.md` → Structure section)
+- [x] **Reconcile `trash > rm` vs `-i` flag rule** — Shell section now leads with `trash`
+  preference and falls back to `rm -i` only if `trash` is unavailable. (`CODING_STANDARDS.md`)
+- [x] **5 skills listed in slash command index have no backing command files** — Moved to
+  `.claude/commands/`; README index now separates slash commands from skills.
 - [x] Remove dead `/context-prime` from slash command index
 - [x] Fix `_validate_llm_output()` — pure function, `dict[str, Any]`, no in-place mutation
 - [x] Replace silent LLM parse failure fallback with propagate + clamping distinction note
