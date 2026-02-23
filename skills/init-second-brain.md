@@ -86,18 +86,14 @@ Each file has a specific purpose. Populate with what you learned in Step 1:
 Create a CLAUDE.md at the project root (not inside `.claude/`). This file is auto-loaded by Claude Code at the start of every session, so it acts as the entry point to the knowledge base. It should contain:
 
 - Project name and one-line description
-- A **Session Start Checklist** section:
-  1. If `.claude/.pending-update` exists — run `update-second-brain` to record the previous session, then delete the file
-  2. If this is a non-trivial session — run `load-second-brain` to load full context
+- A note: "If context is needed for a non-trivial session, run the `load-second-brain` skill explicitly."
 - A reminder: "Before ending any session, say 'update second brain'"
 - A quick reference section with the most common dev commands (test, lint, build, infra)
 - Key paths section pointing to the main source directories
 
-Keep it short — this is a pointer and cheat sheet, not the full knowledge base. The detail lives in the .claude/ files.
+Keep it short — this is a pointer and cheat sheet, not the full knowledge base. The detail lives in the .claude/ files. Do not include auto-load instructions or session start checklists — context should be loaded on demand, not automatically.
 
 If a project-level CLAUDE.md already exists, add the Second Brain section to it rather than overwriting it and let the user know if it can be merged together.
-
-Also add `.claude/.pending-update` to the project's `.gitignore` if one exists — it's a runtime marker, not source.
 
 ### Step 5: Summary
 

@@ -7,13 +7,7 @@ Owner: Paul Diaz (@PaulMDiaz)
 
 ## Second Brain
 
-If `.claude/` exists in this project, load it at the start of non-trivial sessions:
-- `.claude/ARCHITECTURE.md` — codebase shape
-- `.claude/NOTES.md` — recent session history
-- `.claude/BACKLOG.md` — open items and tech debt
-- `.claude/DECISIONS.md` — settled choices and rationale
-
-If `.claude/.pending-update` exists: run `update-second-brain` first, then delete the file.
+If context is needed for a non-trivial session, run the `load-second-brain` skill explicitly.
 
 Before ending any session: say "update second brain" to record what we worked on.
 
