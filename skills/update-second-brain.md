@@ -24,14 +24,24 @@ If any file doesn't exist, skip it (the knowledge base may be partial).
 
 ### Step 2: Staleness audit (read-back)
 
-Before writing anything new, review each existing knowledge file against what you know from this session:
+Before writing anything new, audit each knowledge file for accuracy. Two passes are required:
 
+**Pass A — Session-scope audit**
 For each entry in **DECISIONS.md**, **ARCHITECTURE.md**, **CONVENTIONS.md**, **CODE_POINTERS.md**, and **BACKLOG.md**, ask:
 - **Is this still true?** — Did the session reverse, supersede, or contradict it?
 - **Is this still accurate?** — Did a rename, refactor, or dependency change make it wrong?
 - **Is this still relevant?** — Did we remove the feature/module this entry describes?
 
-Flag anything that needs correction. You'll fix it in Step 5 (NOTES.md in Step 4 is append-only and not subject to staleness correction).
+**Pass B — Code-verification audit**
+For any claim that can be checked against the actual codebase, read the relevant source file and verify it. Don't rely on session memory alone — latent inaccuracies from prior sessions won't surface otherwise. Specifically:
+
+- **ARCHITECTURE.md** — verify env var names against the main entry point, component names against the source directory, module descriptions against actual module docstrings, data flow steps against the main processing function
+- **CODE_POINTERS.md** — verify every file path exists, every function name exists in that file; check that status annotations ("not yet wired", "mocked in tests") still match reality
+- **DECISIONS.md** — verify status claims against code (e.g. "removed from X", "replaced by Y", "not yet implemented") by reading the referenced files
+- **CONVENTIONS.md** — verify tool commands still work (check that referenced CLI commands and flags match `pyproject.toml`, `Makefile`, or equivalent)
+- **BACKLOG.md** — for checked-off items `- [x]`, verify the work is actually present in the codebase; for open items, verify descriptions still match current state
+
+Flag anything that needs correction. You'll fix it in Step 5 (NOTES.md in Step 4 is append-only and is not subject to either audit pass).
 
 Also check **project-root files** that are in scope but outside `.claude/`:
 - `AGENTS.md` (if it exists) — stack, dev commands, test commands
@@ -137,6 +147,7 @@ Also updated:
 ## Guidelines
 
 - **Don't skip the staleness audit** — write-forward without read-back lets old entries rot silently. A stale DECISIONS.md entry is actively worse than no entry.
+- **Do the code-verification pass (Pass B)** — session memory only catches regressions introduced this session. Latent inaccuracies from earlier sessions (wrong env vars, stale module descriptions, mismatched function names) only surface when you check the actual files.
 - **Don't fabricate** — only record things that actually happened in the conversation. If unsure, be conservative.
 - **Be concise** — session notes should be scannable, not exhaustive. One line per bullet.
 - **Preserve NOTES.md history** — never edit or delete previous session entries in NOTES.md. It's append-only. (Other files *should* be corrected when stale.)
