@@ -84,7 +84,6 @@ Rules:
 - Use today's date (`run date` to get it)
 - If there's already an entry for today, add a "(continued)" suffix to distinguish
 - Be specific — mention file names, function names, feature names
-- Keep each bullet to one line
 - Decisions should capture the "why" not just the "what"
 
 ### Step 5: Update other files (normalize format, correct stale entries, then add new)
@@ -204,7 +203,7 @@ Also updated:
 - **Don't skip the staleness audit** — write-forward without read-back lets old entries rot silently. A stale DECISIONS.md entry is actively worse than no entry.
 - **Do the code-verification pass (Pass B)** — session memory only catches regressions introduced this session. Latent inaccuracies from earlier sessions (wrong env vars, stale module descriptions, mismatched function names) only surface when you check the actual files.
 - **Don't fabricate** — only record things that actually happened in the conversation. If unsure, be conservative.
-- **Be concise** — session notes should be scannable, not exhaustive. One line per bullet.
+- **Be concise** — session notes should be scannable, not exhaustive.
 - **Preserve NOTES.md history** — never edit or delete previous session entries in NOTES.md. It's append-only. (Other files *should* be corrected when stale.)
 - **Minimal updates** — don't touch files that didn't change. If the session was just a bug fix with no architectural impact, only NOTES.md and maybe BACKLOG.md need updating.
 - **Accurate pointers** — if updating CODE_POINTERS.md, verify line numbers against the actual files before writing them.
