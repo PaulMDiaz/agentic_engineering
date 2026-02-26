@@ -1,96 +1,119 @@
 ---
 name: update-second-brain
-description: Update the .claude/ knowledge base with changes from this session. Use at end of session or when asked to update project notes. Lightweight — only touches files that actually changed. No ceremonial audit.
+description: Update the .claude/ knowledge base with changes from this session. Use at end of session or when asked to update project notes. Verifies accuracy of entries related to touched files, then updates. Works with any agent (Claude Code, Cursor, OpenClaw).
 argument-hint: "[optional: focus area or notes to include]"
 ---
 
 # Update Second Brain
 
-Record what changed this session into the .claude/ knowledge base. This is the lightweight complement to init-second-brain (creates it) and load-second-brain (reads it).
+Record what changed this session into the .claude/ knowledge base. Verifies accuracy
+of affected entries before writing — keeps the knowledge base trustworthy for all agents,
+including those without conversation history (e.g. Cursor).
 
-## Philosophy
+## Why Accuracy Matters
 
-Update organically, not ceremonially. Only touch files that actually need changes. The git log handles session history — the second brain handles decisions, pointers, and structure.
+Agents without full conversation context (Cursor, Codex, fresh Claude Code sessions) rely
+on these files as their primary source of truth. A stale CODE_POINTERS.md entry or wrong
+ARCHITECTURE.md claim actively misleads. Every update pass must verify what it touches.
 
 ## Process
 
-### Step 1: Reflect on the session
+### Step 1: Identify what changed
 
-Review the conversation to identify what changed:
+Get the list of files modified this session:
 
-1. **Decisions made** — any choices about approach, architecture, tools, patterns, or trade-offs?
-2. **New files or functions** — did we add, rename, or remove important code?
-3. **Structural changes** — did the codebase shape change? New modules, services, data flow?
-4. **Backlog changes** — items completed, new items discovered, priorities shifted?
-5. **Convention changes** — new patterns established, rules changed?
+```bash
+git diff --name-only main
+```
 
-If the user provided additional notes when invoking this skill, incorporate that context.
+Or if working on the same branch across sessions:
+```bash
+git diff --name-only HEAD~N  # where N = approximate commits this session
+```
 
-### Step 2: Update only what changed
+This scopes the verification — you only need to verify entries related to files you touched.
 
-For each file, only update if the session produced relevant changes:
+### Step 2: Reflect on the session
 
-**DECISIONS.md** (core — most likely to need updating)
-- Append new entries when a non-trivial choice was made
+Review the conversation (or git log if conversation is unavailable) to identify:
+
+1. **Decisions made** — choices about approach, architecture, tools, trade-offs
+2. **New files or functions** — added, renamed, or removed
+3. **Structural changes** — new modules, services, tables, data flow changes
+4. **Backlog changes** — items completed, discovered, or reprioritized
+5. **Convention changes** — new patterns established or rules changed
+
+### Step 3: Scoped verification
+
+For each knowledge base file, verify entries that reference the changed files. Do not
+verify the entire file — only the intersection of "what the file claims" and "what you
+touched."
+
+**CODE_POINTERS.md** (most likely to drift)
+- For each changed file: find CODE_POINTERS entries referencing it
+- Verify: file still exists, function/class names are correct, line numbers are approximately right
+- Fix stale entries, add new entries for important new files/functions, remove entries for deleted code
+- If line numbers shifted significantly, update them
+
+**ARCHITECTURE.md** (verify claims about touched areas)
+- For each changed module/component: find ARCHITECTURE.md sections describing it
+- Verify: module descriptions match actual code, data flow steps are in the right order, component names match reality
+- Only update when structural shape changed (new component, new table, new data flow step)
+- Do NOT update for bug fixes or minor features within existing structure
+
+**DECISIONS.md** (verify status claims)
+- For entries that reference changed files: verify status claims ("removed X", "replaced by Y", "not yet implemented") against actual code
+- Mark superseded decisions: append `> ⚠️ Superseded — reason` below the entry
+- Add new entries for decisions made this session
 - Format: `### Title` / `**When:** YYYY-MM-DD` / `**Why:** ...` / `**Trade-off:** ...`
-- Horizontal rule (`---`) between entries
-- If a previous decision was superseded, append `> ⚠️ Superseded — reason` below it
 
-**CODE_POINTERS.md** (core — update when code moves)
-- Add entries for new important files, functions, or entry points
-- Remove entries for deleted files
-- Fix stale paths/function names if you notice them (verify against actual files)
-
-**ARCHITECTURE.md** (only on structural changes)
-- Update when: new module, new service, new table, changed data flow
-- Do NOT update for: bug fixes, small features, refactors within existing structure
-- When updating, verify claims against actual code — this file drifts
+**CONVENTIONS.md** (rarely drifts)
+- Only verify if conventions-related files changed (linter config, CI, Makefile, pyproject.toml)
+- Verify tool commands still match config (e.g. `ruff check .` still works)
+- Update when patterns change
 
 **BACKLOG.md** (update as items change)
 - Check off completed items: `- [x]`
 - Add newly discovered items
-- Remove items that are no longer relevant
+- Remove items no longer relevant
+- No verification needed — backlog is forward-looking
 
-**CONVENTIONS.md** (rarely needs updating)
-- Only update when a new pattern is explicitly established or a rule changes
+**Project-root files** (`AGENTS.md`, `CLAUDE.md`)
+- Only update if dev commands, stack references, or entry points changed
 
-**Project-root files** (`AGENTS.md`, `CLAUDE.md`) — only if dev commands, stack, or entry point references changed.
+### Step 4: Write updates
 
-### Step 3: Verify before writing
+Apply all changes in one pass per file. Verify before writing — read the actual source
+file to confirm any claim you're about to add or correct.
 
-For any claim you're about to write:
-- **Code pointers**: verify the file exists and the function is in it
-- **Architecture claims**: read the actual source to confirm
-- **Decision status claims**: check the code matches ("removed X", "replaced by Y")
-
-Don't write things you haven't verified. A wrong entry is worse than no entry.
-
-### Step 4: Commit the updates
-
-After updating, commit the .claude/ changes with a descriptive message:
-
+Then commit:
 ```bash
 git add .claude/
-git commit -m "docs: update second brain — <brief summary of what changed>"
+git commit -m "docs: update second brain — <brief summary>"
 ```
 
 ### Step 5: Summary
 
-Briefly tell the user what was updated:
+Tell the user what was updated and what was verified:
 
 ```
 Updated:
-- DECISIONS.md — added entry for <decision>
-- CODE_POINTERS.md — added <new file> references
+- CODE_POINTERS.md — added cli.py entries, fixed store line numbers
+- DECISIONS.md — added batch commits decision
+
+Verified (no changes needed):
+- ARCHITECTURE.md — data flow still accurate for touched modules
 ```
 
-If nothing needed updating, say so: "Nothing changed in the knowledge base this session."
+If nothing needed updating: "Verified entries for touched files — knowledge base is current."
 
 ## Guidelines
 
-- **Skip files that didn't change** — don't touch ARCHITECTURE.md for a bug fix session.
-- **No session notes** — the git log handles this. Don't recreate NOTES.md behavior.
-- **Verify before writing** — check actual files for code pointers and architecture claims.
+- **Always verify what you touch** — the scoped check is cheap and prevents rot.
+- **Don't verify everything** — full-file audits are expensive and rarely catch issues in untouched areas.
+- **No session notes** — git log handles session history. Use the `git-recap` skill.
+- **Verify before writing** — read actual source files to confirm claims. Don't write from memory.
 - **Be concise** — entries should be scannable. Tables and bullets over prose.
-- **Minimal commits** — one commit for all .claude/ changes, not one per file.
+- **One commit** for all .claude/ changes, not one per file.
 - **Don't fabricate** — only record things that actually happened.
+- **When in doubt, check the code** — a Cursor agent will trust what you write here. Get it right.

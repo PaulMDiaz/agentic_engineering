@@ -108,19 +108,21 @@ real project (osint-alert-agent), assessed what actually provides value vs cerem
 - **The full update ritual** — 5-10 minutes of tokens per session. The staleness audit
   (Pass A + Pass B) catches real drift but the fixes are mechanical, not insightful.
 
-**New approach:** Update organically, not ceremonially.
-- DECISIONS.md: update when a decision is made
-- CODE_POINTERS.md: update when files/functions change
-- ARCHITECTURE.md: update only when system shape changes (new component, new table, new
-  data flow) — not every session
-- NOTES.md: drop entirely, use git log
-- BACKLOG.md: keep, update as items complete or are discovered
-- CONVENTIONS.md: keep, update when patterns change
-- Stop running the full update-second-brain skill every session
+**New approach:** Scoped verification replaces full audit.
+- DECISIONS.md + CODE_POINTERS.md = core files, always maintained
+- NOTES.md: dropped — git log is the source of truth (`git-recap` skill for summaries)
+- ARCHITECTURE.md: kept but only updated on structural changes, not every session
+- BACKLOG.md + CONVENTIONS.md: kept, updated as needed
+- update-second-brain still runs at end of session — but instead of Pass A/B full audit,
+  it scopes verification to entries referencing files touched this session (`git diff --name-only`)
+- This catches the most likely drift (things break where you just worked) at a fraction
+  of the cost of verifying everything
 
-**Trade-off:** Risk of ARCHITECTURE.md going stale between structural changes. Acceptable —
-agents can read the actual code, and humans can request an architecture refresh when needed.
-Saves significant token cost and session time.
+**Trade-off:** Entries for untouched files won't be verified — could drift over time.
+Acceptable because: (1) untouched files are unlikely to have changed, (2) they'll get
+verified when someone eventually touches them, (3) full audits can be requested explicitly.
+Significant token savings while keeping the knowledge base trustworthy for all agents
+(Cursor, Codex, fresh Claude Code sessions) that rely on it without conversation history.
 
 ---
 
