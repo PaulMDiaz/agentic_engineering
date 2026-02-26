@@ -60,6 +60,7 @@ Rules:
 - Fix root cause, not band-aid.
 - Make minimal, focused changes — solve the problem, nothing extra.
 - Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
+- When you notice refactoring opportunities during work: flag them. Don't silently act on them — mention them to the user or add to `.claude/BACKLOG.md`. Let the human decide scope.
 - Comments in English only.
 - CI: `gh run list/view`, fix until green before handoff.
 - Before handoff: run full gate (lint/typecheck/tests).
