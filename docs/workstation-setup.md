@@ -53,18 +53,25 @@ every Cursor project.
 
 ## Step 3: Install global skills (symlink)
 
-Skills live in the playbook's `skills/` folder. There's no global skills directory in
-Cursor, so we make them available via a known path that AGENTS.md can reference:
+Cursor reads skills from `~/.cursor/skills/`. Symlink each skill file directly
+(Cursor doesn't pick up skills in subdirectories):
 
 ```bash
-# Create a global skills directory
+# Create the global skills directory if it doesn't exist
 mkdir -p ~/.cursor/skills
 
-# Symlink the skills folder
-ln -sf ~/Documents/development/agentic_engineering/skills ~/.cursor/skills/agentic
+# Symlink each skill
+ln -sf ~/Documents/development/agentic_engineering/skills/agent-review.md ~/.cursor/skills/agent-review.md
+ln -sf ~/Documents/development/agentic_engineering/skills/diff-summary.md ~/.cursor/skills/diff-summary.md
+ln -sf ~/Documents/development/agentic_engineering/skills/git-recap.md ~/.cursor/skills/git-recap.md
+ln -sf ~/Documents/development/agentic_engineering/skills/implement.md ~/.cursor/skills/implement.md
+ln -sf ~/Documents/development/agentic_engineering/skills/init-second-brain.md ~/.cursor/skills/init-second-brain.md
+ln -sf ~/Documents/development/agentic_engineering/skills/load-second-brain.md ~/.cursor/skills/load-second-brain.md
+ln -sf ~/Documents/development/agentic_engineering/skills/security-check.md ~/.cursor/skills/security-check.md
+ln -sf ~/Documents/development/agentic_engineering/skills/update-second-brain.md ~/.cursor/skills/update-second-brain.md
 ```
 
-Now skills are available at `~/.cursor/skills/agentic/agent-review.md`, etc.
+Now skills appear in Cursor Settings → Skills and can be invoked with `/skill-name`.
 
 ## Step 4: Install global coding standards
 
@@ -73,55 +80,64 @@ Now skills are available at `~/.cursor/skills/agentic/agent-review.md`, etc.
 ln -sf ~/Documents/development/agentic_engineering/CODING_STANDARDS.md ~/.cursor/CODING_STANDARDS.md
 ```
 
-## Step 5: Per-repo AGENTS.md (one-time, per project)
+## Step 5: Install global rules (Cursor)
 
-Each repo needs a small `AGENTS.md` at its root that points to the global playbook.
-Create this file in each project:
+Cursor reads rules from `~/.cursor/rules/`. Create a global rule that loads
+the coding standards:
 
-```markdown
+```bash
+# Create the global rules directory
+mkdir -p ~/.cursor/rules
+
+# Create a global rule file
+cat > ~/.cursor/rules/agentic-engineering.md << 'EOF'
+---
+description: "Agentic engineering playbook — coding standards and conventions"
+globs:
+alwaysApply: true
+---
+
 # Coding Standards
 
-Read `~/.cursor/CODING_STANDARDS.md` before doing any coding work.
+Read and follow `~/.cursor/CODING_STANDARDS.md` for all coding work.
 
-## Skills
+Key rules:
+- Pure functions (no mutation of inputs)
+- No default parameter values
+- Strong typing (avoid `Any`)
+- No silent fallbacks
+- Conventional commits
+- `.env` first in `.gitignore`
+- `trash` > `rm`
 
-The following skills are available at `~/.cursor/skills/agentic/`:
-
-| Skill | File | Use when |
-|-------|------|----------|
-| agent-review | agent-review.md | Reviewing a PR or branch |
-| diff-summary | diff-summary.md | Understanding what a diff does |
-| git-recap | git-recap.md | Summarizing recent work |
-| init-second-brain | init-second-brain.md | Bootstrapping .claude/ for this project |
-| load-second-brain | load-second-brain.md | Loading project context at session start |
-| update-second-brain | update-second-brain.md | Recording session work into .claude/ |
-
-To use a skill: "Run the agent-review skill from ~/.cursor/skills/agentic/agent-review.md"
-
-## Knowledge Base
-
-If this project has a `.claude/` directory, run `load-second-brain` at the start of
-non-trivial sessions.
-
-Update DECISIONS.md when making decisions, CODE_POINTERS.md when adding files/functions.
+For project-specific conventions, check `.claude/CONVENTIONS.md` if it exists.
+EOF
 ```
 
-### Quick setup script
+This rule appears in Cursor Settings → Rules and applies to all projects.
 
-To create the AGENTS.md in a project:
+## Step 6: Per-repo AGENTS.md (optional)
+
+If you want per-repo context beyond the global rules, create an `AGENTS.md` at the
+project root. This is optional since the global rule now handles coding standards.
 
 ```bash
 # From inside any project repo
 cp ~/Documents/development/agentic_engineering/docs/templates/AGENTS-project.md ./AGENTS.md
 ```
 
-## Step 6: Verify
+## Step 7: Verify
 
-Open any project in Cursor and test:
+Open Cursor Settings and check:
 
-1. Type `/` — you should see check, commit, implement, pr, security-check
-2. Ask Cursor to "run the agent-review skill" — it should find and read the file
-3. Ask Cursor to read CODING_STANDARDS.md — it should find the global copy
+1. **Rules** — "agentic-engineering" should appear and be enabled
+2. **Skills** — all 8 skills should appear (agent-review, diff-summary, etc.)
+3. **Commands** — type `/` in chat to see check, commit, implement, pr, security-check
+
+Test in a project:
+- `/check` should run the quality gate command
+- `/agent-review` should invoke the skill
+- Ask "read the coding standards" — it should find `~/.cursor/CODING_STANDARDS.md`
 
 ## Updating
 
@@ -146,13 +162,24 @@ rm -f ~/.cursor/commands/implement.md
 rm -f ~/.cursor/commands/pr.md
 rm -f ~/.cursor/commands/security-check.md
 
-# Remove global skills and coding standards
-rm -f ~/.cursor/skills/agentic
+# Remove global skills
+rm -f ~/.cursor/skills/agent-review.md
+rm -f ~/.cursor/skills/diff-summary.md
+rm -f ~/.cursor/skills/git-recap.md
+rm -f ~/.cursor/skills/implement.md
+rm -f ~/.cursor/skills/init-second-brain.md
+rm -f ~/.cursor/skills/load-second-brain.md
+rm -f ~/.cursor/skills/security-check.md
+rm -f ~/.cursor/skills/update-second-brain.md
+
+# Remove global rules and coding standards
+rm -f ~/.cursor/rules/agentic-engineering.md
 rm -f ~/.cursor/CODING_STANDARDS.md
 
 # Clean up empty directories (only removes if empty)
 rmdir ~/.cursor/commands 2>/dev/null
 rmdir ~/.cursor/skills 2>/dev/null
+rmdir ~/.cursor/rules 2>/dev/null
 ```
 
 Per-repo AGENTS.md files can be deleted individually or left in place — they're
