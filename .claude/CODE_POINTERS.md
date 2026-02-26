@@ -55,11 +55,6 @@ read_when: "You need to find where something lives"
 
 | What | Where |
 |---|---|
-| LLM classifier output validation pattern | `docs/llm-classifier-security.md` |
-| `_validate_llm_output()` pure function example | `docs/llm-classifier-security.md` → Implementation |
-| JSON parse failure handling | `docs/llm-classifier-security.md` → Handling JSON Parsing Failures |
-| Prompt injection defense layers (L1–L4) | `docs/prompt-injection-defense.md` |
-| XML delimiter pattern | `docs/prompt-injection-defense.md` → Defense Layer 1 |
 | Claude Code Stop hook registration | `docs/second-brain-hooks.md` → Claude Code |
 | Cursor session-end automation | `docs/second-brain-hooks.md` → Cursor |
 | Tool catalog (gh, git, claude CLI, quality gates) | `tools.md` |

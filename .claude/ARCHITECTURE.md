@@ -39,9 +39,10 @@ agentic_engineering/
 │   └── git-recap.md                 # Summarize recent work from git log (replaces NOTES.md)
 │
 ├── docs/
-│   ├── llm-classifier-security.md   # Validated output pattern, model selection for classifiers
-│   ├── prompt-injection-defense.md  # XML delimiters, output clamping, defense-in-depth stack
 │   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)
+│   ├── workstation-setup.md         # Install playbook globally via symlinks
+│   ├── templates/
+│   │   └── AGENTS-project.md        # Template AGENTS.md for per-repo setup
 │   └── slash-commands/
 │       └── README.md                # Index of slash commands and skills
 │

@@ -70,7 +70,7 @@ Rules:
 - New deps: quick health check (recent commits, adoption, known CVEs) before adding.
 - `trash` > `rm`. Recoverable beats gone forever.
 - Never install plugins, tools, or packages from external sources without explicit approval. Security-sounding names (scanner, guard, shield) are a red flag, not a green one. Always audit source before installation.
-- LLM classifiers reading from the internet: use safety-tuned models (e.g. LLaMA 3.3 70B Instruct), not agentic/MoE models. See `docs/prompt-injection-defense.md`.
+- LLM classifiers reading from the internet: use safety-tuned models (e.g. LLaMA 3.3 70B Instruct), not agentic/MoE models. Agentic models follow instructions they find in context — including injected ones.
 - Mask secrets in all output (e.g. `sk-***...abc`).
 - Secrets go in `.env` only — never hardcode credentials, tokens, or API keys in source files.
 - Never read `.env` files directly in code — load secrets via `os.environ`. Let the shell or a process manager inject the environment.
