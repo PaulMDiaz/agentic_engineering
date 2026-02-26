@@ -134,6 +134,32 @@ git pull
 
 That's it. Symlinks mean every repo picks up changes immediately.
 
+## Uninstall
+
+To cleanly remove all global symlinks and go back to a clean slate:
+
+```bash
+# Remove global slash commands
+rm -f ~/.cursor/commands/check.md
+rm -f ~/.cursor/commands/commit.md
+rm -f ~/.cursor/commands/implement.md
+rm -f ~/.cursor/commands/pr.md
+rm -f ~/.cursor/commands/security-check.md
+
+# Remove global skills and coding standards
+rm -f ~/.cursor/skills/agentic
+rm -f ~/.cursor/CODING_STANDARDS.md
+
+# Clean up empty directories (only removes if empty)
+rmdir ~/.cursor/commands 2>/dev/null
+rmdir ~/.cursor/skills 2>/dev/null
+```
+
+Per-repo AGENTS.md files can be deleted individually or left in place — they're
+harmless without the global symlinks (Cursor will just not find the referenced paths).
+
+The agentic_engineering repo itself is just a normal git clone — delete it whenever.
+
 ## Alternative: Per-repo symlinks (no global install)
 
 If you prefer per-repo setup instead of global symlinks:
