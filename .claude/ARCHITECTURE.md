@@ -30,15 +30,15 @@ agentic_engineering/
 ├── tools.md                         # Tool catalog (gh, git, claude CLI, Python/TS/Shell gates)
 ├── .gitignore
 │
-├── skills/                          # Reusable agent skill prompts (invoke by name, not slash command)
-│   ├── agent-review.md              # Review a branch/PR — inline findings, no file output
-│   ├── diff-summary.md              # Walk through a diff — what it does and how
-│   ├── git-recap.md                 # Summarize recent work from git log (replaces NOTES.md)
-│   ├── implement.md                 # Methodical task implementation — understand, plan, implement, verify
-│   ├── init-second-brain.md         # Bootstrap .claude/ for a project
-│   ├── load-second-brain.md         # Load .claude/ context at session start
-│   ├── security-check.md            # Security review — what to check, how to report
-│   └── update-second-brain.md       # Record session work into .claude/
+├── skills/                          # Agent Skills (folder per skill, each with SKILL.md)
+│   ├── agent-review/SKILL.md        # Review a branch/PR — inline findings, no file output
+│   ├── diff-summary/SKILL.md        # Walk through a diff — what it does and how
+│   ├── git-recap/SKILL.md           # Summarize recent work from git log (replaces NOTES.md)
+│   ├── implement/SKILL.md           # Methodical task implementation — understand, plan, implement, verify
+│   ├── init-second-brain/SKILL.md   # Bootstrap .claude/ for a project
+│   ├── load-second-brain/SKILL.md   # Load .claude/ context at session start
+│   ├── security-check/SKILL.md      # Security review — what to check, how to report
+│   └── update-second-brain/SKILL.md # Record session work into .claude/
 │
 ├── docs/
 │   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)

@@ -53,25 +53,24 @@ every Cursor project.
 
 ## Step 3: Install global skills (symlink)
 
-Cursor reads skills from `~/.cursor/skills/`. Symlink each skill file directly
-(Cursor doesn't pick up skills in subdirectories):
+Cursor expects skills as folders containing `SKILL.md`. Symlink each skill folder:
 
 ```bash
 # Create the global skills directory if it doesn't exist
 mkdir -p ~/.cursor/skills
 
-# Symlink each skill
-ln -sf ~/Documents/development/agentic_engineering/skills/agent-review.md ~/.cursor/skills/agent-review.md
-ln -sf ~/Documents/development/agentic_engineering/skills/diff-summary.md ~/.cursor/skills/diff-summary.md
-ln -sf ~/Documents/development/agentic_engineering/skills/git-recap.md ~/.cursor/skills/git-recap.md
-ln -sf ~/Documents/development/agentic_engineering/skills/implement.md ~/.cursor/skills/implement.md
-ln -sf ~/Documents/development/agentic_engineering/skills/init-second-brain.md ~/.cursor/skills/init-second-brain.md
-ln -sf ~/Documents/development/agentic_engineering/skills/load-second-brain.md ~/.cursor/skills/load-second-brain.md
-ln -sf ~/Documents/development/agentic_engineering/skills/security-check.md ~/.cursor/skills/security-check.md
-ln -sf ~/Documents/development/agentic_engineering/skills/update-second-brain.md ~/.cursor/skills/update-second-brain.md
+# Symlink each skill folder
+ln -sf ~/Documents/development/agentic_engineering/skills/agent-review ~/.cursor/skills/agent-review
+ln -sf ~/Documents/development/agentic_engineering/skills/diff-summary ~/.cursor/skills/diff-summary
+ln -sf ~/Documents/development/agentic_engineering/skills/git-recap ~/.cursor/skills/git-recap
+ln -sf ~/Documents/development/agentic_engineering/skills/implement ~/.cursor/skills/implement
+ln -sf ~/Documents/development/agentic_engineering/skills/init-second-brain ~/.cursor/skills/init-second-brain
+ln -sf ~/Documents/development/agentic_engineering/skills/load-second-brain ~/.cursor/skills/load-second-brain
+ln -sf ~/Documents/development/agentic_engineering/skills/security-check ~/.cursor/skills/security-check
+ln -sf ~/Documents/development/agentic_engineering/skills/update-second-brain ~/.cursor/skills/update-second-brain
 ```
 
-Now skills appear in Cursor Settings → Skills and can be invoked with `/skill-name`.
+Skills appear in Cursor Settings → Rules (Agent Decides section) and can be invoked with `/skill-name`.
 
 ## Step 4: Install global coding standards
 
@@ -163,14 +162,14 @@ rm -f ~/.cursor/commands/pr.md
 rm -f ~/.cursor/commands/security-check.md
 
 # Remove global skills
-rm -f ~/.cursor/skills/agent-review.md
-rm -f ~/.cursor/skills/diff-summary.md
-rm -f ~/.cursor/skills/git-recap.md
-rm -f ~/.cursor/skills/implement.md
-rm -f ~/.cursor/skills/init-second-brain.md
-rm -f ~/.cursor/skills/load-second-brain.md
-rm -f ~/.cursor/skills/security-check.md
-rm -f ~/.cursor/skills/update-second-brain.md
+rm -f ~/.cursor/skills/agent-review
+rm -f ~/.cursor/skills/diff-summary
+rm -f ~/.cursor/skills/git-recap
+rm -f ~/.cursor/skills/implement
+rm -f ~/.cursor/skills/init-second-brain
+rm -f ~/.cursor/skills/load-second-brain
+rm -f ~/.cursor/skills/security-check
+rm -f ~/.cursor/skills/update-second-brain
 
 # Remove global rules and coding standards
 rm -f ~/.cursor/rules/agentic-engineering.md

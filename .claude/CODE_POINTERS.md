@@ -33,14 +33,14 @@ read_when: "You need to find where something lives"
 
 | What | Where |
 |---|---|
-| Bootstrap `.claude/` for a project | `skills/init-second-brain.md` |
-| Load `.claude/` context at session start | `skills/load-second-brain.md` |
-| Record session work into `.claude/` | `skills/update-second-brain.md` |
-| Review a branch or PR for bugs/inconsistencies | `skills/agent-review.md` |
-| Walk through a diff — goal + approach | `skills/diff-summary.md` |
-| Summarize recent work from git log | `skills/git-recap.md` |
-| Methodical task implementation | `skills/implement.md` |
-| Security review checklist | `skills/security-check.md` |
+| Bootstrap `.claude/` for a project | `skills/init-second-brain/SKILL.md` |
+| Load `.claude/` context at session start | `skills/load-second-brain/SKILL.md` |
+| Record session work into `.claude/` | `skills/update-second-brain/SKILL.md` |
+| Review a branch or PR for bugs/inconsistencies | `skills/agent-review/SKILL.md` |
+| Walk through a diff — goal + approach | `skills/diff-summary/SKILL.md` |
+| Summarize recent work from git log | `skills/git-recap/SKILL.md` |
+| Methodical task implementation | `skills/implement/SKILL.md` |
+| Security review checklist | `skills/security-check/SKILL.md` |
 
 ## Slash Commands
 
