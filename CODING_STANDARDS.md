@@ -60,6 +60,7 @@ Rules:
 - Fix root cause, not band-aid.
 - Make minimal, focused changes — solve the problem, nothing extra.
 - Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
+- When you notice refactoring opportunities during work: flag them. Don't silently act on them — mention them to the user or add to `.claude/BACKLOG.md`. Let the human decide scope.
 - Comments in English only.
 - CI: `gh run list/view`, fix until green before handoff.
 - Before handoff: run full gate (lint/typecheck/tests).
@@ -96,6 +97,14 @@ Rules:
 - `docs/` files with front-matter: `summary`, `read_when`.
 - Update docs when behavior or API changes. No ship without docs.
 - Add `read_when` hints on cross-cutting docs.
+
+## Knowledge Base (.claude/)
+
+- When making a non-trivial decision: add an entry to `.claude/DECISIONS.md` in the same commit.
+- When adding, renaming, or removing files/functions: update `.claude/CODE_POINTERS.md` in the same commit.
+- When the system shape changes (new module, table, data flow): update `.claude/ARCHITECTURE.md`.
+- These files are the source of truth for agents without conversation context. Keep them accurate.
+- If `.claude/` doesn't exist, skip — not all projects use a second brain.
 
 ## CI/CD
 

@@ -6,19 +6,26 @@ argument-hint: "[optional: path to existing analysis/review docs to ingest]"
 
 # Initialize Second Brain
 
-Bootstrap a .claude/ knowledge base for the current project. This creates a structured set of files that act as persistent memory across Claude Code sessions — capturing architecture, decisions, conventions, code pointers, backlog items, and session-by-session notes.
+Bootstrap a .claude/ knowledge base for the current project. This creates a structured set of files that act as persistent memory across coding agent sessions — capturing architecture, decisions, conventions, code pointers, and backlog items. Works for new projects and for migrating existing legacy second brains.
 
 ## Process
 
-### Step 1: Explore the project
+### Step 1: Assess existing state + explore the project
 
-Before creating anything, thoroughly understand the project:
+Check if `.claude/` already exists:
+
+- **No `.claude/`** — fresh init. Proceed normally.
+- **Has `.claude/` with `NOTES.md`** — legacy format. Migrate: rename `NOTES.md` → `NOTES_ARCHIVE.md`. Preserve all other existing files. Only create files that are missing.
+- **Has `.claude/` without `NOTES.md`** — already current format. Only create files that are missing. Don't overwrite existing content.
+
+Always preserve `settings.local.json` and `commands/`.
+
+Then explore the project:
 
 - Read pyproject.toml, package.json, Cargo.toml, or equivalent to understand the tech stack, dependencies, and package structure
 - Scan the source directory structure to understand module organization
 - Read key source files to understand architectural patterns and data flow
 - Read the Makefile, scripts, or CI config to understand dev workflows
-- Check for existing .claude/ content to preserve (especially `settings.local.json`)
 - If the user provided a path or additional notes when invoking this skill, read those too
 
 ### Step 2: Create directory structure
@@ -26,42 +33,36 @@ Before creating anything, thoroughly understand the project:
 ```
 .claude/
 ├── commands/         # Slash commands (Claude Code + Cursor)
-├── NOTES.md          # Session log (append-only, newest first)
-├── ARCHITECTURE.md   # How the codebase is shaped
-├── DECISIONS.md      # Why things are the way they are
-├── CODE_POINTERS.md  # Where to find important things (file:line references)
+├── ARCHITECTURE.md   # How the codebase is shaped (update on structural changes only)
+├── DECISIONS.md      # Why things are the way they are (core file — always maintain)
+├── CODE_POINTERS.md  # Where to find important things (core file — always maintain)
 ├── CONVENTIONS.md    # Rules and patterns to follow (gatekeeping)
 └── BACKLOG.md        # Known issues, planned improvements, tech debt
 ```
 
-Preserve any existing files (especially `settings.local.json`).
+Only create files that don't already exist — never overwrite existing content.
+
+**No NOTES.md** — session history is tracked via git log. Use the `git-recap` skill to summarize recent work.
 
 ### Step 3: Populate knowledge files
 
 Each file has a specific purpose. Populate with what you learned in Step 1:
 
-**NOTES.md** — Session log. Append-only, newest entries at top. Each entry has:
-- `## Session: YYYY-MM-DD`
-- `### What we worked on` — bullet list of activities
-- `### Decisions made` — choices and their rationale
-- `### Still unresolved` — open questions, blocked items
-- Seed with today's session: "Initialized second brain knowledge base"
-
-**ARCHITECTURE.md** — How the codebase is shaped:
+**ARCHITECTURE.md** — How the codebase is shaped (update only when structural changes occur — new modules, new services, changed data flow. Not every session):
 - Module/layer structure with key classes and their relationships
 - Data flow diagrams (ASCII)
 - Infrastructure (services, ports, compose files)
 - Pipeline descriptions (build, deploy, data processing)
 - Keep it scannable — tables and code blocks over prose
 
-**DECISIONS.md** — Context behind settled choices. Each entry:
+**DECISIONS.md** — Core file. The most valuable part of the second brain. Context behind settled choices. Each entry:
 - `### Decision title`
 - **When**: timeframe
 - **Why**: rationale
 - **Trade-off**: what was given up
 - Seed with the most important architectural decisions visible in the code
 
-**CODE_POINTERS.md** — Quick reference to important locations:
+**CODE_POINTERS.md** — Core file. Quick reference to important locations:
 - Organized by subsystem/concern
 - Tables with `| What | Where |` format
 - Include file paths with line numbers where useful
@@ -87,7 +88,7 @@ Create a CLAUDE.md at the project root (not inside `.claude/`). This file is aut
 
 - Project name and one-line description
 - A note: "If context is needed for a non-trivial session, run the `load-second-brain` skill explicitly."
-- A reminder: "Before ending any session, say 'update second brain'"
+- A reminder: "Update DECISIONS.md when making decisions, CODE_POINTERS.md when adding files/functions"
 - A quick reference section with the most common dev commands (test, lint, build, infra)
 - Key paths section pointing to the main source directories
 
@@ -99,9 +100,14 @@ If a project-level CLAUDE.md already exists, add the Second Brain section to it 
 
 Print a tree of everything created and a brief description of each file's contents. Remind the user:
 
-> To update the knowledge base after a work session, say: "update the project notes with what we worked on"
+> Update the knowledge base organically as you work:
+> - **DECISIONS.md** — when a decision is made
+> - **CODE_POINTERS.md** — when files/functions are added or renamed
+> - **ARCHITECTURE.md** — when the system shape changes (new component, table, data flow)
+> - **BACKLOG.md** — when items are completed or discovered
+> - **CONVENTIONS.md** — when patterns change
 >
-> Over time, also update ARCHITECTURE.md, DECISIONS.md, CODE_POINTERS.md, CONVENTIONS.md, and BACKLOG.md as the project evolves.
+> For session history, use the `git-recap` skill to summarize recent work from the git log.
 
 ## Guidelines
 

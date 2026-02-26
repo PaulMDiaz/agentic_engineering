@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  markdown-lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: "**/*.md"
+          config: ".markdownlint.json"
+
+  link-check:
+    name: Link Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for broken links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --exclude-path .claude/NOTES_ARCHIVE.md "**/*.md"
+          fail: true
+
+  duplicates:
+    name: Duplicate Code Detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install jscpd
+        run: npm install -g jscpd
+
+      - name: Run jscpd
+        run: jscpd --min-lines 10 --min-tokens 50 --reporters console --ignore "**/*.json,**/NOTES_ARCHIVE.md" .

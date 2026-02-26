@@ -26,9 +26,11 @@ Walk through the diff and explain what it's trying to accomplish and how.
    gh pr diff <PR_NUMBER>
    ```
 
-2. Read the diff in full before responding.
+2. Read the commit log for the same range (e.g. `git log --oneline main..HEAD`). Commit messages state intent directly — use them to explain *what* and *why* more accurately than inferring from code alone.
 
-3. Answer two questions:
+3. Read the diff in full before responding.
+
+4. Answer two questions:
    - **What is this trying to accomplish?** — the goal, in plain language
    - **What is the approach?** — how it achieves that goal; key decisions and patterns used
 

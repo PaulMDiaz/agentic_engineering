@@ -88,6 +88,44 @@ required validation and must be kept.
 
 ---
 
+### Second brain: slim down to DECISIONS + CODE_POINTERS as core files
+
+**When:** 2026-02-25
+**Why:** After several weeks of running the full second brain ritual (NOTES.md,
+ARCHITECTURE.md, DECISIONS.md, CODE_POINTERS.md, CONVENTIONS.md, BACKLOG.md) on a
+real project (osint-alert-agent), assessed what actually provides value vs ceremony:
+
+- **DECISIONS.md** — most valuable file. Both human and agent forget *why* choices were
+  made. This file prevents re-litigating settled decisions and catches "I was about to
+  suggest X but we already rejected it for Y" moments.
+- **CODE_POINTERS.md** — high value for agents. Fast lookups without grepping. Low
+  maintenance since it only changes when files/functions are added or renamed.
+- **NOTES.md** — redundant with git log. Descriptive commit messages are more accurate
+  and zero maintenance. Session notes drift from reality and are rarely referenced.
+- **ARCHITECTURE.md** — useful as a human onboarding doc but agents verify it against
+  code anyway (staleness audit keeps catching drift). If you have to read the code to
+  trust the docs, the docs aren't saving you much.
+- **The full update ritual** — 5-10 minutes of tokens per session. The staleness audit
+  (Pass A + Pass B) catches real drift but the fixes are mechanical, not insightful.
+
+**New approach:** Scoped verification replaces full audit.
+- DECISIONS.md + CODE_POINTERS.md = core files, always maintained
+- NOTES.md: dropped — git log is the source of truth (`git-recap` skill for summaries)
+- ARCHITECTURE.md: kept but only updated on structural changes, not every session
+- BACKLOG.md + CONVENTIONS.md: kept, updated as needed
+- update-second-brain still runs at end of session — but instead of Pass A/B full audit,
+  it scopes verification to entries referencing files touched this session (`git diff --name-only`)
+- This catches the most likely drift (things break where you just worked) at a fraction
+  of the cost of verifying everything
+
+**Trade-off:** Entries for untouched files won't be verified — could drift over time.
+Acceptable because: (1) untouched files are unlikely to have changed, (2) they'll get
+verified when someone eventually touches them, (3) full audits can be requested explicitly.
+Significant token savings while keeping the knowledge base trustworthy for all agents
+(Cursor, Codex, fresh Claude Code sessions) that rely on it without conversation history.
+
+---
+
 ### review artifacts auto-deleted from main via GitHub Actions
 
 **When:** 2026-02-21

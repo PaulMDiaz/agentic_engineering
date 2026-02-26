@@ -8,6 +8,9 @@ read_when: "Before starting new work — check if it's already planned"
 
 ## Next Up
 
+- [ ] **Verify Claude Code stop hook schema** — `docs/second-brain-hooks.md` simplified to manual-only, but the schema was never tested against a real project. Low priority since we moved away from hooks.
+- [ ] **Verify `.cursorrules` convention** — Cursor has moved to `.cursor/rules/`. `second-brain-hooks.md` reference may be outdated. Check current Cursor docs.
+
 ## Known Gaps / Tech Debt
 
 ## Done

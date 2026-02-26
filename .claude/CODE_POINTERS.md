@@ -38,6 +38,7 @@ read_when: "You need to find where something lives"
 | Record session work into `.claude/` | `skills/update-second-brain.md` |
 | Review a branch or PR for bugs/inconsistencies | `skills/agent-review.md` |
 | Walk through a diff — goal + approach | `skills/diff-summary.md` |
+| Summarize recent work from git log | `skills/git-recap.md` |
 
 ## Slash Commands
 
