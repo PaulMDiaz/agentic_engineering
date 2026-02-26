@@ -88,6 +88,42 @@ required validation and must be kept.
 
 ---
 
+### Second brain: slim down to DECISIONS + CODE_POINTERS as core files
+
+**When:** 2026-02-25
+**Why:** After several weeks of running the full second brain ritual (NOTES.md,
+ARCHITECTURE.md, DECISIONS.md, CODE_POINTERS.md, CONVENTIONS.md, BACKLOG.md) on a
+real project (osint-alert-agent), assessed what actually provides value vs ceremony:
+
+- **DECISIONS.md** — most valuable file. Both human and agent forget *why* choices were
+  made. This file prevents re-litigating settled decisions and catches "I was about to
+  suggest X but we already rejected it for Y" moments.
+- **CODE_POINTERS.md** — high value for agents. Fast lookups without grepping. Low
+  maintenance since it only changes when files/functions are added or renamed.
+- **NOTES.md** — redundant with git log. Descriptive commit messages are more accurate
+  and zero maintenance. Session notes drift from reality and are rarely referenced.
+- **ARCHITECTURE.md** — useful as a human onboarding doc but agents verify it against
+  code anyway (staleness audit keeps catching drift). If you have to read the code to
+  trust the docs, the docs aren't saving you much.
+- **The full update ritual** — 5-10 minutes of tokens per session. The staleness audit
+  (Pass A + Pass B) catches real drift but the fixes are mechanical, not insightful.
+
+**New approach:** Update organically, not ceremonially.
+- DECISIONS.md: update when a decision is made
+- CODE_POINTERS.md: update when files/functions change
+- ARCHITECTURE.md: update only when system shape changes (new component, new table, new
+  data flow) — not every session
+- NOTES.md: drop entirely, use git log
+- BACKLOG.md: keep, update as items complete or are discovered
+- CONVENTIONS.md: keep, update when patterns change
+- Stop running the full update-second-brain skill every session
+
+**Trade-off:** Risk of ARCHITECTURE.md going stale between structural changes. Acceptable —
+agents can read the actual code, and humans can request an architecture refresh when needed.
+Saves significant token cost and session time.
+
+---
+
 ### review artifacts auto-deleted from main via GitHub Actions
 
 **When:** 2026-02-21
