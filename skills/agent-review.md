@@ -111,10 +111,14 @@ If the project has no CODING_STANDARDS.md, skip this section — don't invent ru
 - No graceful shutdown / signal handling
 - Startup failures that don't surface clearly
 
-### Code Duplication
+### Code Duplication & Refactoring Opportunities
 - Repeated logic that could be a shared function
 - Inline constants that should be named
 - Copy-pasted error handling that could be a decorator
+- Functions doing too many things (split candidates)
+- Modules with tangled responsibilities
+- Overly complex conditionals that could be simplified
+- Flag these as `[LOW]` unless the complexity is actively causing bugs or blocking changes (`[MEDIUM]`)
 
 ### Architecture & Design
 - Components instantiated but never used
