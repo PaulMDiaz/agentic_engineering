@@ -2,4 +2,8 @@
 
 Run the `security-check` skill on the current changes.
 
-Read `skills/security-check.md` and follow its process. Report all findings before fixing.
+Read the security-check skill and follow its process. Report all findings before fixing.
+
+Skill location:
+- Global install: `~/.cursor/skills/agentic/security-check.md`
+- Local repo: `skills/security-check.md`

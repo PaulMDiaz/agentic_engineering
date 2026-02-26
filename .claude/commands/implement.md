@@ -2,4 +2,8 @@
 
 Run the `implement` skill for the given task.
 
-Read `skills/implement.md` and follow its process: understand → plan → implement → verify.
+Read the implement skill and follow its process: understand → plan → implement → verify.
+
+Skill location:
+- Global install: `~/.cursor/skills/agentic/implement.md`
+- Local repo: `skills/implement.md`
