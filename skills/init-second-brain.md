@@ -35,6 +35,8 @@ Before creating anything, thoroughly understand the project:
 
 Preserve any existing files (especially `settings.local.json`).
 
+If migrating an existing second brain that has `NOTES.md`, rename it to `NOTES_ARCHIVE.md` to preserve history. Do not create a new NOTES.md.
+
 **No NOTES.md** — session history is tracked via git log. Use the `git-recap` skill to summarize recent work instead of maintaining manual session notes.
 
 ### Step 3: Populate knowledge files

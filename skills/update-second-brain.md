@@ -18,6 +18,16 @@ ARCHITECTURE.md claim actively misleads. Every update pass must verify what it t
 
 ## Process
 
+### Step 0: Check for legacy structure (one-time migration)
+
+If `.claude/NOTES.md` exists, the project is using the old second brain format. Migrate:
+
+1. **NOTES.md** — Do not delete. Rename to `.claude/NOTES_ARCHIVE.md` so history is preserved but the file is clearly retired. Do not append new entries to it.
+2. **Missing core files** — If `CODE_POINTERS.md` or `DECISIONS.md` don't exist, create them by scanning the codebase (same process as init-second-brain Step 1 + Step 3, scoped to those files).
+3. **Tell the user** what you migrated: "Migrated from legacy second brain format: archived NOTES.md, created CODE_POINTERS.md" (or whatever applies).
+
+This step is idempotent — if `NOTES.md` doesn't exist, skip it entirely.
+
 ### Step 1: Identify what changed
 
 Get the list of files modified this session:
