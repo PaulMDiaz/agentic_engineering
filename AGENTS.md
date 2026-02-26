@@ -1,8 +1,41 @@
-# Global Coding Standards — @PaulMDiaz
+---
+description: "Universal coding standards for all projects"
+alwaysApply: true
+---
 
-Points all AGENTS.md-aware agents to CODING_STANDARDS.md.
-Read by Claude Code, Codex, and other AGENTS.md-aware coding agents. Equivalent to `CLAUDE.md` for agents that don't support that convention.
+# Coding Standards
 
-Read `CODING_STANDARDS.md` in this directory before doing any coding work.
-It contains universal rules for git, commits, code style, testing, and security
-that apply in every project regardless of language or framework.
+This development folder uses the agentic engineering playbook.
+
+## Rules
+
+Read and follow `agentic_engineering/CODING_STANDARDS.md` for all coding work.
+
+Key rules:
+- Pure functions — return new objects, never mutate inputs
+- No default parameter values
+- Strong typing — avoid `Any`
+- No silent fallbacks — propagate errors
+- Conventional commits — `type(scope): description`
+- `.env` first in `.gitignore`
+- `trash` > `rm`
+- Never install external tools without explicit approval
+
+## Skills
+
+Skills are available via `/skill-name` in Cursor:
+
+| Skill | Use when |
+|-------|----------|
+| /agent-review | Reviewing a PR or branch |
+| /diff-summary | Understanding what a diff does |
+| /git-recap | Summarizing recent work |
+| /implement | Working on a coding task methodically |
+| /init-second-brain | Bootstrapping .claude/ for a project |
+| /load-second-brain | Loading project context at session start |
+| /security-check | Reviewing changes for security issues |
+| /update-second-brain | Recording session work into .claude/ |
+
+## Project-Specific Conventions
+
+Check `.claude/CONVENTIONS.md` in the current project if it exists.

@@ -43,8 +43,6 @@ agentic_engineering/
 ├── docs/
 │   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)
 │   ├── workstation-setup.md         # Install playbook globally via symlinks
-│   ├── templates/                   # Starter templates for new projects
-│   │   └── AGENTS-project.md        # Template AGENTS.md for per-repo setup
 │   └── slash-commands/
 │       └── README.md                # Index of slash commands and skills
 │
