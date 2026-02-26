@@ -27,7 +27,15 @@ Important (ignore-safe detection):
 
 If .claude/ truly doesn't exist, tell the user and suggest running the init-second-brain skill.
 
-### Step 2: Read knowledge files (batch)
+### Step 2: Detect legacy format
+
+If `.claude/NOTES.md` exists, the project is using an older second brain format. Flag it:
+
+> "This project has a legacy second brain (NOTES.md still present). Run update-second-brain to migrate — it will archive NOTES.md and ensure core files exist."
+
+Still load whatever files exist — don't block on migration.
+
+### Step 3: Read knowledge files (batch)
 
 Read all of these files in a single parallel batch — do not read them one at a time:
 
@@ -36,19 +44,18 @@ Read all of these files in a single parallel batch — do not read them one at a
 | DECISIONS.md | Settled choices and their rationale | Core — avoid re-litigating |
 | CODE_POINTERS.md | File/function locations by subsystem | Core — fast navigation |
 | BACKLOG.md | Open items, planned work, tech debt | High — know what's pending |
-| ARCHITECTURE.md | Codebase shape, modules, data flow, infrastructure | High — read first for unfamiliar projects |
+| ARCHITECTURE.md | Codebase shape, modules, data flow, infrastructure | High — understand structure |
 | CONVENTIONS.md | Code style, patterns, gatekeeping rules | Medium — follow when editing |
 
-Also check for:
+Also read if present:
+- `NOTES.md` or `NOTES_ARCHIVE.md` — legacy session history (skim recent entries for context, don't rely on it as primary source)
 - `commands/` — slash commands (read if about to use one)
-
-**No NOTES.md** — session history lives in the git log. Use the `git-recap` skill if you need recent context.
 
 Skip any files that don't exist — the knowledge base may be partial.
 
 Implementation detail: attempt direct Read calls to each expected file path in parallel and treat "file not found" responses as missing files.
 
-### Step 3: Internalize silently
+### Step 4: Internalize silently
 
 After reading, do not produce a summary unless the user asks for one. Simply proceed with full project context loaded. The knowledge base is for your benefit — the user already knows their project.
 
@@ -56,9 +63,9 @@ If the user explicitly asks for a summary or asks "what do you know", then provi
 - Project purpose (one line)
 - Current state (what's working, what's in progress)
 - Key open items from backlog
-- Recent session activity (last 1-2 sessions from NOTES.md)
+- Recent activity (from git log: `git log --oneline -10`)
 
-### Step 4: Apply context during the session
+### Step 5: Apply context during the session
 
 With the knowledge base loaded:
 - Check DECISIONS.md before proposing approaches that may have been already evaluated
@@ -74,3 +81,4 @@ With the knowledge base loaded:
 - **Trust the knowledge base**: If a decision is recorded, respect it unless the user explicitly wants to revisit.
 - **Stale pointers**: CODE_POINTERS.md line numbers may drift after edits. Verify against actual files when navigating.
 - **Session continuity**: If you need to know what happened recently, run `git-recap` or check `git log --oneline -20`.
+- **Missing files are okay**: Not every project will have all files. Work with what exists.
