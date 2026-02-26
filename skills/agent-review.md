@@ -43,8 +43,11 @@ gh pr diff <PR_NUMBER>
 
 ## Output Format
 
-Report findings ordered by severity (highest first). Tag each with `[HIGH]`, `[MEDIUM]`,
-or `[LOW]`. Use this structure:
+Two modes: **inline** (default) and **PR comments** (when user says "for PR", "for GitHub", or "copy-paste format").
+
+### Inline mode (default)
+
+Report findings ordered by severity (highest first):
 
 ```
 ### [SEVERITY] Short title
@@ -52,10 +55,44 @@ or `[LOW]`. Use this structure:
 **What:** Clear description of what is wrong.
 **Why:** Why this is problematic.
 **Fix:** Concrete suggestion (not vague advice).
-**File(s):** `path/to/file:L<start>-L<end>` (always include line numbers — essential for PR comments)
+**File(s):** `path/to/file:L<start>-L<end>` (always include line numbers)
 ```
 
-Severity guide:
+### PR comment mode
+
+When the user wants findings for GitHub PR comments, output each finding as a
+self-contained markdown block that can be copy-pasted directly into a GitHub review
+comment. Each finding should be its own code-fence-free block:
+
+```
+**[SEVERITY] Short title**
+
+📍 `path/to/file:L<start>-L<end>`
+
+**What:** Clear description of what is wrong.
+
+**Why:** Why this is problematic — incorrect behavior, violated contract, hidden assumption, etc.
+
+**Consequences of not fixing:** What breaks, degrades, or silently misbehaves if left unresolved.
+
+**Suggested fix:**
+- Option A: description
+- Option B: description
+
+<details>
+<summary>Example fix</summary>
+
+```python
+# concrete code suggestion if applicable
+```
+
+</details>
+```
+
+Separate each finding with `---` so the user can copy individual blocks.
+
+### Severity guide (both modes)
+
 - `[HIGH]` — Bug, data loss risk, silent failure, security issue, blocks operation
 - `[MEDIUM]` — Logic flaw, inconsistency, missing error handling, violated standard
 - `[LOW]` — Dead code, refactor opportunity, style/naming, minor cleanup
