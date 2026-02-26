@@ -33,15 +33,16 @@ Read all of these files in a single parallel batch — do not read them one at a
 
 | File | Purpose | Priority |
 |------|---------|----------|
-| ARCHITECTURE.md | Codebase shape, modules, data flow, infrastructure | High — read first |
+| DECISIONS.md | Settled choices and their rationale | Core — avoid re-litigating |
+| CODE_POINTERS.md | File/function locations by subsystem | Core — fast navigation |
 | BACKLOG.md | Open items, planned work, tech debt | High — know what's pending |
-| NOTES.md | Session history (newest first) | High — recent context |
-| DECISIONS.md | Settled choices and their rationale | Medium — avoid re-litigating |
-| CODE_POINTERS.md | File/function locations by subsystem | Medium — reference on demand |
+| ARCHITECTURE.md | Codebase shape, modules, data flow, infrastructure | High — read first for unfamiliar projects |
 | CONVENTIONS.md | Code style, patterns, gatekeeping rules | Medium — follow when editing |
 
 Also check for:
 - `commands/` — slash commands (read if about to use one)
+
+**No NOTES.md** — session history lives in the git log. Use the `git-recap` skill if you need recent context.
 
 Skip any files that don't exist — the knowledge base may be partial.
 
@@ -72,4 +73,4 @@ With the knowledge base loaded:
 - **Don't parrot back**: The user wrote these files. Don't summarize them back unprompted.
 - **Trust the knowledge base**: If a decision is recorded, respect it unless the user explicitly wants to revisit.
 - **Stale pointers**: CODE_POINTERS.md line numbers may drift after edits. Verify against actual files when navigating.
-- **Session continuity**: The most recent NOTES.md entry tells you what happened last. Use it to pick up where things left off if the user asks.
+- **Session continuity**: If you need to know what happened recently, run `git-recap` or check `git log --oneline -20`.
