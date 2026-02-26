@@ -35,7 +35,8 @@ agentic_engineering/
 │   ├── load-second-brain.md         # Load .claude/ context at session start
 │   ├── update-second-brain.md       # Record session work into .claude/
 │   ├── agent-review.md              # Review a branch/PR — inline findings, no file output
-│   └── diff-summary.md              # Walk through a diff — what it does and how
+│   ├── diff-summary.md              # Walk through a diff — what it does and how
+│   └── git-recap.md                 # Summarize recent work from git log (replaces NOTES.md)
 │
 ├── docs/
 │   ├── llm-classifier-security.md   # Validated output pattern, model selection for classifiers
