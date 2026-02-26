@@ -8,12 +8,13 @@ description: "Review code for bugs, inconsistencies, duplication, and refactorin
 Code review skill. Reviews diffs for bugs, issues, inconsistencies, and refactoring
 opportunities. Reports findings directly — does not create a file.
 
-## Default Workflow
+## Workflow
 
-1. Get the diff (see Usage Variants below)
-2. Read the diff output
-3. Review against the criteria in this file
-4. Report findings grouped by severity, directly in the response
+1. Read `CODING_STANDARDS.md` from the project root (or `@CODING_STANDARDS.md` if referenced in `CLAUDE.md`). If not found, check the repo's `.claude/CONVENTIONS.md`. These are the project's rules — enforce them.
+2. Get the diff (see Usage Variants below)
+3. Read the full diff
+4. Review against CODING_STANDARDS.md + the criteria below
+5. Report findings grouped by severity
 
 ## Usage Variants
 
@@ -44,34 +45,27 @@ or `[LOW]`. Use this structure:
 ```
 ### [SEVERITY] Short title
 
-**What is the issue?**
-Clear description of what is wrong.
-
-**Why is this an issue?**
-Why this is problematic — incorrect behavior, violated contract, hidden assumption, etc.
-
-**Consequences of not fixing:**
-What breaks, degrades, or silently misbehaves if left unresolved.
-
-**Possible fixes:**
-- Option A: ...
-- Option B: ...
-
+**What:** Clear description of what is wrong.
+**Why:** Why this is problematic.
+**Fix:** Concrete suggestion (not vague advice).
 **File(s):** `path/to/file` (line N if applicable)
 ```
 
 Severity guide:
 - `[HIGH]` — Bug, data loss risk, silent failure, security issue, blocks operation
-- `[MEDIUM]` — Logic flaw, inconsistency, missing error handling, misleading behavior
+- `[MEDIUM]` — Logic flaw, inconsistency, missing error handling, violated standard
 - `[LOW]` — Dead code, refactor opportunity, style/naming, minor cleanup
 
-End with a **Summary**: overall quality assessment and merge readiness.
+End with a **Summary**: total findings by severity, overall quality assessment, merge readiness.
 
-If there are no findings, say so clearly — "No issues found. Ready to merge."
+If there are no findings: "No issues found. Ready to merge."
 
 ---
 
 ## Review Criteria
+
+Review against CODING_STANDARDS.md first — those are the project's explicit rules. Then apply
+these additional criteria that go beyond what standards typically cover:
 
 ### Bugs & Correctness
 - Off-by-one errors, incorrect conditionals, wrong comparisons
@@ -81,6 +75,22 @@ If there are no findings, say so clearly — "No issues found. Ready to merge."
 - Wrong return types or missing return values
 - Incorrect boolean logic (negation errors, short-circuit issues)
 
+### Standards Enforcement
+Check the diff against CODING_STANDARDS.md. Common violations to watch for:
+
+- **Pure functions**: input parameters mutated instead of returning new objects
+- **Default parameter values**: new functions using defaults instead of explicit params
+- **Typing**: `Any`, `Dict[str, Any]`, loose dicts where structured models belong
+- **Error handling**: bare `except Exception` in business logic (not outer loops), silent fallbacks returning fake defaults
+- **Security clamping vs fallback**: ensure LLM output validation is kept (not a fallback)
+- **`.env` handling**: reading `.env` directly instead of `os.environ`, `.env` missing from `.gitignore`
+- **Secrets**: credentials hardcoded instead of env vars, secrets visible in logs/output
+- **File size**: files exceeding ~500 LOC that should be split
+- **Dependencies**: new deps added without health check justification
+- **Docs**: behavior/API changes shipped without doc updates
+
+If the project has no CODING_STANDARDS.md, skip this section — don't invent rules.
+
 ### Security
 - Secrets or credentials in code (not env vars)
 - Unsanitized input passed to shell, SQL, or eval
@@ -89,30 +99,30 @@ If there are no findings, say so clearly — "No issues found. Ready to merge."
 
 ### Inconsistencies
 - Same config value defined in multiple places with different defaults
-- Naming that contradicts behavior (e.g. `update_event` that does insert)
+- Naming that contradicts behavior
 - Type mismatches between definitions and usage
 - Dead code that's defined but never wired in
-- Config files with env var placeholders that aren't interpolated at runtime
+- Config with env var placeholders that aren't interpolated at runtime
 
 ### Error Handling
-- Bare `except Exception` that swallows errors silently
+- Bare `except Exception` that swallows errors silently (in business logic)
 - Missing retry logic for transient failures (network, webhooks)
 - No graceful shutdown / signal handling
 - Startup failures that don't surface clearly
 
 ### Code Duplication
-- Repeated logic that could be a shared function/class
+- Repeated logic that could be a shared function
 - Inline constants that should be named
 - Copy-pasted error handling that could be a decorator
 
 ### Architecture & Design
-- Components that are instantiated but never used
+- Components instantiated but never used
 - State split across in-memory and persistent store without sync
-- Alert/result objects created but not persisted anywhere
+- Objects created but not persisted
 - Config loaded but never passed to the component that needs it
 
 ### Tests
 - Tests that mock too much and don't test actual behavior
 - Missing edge cases (empty input, None, network failure)
-- Test fixtures that don't match production shapes
+- Fixtures that don't match production shapes
 - No test for the happy path of a critical component
