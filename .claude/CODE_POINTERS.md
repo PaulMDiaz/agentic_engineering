@@ -39,6 +39,8 @@ read_when: "You need to find where something lives"
 | Review a branch or PR for bugs/inconsistencies | `skills/agent-review.md` |
 | Walk through a diff — goal + approach | `skills/diff-summary.md` |
 | Summarize recent work from git log | `skills/git-recap.md` |
+| Methodical task implementation | `skills/implement.md` |
+| Security review checklist | `skills/security-check.md` |
 
 ## Slash Commands
 

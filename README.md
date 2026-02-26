@@ -19,8 +19,10 @@ See [Workstation Setup](docs/workstation-setup.md) for installation and uninstal
 | agent-review | Review code for bugs, inconsistencies, and refactoring opportunities |
 | diff-summary | Explain what a diff is trying to accomplish |
 | git-recap | Summarize recent work from git history |
+| implement | Methodical task approach — understand, plan, implement, verify |
 | init-second-brain | Bootstrap a `.claude/` knowledge base for a project |
 | load-second-brain | Load project context at session start |
+| security-check | Security review — what to check for, how to report findings |
 | update-second-brain | Record session work into `.claude/` |
 
 ## Philosophy
