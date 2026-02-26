@@ -79,51 +79,20 @@ Skills appear in Cursor Settings → Rules (Agent Decides section) and can be in
 ln -sf ~/Documents/development/agentic_engineering/CODING_STANDARDS.md ~/.cursor/CODING_STANDARDS.md
 ```
 
-## Step 5: Install global rules (Cursor)
+## Step 5: Install development-wide rules (Cursor)
 
-Cursor reads rules from `~/.cursor/rules/`. Create a global rule that loads
-the coding standards:
-
-```bash
-# Create the global rules directory
-mkdir -p ~/.cursor/rules
-
-# Create a global rule file
-cat > ~/.cursor/rules/agentic-engineering.md << 'EOF'
----
-description: "Agentic engineering playbook — coding standards and conventions"
-globs:
-alwaysApply: true
----
-
-# Coding Standards
-
-Read and follow `~/.cursor/CODING_STANDARDS.md` for all coding work.
-
-Key rules:
-- Pure functions (no mutation of inputs)
-- No default parameter values
-- Strong typing (avoid `Any`)
-- No silent fallbacks
-- Conventional commits
-- `.env` first in `.gitignore`
-- `trash` > `rm`
-
-For project-specific conventions, check `.claude/CONVENTIONS.md` if it exists.
-EOF
-```
-
-This rule appears in Cursor Settings → Rules and applies to all projects.
-
-## Step 6: Per-repo AGENTS.md (optional)
-
-If you want per-repo context beyond the global rules, create an `AGENTS.md` at the
-project root. This is optional since the global rule now handles coding standards.
+Cursor reads `AGENTS.md` from parent directories. Symlink it at your development
+folder root so it applies to all projects underneath:
 
 ```bash
-# From inside any project repo
-cp ~/Documents/development/agentic_engineering/docs/templates/AGENTS-project.md ./AGENTS.md
+# Symlink AGENTS.md to your development folder
+ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/Documents/Development/AGENTS.md
 ```
+
+This appears in Cursor Settings → Rules → Development and applies to all projects
+under `~/Documents/Development/`.
+
+**Note:** Adjust the path if your development folder is named differently (e.g., `~/code/`).
 
 ## Step 7: Verify
 
@@ -171,14 +140,13 @@ rm -f ~/.cursor/skills/load-second-brain
 rm -f ~/.cursor/skills/security-check
 rm -f ~/.cursor/skills/update-second-brain
 
-# Remove global rules and coding standards
-rm -f ~/.cursor/rules/agentic-engineering.md
+# Remove development-wide rules and coding standards
+rm -f ~/Documents/Development/AGENTS.md
 rm -f ~/.cursor/CODING_STANDARDS.md
 
 # Clean up empty directories (only removes if empty)
 rmdir ~/.cursor/commands 2>/dev/null
 rmdir ~/.cursor/skills 2>/dev/null
-rmdir ~/.cursor/rules 2>/dev/null
 ```
 
 Per-repo AGENTS.md files can be deleted individually or left in place — they're
