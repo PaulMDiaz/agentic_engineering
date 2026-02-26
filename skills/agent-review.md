@@ -17,7 +17,8 @@ opportunities. Reports findings directly — does not create a file.
 5. Read the full diff
 6. Review against CODING_STANDARDS.md + the criteria below
 7. Check for stale documentation (see Documentation Freshness below)
-8. Report findings grouped by severity
+8. If `.claude/CODE_POINTERS.md` exists, cross-reference it against the diff — flag entries that reference changed files with stale function names, line numbers, or deleted paths. Include as findings.
+9. Report findings grouped by severity
 
 ## Usage Variants
 
@@ -51,7 +52,7 @@ or `[LOW]`. Use this structure:
 **What:** Clear description of what is wrong.
 **Why:** Why this is problematic.
 **Fix:** Concrete suggestion (not vague advice).
-**File(s):** `path/to/file` (line N if applicable)
+**File(s):** `path/to/file:L<start>-L<end>` (always include line numbers — essential for PR comments)
 ```
 
 Severity guide:
