@@ -1,7 +1,12 @@
 {
   "default": true,
   "MD013": false,
+  "MD022": false,
   "MD024": false,
+  "MD031": false,
+  "MD032": false,
   "MD033": false,
-  "MD041": false
+  "MD040": false,
+  "MD041": false,
+  "//": "Disabled: MD013 (line length — intentional for skill files), MD022/MD031/MD032 (blank line spacing — too strict for compact skill format), MD024 (duplicate headings — reused across skills), MD033 (inline HTML — details/summary), MD040 (fenced code language — not always applicable), MD041 (first line H1 — YAML frontmatter)"
 }
