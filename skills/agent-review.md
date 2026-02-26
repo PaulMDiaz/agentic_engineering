@@ -11,11 +11,13 @@ opportunities. Reports findings directly — does not create a file.
 ## Workflow
 
 1. Read `CODING_STANDARDS.md` from the project root (or `@CODING_STANDARDS.md` if referenced in `CLAUDE.md`). If not found, check the repo's `.claude/CONVENTIONS.md`. These are the project's rules — enforce them.
-2. Get the diff (see Usage Variants below)
-3. Read the commit log for the same range: `git log --oneline main..HEAD` (or equivalent). Commit messages clarify intent — use them to distinguish "intentional change" from "accidental regression."
-4. Read the full diff
-5. Review against CODING_STANDARDS.md + the criteria below
-6. Report findings grouped by severity
+2. If `.claude/ARCHITECTURE.md` exists, read it. Use it to verify that the diff is consistent with the documented architecture — flag changes that alter system shape without updating the doc.
+3. Get the diff (see Usage Variants below)
+4. Read the commit log for the same range: `git log --oneline main..HEAD` (or equivalent). Commit messages clarify intent — use them to distinguish "intentional change" from "accidental regression."
+5. Read the full diff
+6. Review against CODING_STANDARDS.md + the criteria below
+7. Check for stale documentation (see Documentation Freshness below)
+8. Report findings grouped by severity
 
 ## Usage Variants
 
@@ -119,6 +121,12 @@ If the project has no CODING_STANDARDS.md, skip this section — don't invent ru
 - Modules with tangled responsibilities
 - Overly complex conditionals that could be simplified
 - Flag these as `[LOW]` unless the complexity is actively causing bugs or blocking changes (`[MEDIUM]`)
+
+### Documentation Freshness
+- **README.md** (root and any subdirectory READMEs): do the diff's changes make any README claims stale? New features not mentioned, removed features still listed, changed CLI flags, updated install steps, altered API surface. READMEs are the most neglected docs — check them explicitly.
+- **ARCHITECTURE.md**: does the diff change system shape (new module, table, data flow) without updating `.claude/ARCHITECTURE.md`?
+- **Other docs**: if the diff changes behavior that's documented in `docs/`, flag stale references.
+- Flag as `[MEDIUM]` when the docs actively mislead (wrong commands, missing features), `[LOW]` for minor gaps.
 
 ### Architecture & Design
 - Components instantiated but never used
