@@ -31,17 +31,20 @@ agentic_engineering/
 ├── .gitignore
 │
 ├── skills/                          # Reusable agent skill prompts (invoke by name, not slash command)
-│   ├── init-second-brain.md         # Bootstrap .claude/ for a project
-│   ├── load-second-brain.md         # Load .claude/ context at session start
-│   ├── update-second-brain.md       # Record session work into .claude/
 │   ├── agent-review.md              # Review a branch/PR — inline findings, no file output
 │   ├── diff-summary.md              # Walk through a diff — what it does and how
-│   └── git-recap.md                 # Summarize recent work from git log (replaces NOTES.md)
+│   ├── git-recap.md                 # Summarize recent work from git log (replaces NOTES.md)
+│   ├── implement.md                 # Methodical task implementation — understand, plan, implement, verify
+│   ├── init-second-brain.md         # Bootstrap .claude/ for a project
+│   ├── load-second-brain.md         # Load .claude/ context at session start
+│   ├── security-check.md            # Security review — what to check, how to report
+│   └── update-second-brain.md       # Record session work into .claude/
 │
 ├── docs/
-│   ├── llm-classifier-security.md   # Validated output pattern, model selection for classifiers
-│   ├── prompt-injection-defense.md  # XML delimiters, output clamping, defense-in-depth stack
 │   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)
+│   ├── workstation-setup.md         # Install playbook globally via symlinks
+│   ├── templates/                   # Starter templates for new projects
+│   │   └── AGENTS-project.md        # Template AGENTS.md for per-repo setup
 │   └── slash-commands/
 │       └── README.md                # Index of slash commands and skills
 │

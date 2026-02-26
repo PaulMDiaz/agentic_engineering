@@ -11,8 +11,10 @@ The following skills are available at `~/.cursor/skills/agentic/`:
 | agent-review | agent-review.md | Reviewing a PR or branch |
 | diff-summary | diff-summary.md | Understanding what a diff does |
 | git-recap | git-recap.md | Summarizing recent work |
+| implement | implement.md | Working on a coding task methodically |
 | init-second-brain | init-second-brain.md | Bootstrapping .claude/ for this project |
 | load-second-brain | load-second-brain.md | Loading project context at session start |
+| security-check | security-check.md | Reviewing changes for security issues |
 | update-second-brain | update-second-brain.md | Recording session work into .claude/ |
 
 To use a skill: "Run the agent-review skill from ~/.cursor/skills/agentic/agent-review.md"

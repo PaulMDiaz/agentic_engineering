@@ -25,6 +25,9 @@ not as slash commands:
 |---|---|
 | `agent-review` | Review current branch or PR for bugs, inconsistencies, and refactor opportunities |
 | `diff-summary` | Walk through a diff — what it's trying to accomplish and the approach |
+| `git-recap` | Summarize recent work from git history (replaces session notes) |
+| `implement` | Methodical task approach — understand, plan, implement, verify |
 | `init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
 | `load-second-brain` | Load full project context at session start |
+| `security-check` | Security review checklist — what to look for, how to report |
 | `update-second-brain` | Record what was worked on this session |
