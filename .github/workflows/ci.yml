@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  duplicates:
+    name: Duplicate Code Detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install jscpd
+        run: npm install -g jscpd
+
+      - name: Run jscpd
+        run: jscpd --min-lines 10 --min-tokens 50 --reporters console --ignore "**/*.json,**/NOTES_ARCHIVE.md" .
