@@ -61,8 +61,3 @@ Stage specific files + commit. Enforces non-empty message.
 ### Shell
 - Always: `set -euo pipefail`
 - Lint: `shellcheck`
-
-## System (Pi)
-- OS: Linux (arm64, Raspberry Pi)
-- Node: v24 (nvm)
-- OpenClaw gateway: `openclaw gateway status/start/stop/restart`
