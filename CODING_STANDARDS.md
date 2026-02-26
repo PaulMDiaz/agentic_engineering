@@ -97,6 +97,14 @@ Rules:
 - Update docs when behavior or API changes. No ship without docs.
 - Add `read_when` hints on cross-cutting docs.
 
+## Knowledge Base (.claude/)
+
+- When making a non-trivial decision: add an entry to `.claude/DECISIONS.md` in the same commit.
+- When adding, renaming, or removing files/functions: update `.claude/CODE_POINTERS.md` in the same commit.
+- When the system shape changes (new module, table, data flow): update `.claude/ARCHITECTURE.md`.
+- These files are the source of truth for agents without conversation context. Keep them accurate.
+- If `.claude/` doesn't exist, skip — not all projects use a second brain.
+
 ## CI/CD
 
 - Use GitHub Actions.
