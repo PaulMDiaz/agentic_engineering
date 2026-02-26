@@ -1,3 +1,7 @@
+# Secrets — FIRST (per CODING_STANDARDS.md)
+.env
+.env.*
+
 # Second brain runtime marker (see docs/second-brain-hooks.md)
 .claude/.pending-update
 
@@ -12,10 +16,6 @@ dist/
 build/
 .venv/
 venv/
-
-# Environment
-.env
-.env.*
 
 # macOS
 .DS_Store
