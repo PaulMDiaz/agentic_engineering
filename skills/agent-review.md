@@ -12,9 +12,10 @@ opportunities. Reports findings directly — does not create a file.
 
 1. Read `CODING_STANDARDS.md` from the project root (or `@CODING_STANDARDS.md` if referenced in `CLAUDE.md`). If not found, check the repo's `.claude/CONVENTIONS.md`. These are the project's rules — enforce them.
 2. Get the diff (see Usage Variants below)
-3. Read the full diff
-4. Review against CODING_STANDARDS.md + the criteria below
-5. Report findings grouped by severity
+3. Read the commit log for the same range: `git log --oneline main..HEAD` (or equivalent). Commit messages clarify intent — use them to distinguish "intentional change" from "accidental regression."
+4. Read the full diff
+5. Review against CODING_STANDARDS.md + the criteria below
+6. Report findings grouped by severity
 
 ## Usage Variants
 
