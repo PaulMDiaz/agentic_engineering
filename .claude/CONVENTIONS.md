@@ -31,7 +31,7 @@ Files without front-matter won't be discoverable by `load-second-brain`.
 
 ## Skill Format
 
-Files under `skills/` use Claude Code skill front-matter:
+Skills live in `skills/<name>/SKILL.md` (folder per skill). Use front-matter:
 
 ```yaml
 ---
@@ -67,7 +67,7 @@ All commit types: `feat fix docs refactor style perf test chore wip remove secur
 |---|---|
 | A universal coding rule | `CODING_STANDARDS.md` |
 | A reference pattern (security, architecture, etc.) | `docs/<topic>.md` with front-matter |
-| A reusable agent workflow | `skills/<name>.md` |
+| A reusable agent workflow | `skills/<name>/SKILL.md` |
 | A slash command | `.claude/commands/<name>.md` + update `docs/slash-commands/README.md` |
 | A project-level convenience script | `scripts/` |
 | A CI automation | `.github/workflows/` |

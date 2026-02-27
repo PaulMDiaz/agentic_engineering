@@ -126,6 +126,39 @@ Significant token savings while keeping the knowledge base trustworthy for all a
 
 ---
 
+### Skills use folder-per-skill format (`skills/name/SKILL.md`)
+
+**When:** 2026-02-26
+**Why:** Cursor discovers skills from folders containing `SKILL.md`, not flat `.md` files.
+The old flat format (`skills/agent-review.md`) worked for Claude Code but was invisible
+to Cursor's skill discovery. Folder format works for both.
+**Trade-off:** Slightly deeper nesting. Worth it — Cursor is the primary platform.
+
+> Supersedes the implicit flat-file convention from initial setup.
+
+---
+
+### Parent-directory AGENTS.md replaces per-repo templates
+
+**When:** 2026-02-26
+**Why:** Cursor reads `AGENTS.md` from parent directories. Symlinking one `AGENTS.md` to
+the development folder root (`~/Documents/Development/AGENTS.md`) applies coding standards
+to every project underneath — no per-repo setup needed.
+**Trade-off:** Removed `docs/templates/AGENTS-project.md`. Projects that aren't under the
+development folder won't pick up the rules automatically (they can still reference
+CODING_STANDARDS.md directly).
+
+---
+
+### AGENTS.md references CODING_STANDARDS.md without duplicating rules
+
+**When:** 2026-02-26
+**Why:** Earlier version inlined key rules (pure functions, no defaults, etc.) which would
+go stale if CODING_STANDARDS.md evolves. Single source of truth is better.
+**Trade-off:** Agent must read two files instead of one. Minimal cost.
+
+---
+
 ### review artifacts auto-deleted from main via GitHub Actions
 
 **When:** 2026-02-21

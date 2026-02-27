@@ -15,6 +15,10 @@ read_when: "Before starting new work — check if it's already planned"
 
 ## Done
 
+- [x] **Restructure skills to folder format** — `skills/name.md` → `skills/name/SKILL.md` for Cursor discovery
+- [x] **Rewrite workstation-setup.md** — shorter, loop-based symlinks, parent-directory AGENTS.md approach
+- [x] **Remove per-repo template** — `docs/templates/AGENTS-project.md` deleted, parent-directory approach replaces it
+- [x] **AGENTS.md deduplication** — removed inlined rules, references CODING_STANDARDS.md only
 - [x] **Stop hook mechanism** — Won't implement. Auto-loading context reduces task success rates and increases inference cost (Gloaguen et al. 2602.11988). Context loaded on demand via `load-second-brain` skill instead. `second-brain-hooks.md` updated accordingly.
 - [x] **`.cursorrules` stop hook reference** — Moot; entire Cursor stop hook section removed alongside the mechanism.
 - [x] **Fix stale `AGENTS.md` row in `CLAUDE.md`** — Updated description to reflect that

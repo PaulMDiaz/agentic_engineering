@@ -3,31 +3,34 @@ summary: "Index of available slash commands and skills"
 read_when: "You want to know what slash commands or skills are available"
 ---
 
-# Slash Commands
+# Commands & Skills
 
-Command files live in `.claude/commands/` — Claude Code picks them up automatically.
-Invoke with `/command-name` in Claude Code or Cursor.
+Both commands and skills are invoked with `/name` in Cursor.
+
+## Commands
 
 | Command | Purpose |
-|---|---|
-| `/commit` | Create well-formatted conventional commit |
+|---------|---------|
 | `/check` | Run full code quality gate |
+| `/commit` | Create well-formatted conventional commit |
 | `/implement` | Methodical task implementation |
 | `/pr` | Create a pull request |
 | `/security-check` | Review for security issues |
 
-## Skills (invoke by name, not slash command)
-
-The following are skills in `skills/` — invoke them by asking the agent to run the skill,
-not as slash commands:
+## Skills
 
 | Skill | Purpose |
-|---|---|
-| `agent-review` | Review current branch or PR for bugs, inconsistencies, and refactor opportunities |
-| `diff-summary` | Walk through a diff — what it's trying to accomplish and the approach |
-| `git-recap` | Summarize recent work from git history (replaces session notes) |
-| `implement` | Methodical task approach — understand, plan, implement, verify |
-| `init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
-| `load-second-brain` | Load full project context at session start |
-| `security-check` | Security review checklist — what to look for, how to report |
-| `update-second-brain` | Record what was worked on this session |
+|-------|---------|
+| `/agent-review` | Review current branch or PR for bugs and inconsistencies |
+| `/diff-summary` | Walk through a diff — what it does and how |
+| `/git-recap` | Summarize recent work from git history |
+| `/implement` | Methodical task approach — understand, plan, implement, verify |
+| `/init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
+| `/load-second-brain` | Load full project context at session start |
+| `/security-check` | Security review checklist |
+| `/update-second-brain` | Record what was worked on this session |
+
+## File Locations
+
+- Commands: `.claude/commands/*.md` (symlinked to `~/.cursor/commands/`)
+- Skills: `skills/*/SKILL.md` (symlinked to `~/.cursor/skills/`)

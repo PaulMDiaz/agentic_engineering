@@ -5,176 +5,111 @@ read_when: "Setting up a new machine or onboarding the playbook to a work laptop
 
 # Workstation Setup
 
-Install the agentic engineering playbook once so every repo on your machine gets access to
-coding standards, skills, and slash commands — no per-repo configuration needed.
+Install the agentic engineering playbook once. All projects in your development
+folder get coding standards, skills, and slash commands — no per-repo setup needed.
 
 ## Prerequisites
 
 - Git installed
-- Cursor IDE (primary) and/or Claude Code
-- A `~/Documents/development/` folder (or equivalent) where repos live
+- Cursor IDE
+- A development folder where your repos live (e.g., `~/Documents/Development/`)
 
 ## Step 1: Clone the repo
 
+Clone into your development folder:
+
 ```bash
-cd ~/Documents/development
+cd ~/Documents/Development
 git clone https://github.com/PaulMDiaz/agentic_engineering.git
 ```
 
-Your folder structure should look like:
+Your folder structure:
 
 ```
-~/Documents/development/
-├── agentic_engineering/      # ← the playbook (shared infrastructure)
-├── osint-alert-agent/        # ← a project repo
-├── work-project-a/           # ← another project repo
-└── work-project-b/           # ← etc.
+~/Documents/Development/
+├── agentic_engineering/      # ← the playbook
+├── project-a/                # ← your repos
+├── project-b/
+└── ...
 ```
 
-## Step 2: Install global slash commands (Cursor)
+## Step 2: Install slash commands
 
-Cursor reads slash commands from `~/.cursor/commands/` (global) and
-`.cursor/commands/` (per-project). Symlink the global ones once:
+Symlink commands to `~/.cursor/commands/`:
 
 ```bash
-# Create the global commands directory if it doesn't exist
 mkdir -p ~/.cursor/commands
 
-# Symlink each command
-ln -sf ~/Documents/development/agentic_engineering/.claude/commands/check.md ~/.cursor/commands/check.md
-ln -sf ~/Documents/development/agentic_engineering/.claude/commands/commit.md ~/.cursor/commands/commit.md
-ln -sf ~/Documents/development/agentic_engineering/.claude/commands/implement.md ~/.cursor/commands/implement.md
-ln -sf ~/Documents/development/agentic_engineering/.claude/commands/pr.md ~/.cursor/commands/pr.md
-ln -sf ~/Documents/development/agentic_engineering/.claude/commands/security-check.md ~/.cursor/commands/security-check.md
-```
-
-Now `/check`, `/commit`, `/implement`, `/pr`, and `/security-check` are available in
-every Cursor project.
-
-## Step 3: Install global skills (symlink)
-
-Skills live in the playbook's `skills/` folder. There's no global skills directory in
-Cursor, so we make them available via a known path that AGENTS.md can reference:
-
-```bash
-# Create a global skills directory
-mkdir -p ~/.cursor/skills
-
-# Symlink the skills folder
-ln -sf ~/Documents/development/agentic_engineering/skills ~/.cursor/skills/agentic
-```
-
-Now skills are available at `~/.cursor/skills/agentic/agent-review.md`, etc.
-
-## Step 4: Install global coding standards
-
-```bash
-# Symlink coding standards to a known location
-ln -sf ~/Documents/development/agentic_engineering/CODING_STANDARDS.md ~/.cursor/CODING_STANDARDS.md
-```
-
-## Step 5: Per-repo AGENTS.md (one-time, per project)
-
-Each repo needs a small `AGENTS.md` at its root that points to the global playbook.
-Create this file in each project:
-
-```markdown
-# Coding Standards
-
-Read `~/.cursor/CODING_STANDARDS.md` before doing any coding work.
-
-## Skills
-
-The following skills are available at `~/.cursor/skills/agentic/`:
-
-| Skill | File | Use when |
-|-------|------|----------|
-| agent-review | agent-review.md | Reviewing a PR or branch |
-| diff-summary | diff-summary.md | Understanding what a diff does |
-| git-recap | git-recap.md | Summarizing recent work |
-| init-second-brain | init-second-brain.md | Bootstrapping .claude/ for this project |
-| load-second-brain | load-second-brain.md | Loading project context at session start |
-| update-second-brain | update-second-brain.md | Recording session work into .claude/ |
-
-To use a skill: "Run the agent-review skill from ~/.cursor/skills/agentic/agent-review.md"
-
-## Knowledge Base
-
-If this project has a `.claude/` directory, run `load-second-brain` at the start of
-non-trivial sessions.
-
-Update DECISIONS.md when making decisions, CODE_POINTERS.md when adding files/functions.
-```
-
-### Quick setup script
-
-To create the AGENTS.md in a project:
-
-```bash
-# From inside any project repo
-cp ~/Documents/development/agentic_engineering/docs/templates/AGENTS-project.md ./AGENTS.md
-```
-
-## Step 6: Verify
-
-Open any project in Cursor and test:
-
-1. Type `/` — you should see check, commit, implement, pr, security-check
-2. Ask Cursor to "run the agent-review skill" — it should find and read the file
-3. Ask Cursor to read CODING_STANDARDS.md — it should find the global copy
-
-## Updating
-
-When the playbook is updated:
-
-```bash
-cd ~/Documents/development/agentic_engineering
-git pull
-```
-
-That's it. Symlinks mean every repo picks up changes immediately.
-
-## Uninstall
-
-To cleanly remove all global symlinks and go back to a clean slate:
-
-```bash
-# Remove global slash commands
-rm -f ~/.cursor/commands/check.md
-rm -f ~/.cursor/commands/commit.md
-rm -f ~/.cursor/commands/implement.md
-rm -f ~/.cursor/commands/pr.md
-rm -f ~/.cursor/commands/security-check.md
-
-# Remove global skills and coding standards
-rm -f ~/.cursor/skills/agentic
-rm -f ~/.cursor/CODING_STANDARDS.md
-
-# Clean up empty directories (only removes if empty)
-rmdir ~/.cursor/commands 2>/dev/null
-rmdir ~/.cursor/skills 2>/dev/null
-```
-
-Per-repo AGENTS.md files can be deleted individually or left in place — they're
-harmless without the global symlinks (Cursor will just not find the referenced paths).
-
-The agentic_engineering repo itself is just a normal git clone — delete it whenever.
-
-## Alternative: Per-repo symlinks (no global install)
-
-If you prefer per-repo setup instead of global symlinks:
-
-```bash
-# From inside a project repo
-ln -sf ../agentic_engineering/CODING_STANDARDS.md ./CODING_STANDARDS.md
-ln -sf ../agentic_engineering/skills ./skills-shared
-
-# Create .cursor/commands/ with symlinks
-mkdir -p .cursor/commands
 for cmd in check commit implement pr security-check; do
-  ln -sf ../../agentic_engineering/.claude/commands/$cmd.md .cursor/commands/$cmd.md
+  ln -sf ~/Documents/Development/agentic_engineering/.claude/commands/$cmd.md ~/.cursor/commands/$cmd.md
 done
 ```
 
-This works if all repos are siblings in the same development folder. Add the symlinks
-to `.gitignore` so they don't get committed.
+Commands available: `/check`, `/commit`, `/implement`, `/pr`, `/security-check`
+
+## Step 3: Install skills
+
+Symlink skill folders to `~/.cursor/skills/`:
+
+```bash
+mkdir -p ~/.cursor/skills
+
+for skill in agent-review diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
+  ln -sf ~/Documents/Development/agentic_engineering/skills/$skill ~/.cursor/skills/$skill
+done
+```
+
+Skills appear in Cursor Settings → Rules → Agent Decides.
+
+## Step 4: Install development-wide rules
+
+Symlink `AGENTS.md` to your development folder root. Cursor picks it up and applies
+it to all projects underneath:
+
+```bash
+ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/Documents/Development/AGENTS.md
+```
+
+Shows in Cursor Settings → Rules → Development.
+
+## Verify
+
+1. Open Cursor Settings (Cmd+Shift+J)
+2. Go to **Rules**:
+   - **Development tab**: AGENTS.md should appear
+   - **Agent Decides section**: 8 skills listed
+3. Type `/` in chat — commands should appear
+
+## Updating
+
+```bash
+cd ~/Documents/Development/agentic_engineering
+git pull
+```
+
+Symlinks mean changes apply immediately.
+
+## Uninstall
+
+```bash
+# Commands
+rm -f ~/.cursor/commands/{check,commit,implement,pr,security-check}.md
+
+# Skills
+rm -f ~/.cursor/skills/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
+
+# Rules
+rm -f ~/Documents/Development/AGENTS.md
+
+# Clean up empty directories
+rmdir ~/.cursor/commands ~/.cursor/skills 2>/dev/null
+```
+
+## Different folder path?
+
+If your development folder isn't `~/Documents/Development/`, adjust all paths above.
+For example, if you use `~/code/`:
+
+```bash
+ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
+```
