@@ -11,16 +11,6 @@ This development folder uses the agentic engineering playbook.
 
 Read and follow `agentic_engineering/CODING_STANDARDS.md` for all coding work.
 
-Key rules:
-- Pure functions — return new objects, never mutate inputs
-- No default parameter values
-- Strong typing — avoid `Any`
-- No silent fallbacks — propagate errors
-- Conventional commits — `type(scope): description`
-- `.env` first in `.gitignore`
-- `trash` > `rm`
-- Never install external tools without explicit approval
-
 ## Skills
 
 Skills are available via `/skill-name` in Cursor:
