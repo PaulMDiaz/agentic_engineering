@@ -84,16 +84,16 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
 
 This makes Codex pick up the same coding standards and workflow guidance.
 
-## Step 6: Install Codex skills (optional)
+## Step 6: Install Codex system-level skills (optional)
 
-Codex user-level skills are loaded from `~/.agents/skills/`. Symlink **skill directories** (not individual markdown files). Each target should look like `~/.agents/skills/<skill-name>/SKILL.md`.
+If you want skills at Codex system scope, symlink **skill directories** (not individual markdown files) into `~/.codex/.system/`. Each target should look like `~/.codex/.system/<skill-name>/SKILL.md`.
 
 ```bash
-mkdir -p ~/.agents/skills
+mkdir -p ~/.codex/.system
 
 for skill in agent-review diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
   # Source is a directory that contains SKILL.md
-  ln -sfn ~/Documents/Development/agentic_engineering/skills/$skill ~/.agents/skills/$skill
+  ln -sfn ~/Documents/Development/agentic_engineering/skills/$skill ~/.codex/.system/$skill
 done
 ```
 
@@ -107,7 +107,7 @@ This mirrors the Cursor skill setup so Codex can discover the same skill set.
    - **Agent Decides section**: 8 skills listed
 3. Type `/` in chat — commands should appear
 4. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
-5. (Codex skills) run `find ~/.agents/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.agents/skills/<skill>/SKILL.md`
+5. (Codex skills) run `find ~/.codex/.system -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/.system/<skill>/SKILL.md`
 
 ## Updating
 
@@ -132,10 +132,10 @@ rm -f ~/Documents/Development/AGENTS.md
 
 # Codex
 rm -f ~/.codex/AGENTS.md
-rm -f ~/.agents/skills/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
+rm -f ~/.codex/.system/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
 
 # Clean up empty directories
-rmdir ~/.cursor/commands ~/.cursor/skills ~/.agents/skills ~/.agents ~/.codex 2>/dev/null
+rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/.system ~/.codex 2>/dev/null
 ```
 
 ## Different folder path?
@@ -146,7 +146,7 @@ For example, if you use `~/code/`:
 ```bash
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
-mkdir -p ~/.agents/skills
-ln -sfn ~/code/agentic_engineering/skills/agent-review ~/.agents/skills/agent-review
+mkdir -p ~/.codex/.system
+ln -sfn ~/code/agentic_engineering/skills/agent-review ~/.codex/.system/agent-review
 # repeat for other skills as needed
 ```
