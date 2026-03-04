@@ -12,6 +12,7 @@ folder get coding standards, skills, and slash commands — no per-repo setup ne
 
 - Git installed
 - Cursor IDE
+- Codex CLI (optional, if you use Codex agents)
 - A development folder where your repos live (e.g., `~/Documents/Development/`)
 
 ## Step 1: Clone the repo
@@ -72,6 +73,17 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/Documents/Develop
 
 Shows in Cursor Settings → Rules → Development.
 
+## Step 5: Install Codex development-wide rules (optional)
+
+If you use Codex agents, symlink the same `AGENTS.md` into `~/.codex/`:
+
+```bash
+mkdir -p ~/.codex
+ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
+```
+
+This makes Codex pick up the same coding standards and workflow guidance.
+
 ## Verify
 
 1. Open Cursor Settings (Cmd+Shift+J)
@@ -79,6 +91,7 @@ Shows in Cursor Settings → Rules → Development.
    - **Development tab**: AGENTS.md should appear
    - **Agent Decides section**: 8 skills listed
 3. Type `/` in chat — commands should appear
+4. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
 
 ## Updating
 
@@ -101,8 +114,11 @@ rm -f ~/.cursor/skills/{agent-review,diff-summary,git-recap,implement,init-secon
 # Rules
 rm -f ~/Documents/Development/AGENTS.md
 
+# Codex
+rm -f ~/.codex/AGENTS.md
+
 # Clean up empty directories
-rmdir ~/.cursor/commands ~/.cursor/skills 2>/dev/null
+rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex 2>/dev/null
 ```
 
 ## Different folder path?
@@ -112,4 +128,5 @@ For example, if you use `~/code/`:
 
 ```bash
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
+ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
 ```
