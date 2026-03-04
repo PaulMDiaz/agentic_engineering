@@ -84,20 +84,87 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
 
 This makes Codex pick up the same coding standards and workflow guidance.
 
-## Step 6: Install Codex skills (optional)
+## Step 6: Install Codex skills (optional, macOS)
 
-If you use Codex local skills, symlink **skill directories** (not individual markdown files) into `~/.codex/skills/.system/`. Each target should look like `~/.codex/skills/.system/<skill-name>/SKILL.md`.
+Codex skill indexing may ignore pure symlinked skill folders. The reliable setup is:
+
+- keep source-of-truth skills in `~/Documents/Development/agentic_engineering/skills`
+- mirror them into **real folders** under `~/.codex/skills/<skill>/SKILL.md`
+- run sync automatically when Codex launches
+
+Create sync scripts and LaunchAgent:
 
 ```bash
-mkdir -p ~/.codex/skills/.system
+mkdir -p ~/.codex/scripts
+mkdir -p ~/Library/LaunchAgents
+
+cat > ~/.codex/scripts/sync-codex-skills.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+SRC="$HOME/Documents/Development/agentic_engineering/skills"
+DST="$HOME/.codex/skills"
 
 for skill in agent-review diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
-  # Source is a directory that contains SKILL.md
-  ln -sfn ~/Documents/Development/agentic_engineering/skills/$skill ~/.codex/skills/.system/$skill
+  mkdir -p "$DST/$skill"
+  rsync -a --delete "$SRC/$skill/" "$DST/$skill/"
 done
+EOF
+
+cat > ~/.codex/scripts/sync-when-codex-running.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+last_pid=""
+while true; do
+  pid="$(pgrep -x Codex || true)"
+  if [[ -n "$pid" && "$pid" != "$last_pid" ]]; then
+    "$HOME/.codex/scripts/sync-codex-skills.sh"
+    last_pid="$pid"
+  elif [[ -z "$pid" ]]; then
+    last_pid=""
+  fi
+  sleep 2
+done
+EOF
+
+cat > ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key><string>com.pauldiaz.codex-skill-sync</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/bash</string>
+      <string>/Users/YOUR_USER/.codex/scripts/sync-when-codex-running.sh</string>
+    </array>
+    <key>RunAtLoad</key><true/>
+    <key>KeepAlive</key><true/>
+    <key>StandardOutPath</key><string>/tmp/codex-skill-sync.out</string>
+    <key>StandardErrorPath</key><string>/tmp/codex-skill-sync.err</string>
+  </dict>
+</plist>
+EOF
+
+chmod +x ~/.codex/scripts/sync-codex-skills.sh
+chmod +x ~/.codex/scripts/sync-when-codex-running.sh
 ```
 
-This mirrors the Cursor skill setup so Codex can discover the same skill set.
+Before loading, edit `~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist` and replace `YOUR_USER` with your macOS username.
+
+Load the LaunchAgent and run one initial sync:
+
+```bash
+launchctl unload ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist 2>/dev/null || true
+launchctl load ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist
+~/.codex/scripts/sync-codex-skills.sh
+```
+
+Notes:
+- `~/.codex/skills/.system/*` can remain symlinks.
+- Codex should read mirrored **real folders** at `~/.codex/skills/<skill>/SKILL.md`.
+- Restart Codex to refresh the session skill index.
 
 ## Verify
 
@@ -107,7 +174,7 @@ This mirrors the Cursor skill setup so Codex can discover the same skill set.
    - **Agent Decides section**: 8 skills listed
 3. Type `/` in chat — commands should appear
 4. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
-5. (Codex skills) run `find ~/.codex/skills/.system -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/.system/<skill>/SKILL.md`
+5. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
 
 ## Updating
 
@@ -116,7 +183,7 @@ cd ~/Documents/Development/agentic_engineering
 git pull
 ```
 
-Symlinks mean changes apply immediately.
+Cursor symlinks apply immediately. For Codex, changes propagate on the next sync (or run `~/.codex/scripts/sync-codex-skills.sh` manually).
 
 ## Uninstall
 
@@ -132,10 +199,13 @@ rm -f ~/Documents/Development/AGENTS.md
 
 # Codex
 rm -f ~/.codex/AGENTS.md
-rm -f ~/.codex/skills/.system/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
+rm -f ~/.codex/skills/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
+rm -f ~/.codex/scripts/sync-codex-skills.sh ~/.codex/scripts/sync-when-codex-running.sh
+launchctl unload ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist 2>/dev/null || true
+rm -f ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist
 
 # Clean up empty directories
-rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/skills/.system ~/.codex/skills ~/.codex 2>/dev/null
+rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/scripts ~/.codex/skills ~/.codex 2>/dev/null
 ```
 
 ## Different folder path?
@@ -146,7 +216,8 @@ For example, if you use `~/code/`:
 ```bash
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
-mkdir -p ~/.codex/skills/.system
-ln -sfn ~/code/agentic_engineering/skills/agent-review ~/.codex/skills/.system/agent-review
-# repeat for other skills as needed
+mkdir -p ~/.codex/skills
+mkdir -p ~/.codex/scripts
+# set SRC in ~/.codex/scripts/sync-codex-skills.sh to ~/code/agentic_engineering/skills
+~/.codex/scripts/sync-codex-skills.sh
 ```
