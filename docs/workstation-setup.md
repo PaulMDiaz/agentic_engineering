@@ -128,16 +128,17 @@ while true; do
 done
 EOF
 
-cat > ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist <<'EOF'
+cat > ~/Library/LaunchAgents/com.codex-skill-sync.plist <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
-    <key>Label</key><string>com.pauldiaz.codex-skill-sync</string>
+    <key>Label</key><string>com.codex-skill-sync</string>
     <key>ProgramArguments</key>
     <array>
       <string>/bin/bash</string>
-      <string>/Users/YOUR_USER/.codex/scripts/sync-when-codex-running.sh</string>
+      <string>-lc</string>
+      <string>$HOME/.codex/scripts/sync-when-codex-running.sh</string>
     </array>
     <key>RunAtLoad</key><true/>
     <key>KeepAlive</key><true/>
@@ -151,13 +152,11 @@ chmod +x ~/.codex/scripts/sync-codex-skills.sh
 chmod +x ~/.codex/scripts/sync-when-codex-running.sh
 ```
 
-Before loading, edit `~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist` and replace `YOUR_USER` with your macOS username.
-
 Load the LaunchAgent and run one initial sync:
 
 ```bash
-launchctl unload ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist 2>/dev/null || true
-launchctl load ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist
+launchctl unload ~/Library/LaunchAgents/com.codex-skill-sync.plist 2>/dev/null || true
+launchctl load ~/Library/LaunchAgents/com.codex-skill-sync.plist
 ~/.codex/scripts/sync-codex-skills.sh
 ```
 
@@ -201,8 +200,8 @@ rm -f ~/Documents/Development/AGENTS.md
 rm -f ~/.codex/AGENTS.md
 rm -f ~/.codex/skills/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
 rm -f ~/.codex/scripts/sync-codex-skills.sh ~/.codex/scripts/sync-when-codex-running.sh
-launchctl unload ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist 2>/dev/null || true
-rm -f ~/Library/LaunchAgents/com.pauldiaz.codex-skill-sync.plist
+launchctl unload ~/Library/LaunchAgents/com.codex-skill-sync.plist 2>/dev/null || true
+rm -f ~/Library/LaunchAgents/com.codex-skill-sync.plist
 
 # Clean up empty directories
 rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/scripts ~/.codex/skills ~/.codex 2>/dev/null
