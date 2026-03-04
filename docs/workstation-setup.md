@@ -86,12 +86,13 @@ This makes Codex pick up the same coding standards and workflow guidance.
 
 ## Step 6: Install Codex skills (optional)
 
-If your Codex setup loads skills from `~/.codex/.system/skills/`, symlink the skill folders:
+If your Codex setup loads skills from `~/.codex/.system/skills/`, symlink **skill directories** (not individual markdown files). Each target must look like `~/.codex/.system/skills/<skill-name>/SKILL.md`.
 
 ```bash
 mkdir -p ~/.codex/.system/skills
 
 for skill in agent-review diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
+  # Source is a directory that contains SKILL.md
   ln -sfn ~/Documents/Development/agentic_engineering/skills/$skill ~/.codex/.system/skills/$skill
 done
 ```
@@ -106,7 +107,7 @@ This mirrors the Cursor skill setup so Codex can discover the same skill set.
    - **Agent Decides section**: 8 skills listed
 3. Type `/` in chat — commands should appear
 4. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
-5. (Codex skills) run `ls -l ~/.codex/.system/skills` and confirm symlinks point to `agentic_engineering/skills/*`
+5. (Codex skills) run `find ~/.codex/.system/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/.system/skills/<skill>/SKILL.md`
 
 ## Updating
 
