@@ -84,6 +84,20 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
 
 This makes Codex pick up the same coding standards and workflow guidance.
 
+## Step 6: Install Codex skills (optional)
+
+If your Codex setup loads skills from `~/.codex/.system/skills/`, symlink the skill folders:
+
+```bash
+mkdir -p ~/.codex/.system/skills
+
+for skill in agent-review diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
+  ln -sfn ~/Documents/Development/agentic_engineering/skills/$skill ~/.codex/.system/skills/$skill
+done
+```
+
+This mirrors the Cursor skill setup so Codex can discover the same skill set.
+
 ## Verify
 
 1. Open Cursor Settings (Cmd+Shift+J)
@@ -92,6 +106,7 @@ This makes Codex pick up the same coding standards and workflow guidance.
    - **Agent Decides section**: 8 skills listed
 3. Type `/` in chat — commands should appear
 4. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
+5. (Codex skills) run `ls -l ~/.codex/.system/skills` and confirm symlinks point to `agentic_engineering/skills/*`
 
 ## Updating
 
@@ -116,9 +131,10 @@ rm -f ~/Documents/Development/AGENTS.md
 
 # Codex
 rm -f ~/.codex/AGENTS.md
+rm -f ~/.codex/.system/skills/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
 
 # Clean up empty directories
-rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex 2>/dev/null
+rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/.system/skills ~/.codex/.system ~/.codex 2>/dev/null
 ```
 
 ## Different folder path?
@@ -129,4 +145,7 @@ For example, if you use `~/code/`:
 ```bash
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
+mkdir -p ~/.codex/.system/skills
+ln -sfn ~/code/agentic_engineering/skills/agent-review ~/.codex/.system/skills/agent-review
+# repeat for other skills as needed
 ```
