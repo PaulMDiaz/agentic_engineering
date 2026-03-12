@@ -40,17 +40,7 @@ jobs:
 
       - name: Check for broken links
         run: |
-          lychee --no-progress \
-            --exclude-path .claude/NOTES_ARCHIVE.md \
-            --exclude "/CONTRIBUTING.md" \
-            --exclude "docs/assets/logo.svg" \
-            --exclude "docs/assets/maybe.svg" \
-            --exclude "docs/assets/no.svg" \
-            --exclude "docs/assets/screencast.svg" \
-            --exclude "docs/assets/yes.svg" \
-            --exclude "docs/docs/TROUBLESHOOTING.md" \
-            --exclude "docs/examples" \
-            "**/*.md"
+          lychee --no-progress --exclude-path .claude/NOTES_ARCHIVE.md "**/*.md"
 
   duplicates:
     name: Duplicate Code Detection
