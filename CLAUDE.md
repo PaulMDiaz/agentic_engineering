@@ -25,7 +25,6 @@ Before ending any session: say "update second brain" to record what we worked on
 
 ## Quick Reference
 
-Create well-formatted commits with conventional commit messages and emojis.
 
 ```bash
 # Commit

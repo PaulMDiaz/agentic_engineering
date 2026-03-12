@@ -35,6 +35,7 @@ Types:
 - 🔒 `security` — security improvements
 
 Rules:
+- Create well-formatted commits with conventional commit messages and emojis
 - Imperative mood ("Add feature" not "Added feature")
 - Explain why, not just what (body for complex changes)
 - Reference issues/PRs when relevant
