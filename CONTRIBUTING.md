@@ -9,6 +9,7 @@ Thanks for contributing to `agentic_engineering`.
 3. Follow `CODING_STANDARDS.md`
 4. Open a PR to `main`
 5. Wait for CI to pass before merge
+6. Prefer fixing docs/CI drift in the repo instead of hiding it in workflow ignores
 
 ## Docs changes
 
