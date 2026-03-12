@@ -25,7 +25,6 @@ Before ending any session: say "update second brain" to record what we worked on
 
 ## Quick Reference
 
-
 ```bash
 # Commit
 ./scripts/committer "feat(scope): description" file1 file2
