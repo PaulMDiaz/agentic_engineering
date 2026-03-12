@@ -6,12 +6,17 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   markdown-lint:
     name: Markdown Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Run markdownlint
         uses: DavidAnson/markdownlint-cli2-action@v19
@@ -24,18 +29,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install lychee
+        run: |
+          curl -sSL https://github.com/lycheeverse/lychee/releases/latest/download/lychee-x86_64-unknown-linux-gnu.tar.gz -o lychee.tar.gz
+          tar -xzf lychee.tar.gz
+          sudo mv lychee /usr/local/bin/lychee
 
       - name: Check for broken links
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: --no-progress --exclude-path .claude/NOTES_ARCHIVE.md "**/*.md"
-          fail: true
+        run: |
+          git ls-files '*.md' \
+            | grep -v '^\.claude/NOTES_ARCHIVE\.md$' \
+            | xargs lychee --no-progress --root-dir .
 
   duplicates:
     name: Duplicate Code Detection
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install jscpd
         run: npm install -g jscpd
