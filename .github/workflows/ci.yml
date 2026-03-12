@@ -40,7 +40,9 @@ jobs:
 
       - name: Check for broken links
         run: |
-          lychee --no-progress --exclude-path .claude/NOTES_ARCHIVE.md "**/*.md"
+          git ls-files '*.md' \
+            | grep -v '^\.claude/NOTES_ARCHIVE\.md$' \
+            | xargs lychee --no-progress --root-dir .
 
   duplicates:
     name: Duplicate Code Detection
