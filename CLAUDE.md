@@ -25,6 +25,8 @@ Before ending any session: say "update second brain" to record what we worked on
 
 ## Quick Reference
 
+Create well-formatted commits with conventional commit messages and emojis.
+
 ```bash
 # Commit
 ./scripts/committer "feat(scope): description" file1 file2
