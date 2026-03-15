@@ -55,8 +55,11 @@ Symlink skill folders to `~/.cursor/skills/`:
 ```bash
 mkdir -p ~/.cursor/skills
 
-for skill in agent-review check-ci diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
-  ln -sf ~/Documents/Development/agentic_engineering/skills/$skill ~/.cursor/skills/$skill
+for skill_dir in ~/Documents/Development/agentic_engineering/skills/*; do
+  [ -d "$skill_dir" ] || continue
+  [ -f "$skill_dir/SKILL.md" ] || continue
+  skill="$(basename "$skill_dir")"
+  ln -sf "$skill_dir" ~/.cursor/skills/$skill
 done
 ```
 
@@ -105,9 +108,14 @@ set -euo pipefail
 SRC="$HOME/Documents/Development/agentic_engineering/skills"
 DST="$HOME/.codex/skills"
 
-for skill in agent-review check-ci diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
+mkdir -p "$DST"
+
+for skill_dir in "$SRC"/*; do
+  [ -d "$skill_dir" ] || continue
+  [ -f "$skill_dir/SKILL.md" ] || continue
+  skill="$(basename "$skill_dir")"
   mkdir -p "$DST/$skill"
-  rsync -a --delete "$SRC/$skill/" "$DST/$skill/"
+  rsync -a --delete "$skill_dir/" "$DST/$skill/"
 done
 EOF
 
