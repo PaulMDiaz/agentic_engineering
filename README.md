@@ -17,6 +17,7 @@ See [Workstation Setup](docs/workstation-setup.md) for installation and uninstal
 | Skill | Description |
 |-------|-------------|
 | agent-review | Review code for bugs, inconsistencies, and refactoring opportunities |
+| check-ci | Verify local CI-equivalent checks for changed files or the full repo |
 | diff-summary | Explain what a diff is trying to accomplish |
 | git-recap | Summarize recent work from git history |
 | implement | Methodical task approach — understand, plan, implement, verify |

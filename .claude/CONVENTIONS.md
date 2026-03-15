@@ -2,15 +2,15 @@
 summary: "Rules specific to contributing to agentic_engineering itself"
 read_when: "Before editing, adding, or restructuring anything in this repo"
 ---
-<!-- Format: ## Section headers → rules as prose or short bullet lists. No tables. -->
+<!-- Format: ## Section headers → rules as prose, short bullet lists, or compact tables when they improve clarity. -->
 
 # Conventions
 
-## This Repo is a Docs Repo
+## This Repo is a Playbook Repo
 
-No code, no dependencies, no build system. All content is markdown.
-`CODING_STANDARDS.md` applies to other projects — conventions below apply
-to changes *to this repo itself*.
+Mostly markdown, plus lightweight helper automation (for example `scripts/committer`
+and GitHub Actions workflows). `CODING_STANDARDS.md` applies to other projects —
+conventions below apply to changes *to this repo itself*.
 
 ---
 
@@ -56,8 +56,8 @@ Files under `.claude/commands/` are the actual invokable slash commands:
 
 ## Commits
 
-Use `scripts/committer` for all commits. Conventional Commits format is enforced.
-All commit types: `feat fix docs refactor style perf test chore wip remove security`
+`scripts/committer` is the preferred convenience helper, not a requirement. Conventional
+Commits format is enforced. All commit types: `feat fix docs refactor style perf test chore wip remove security`
 
 ---
 
@@ -71,6 +71,22 @@ All commit types: `feat fix docs refactor style perf test chore wip remove secur
 | A slash command | `.claude/commands/<name>.md` + update `docs/slash-commands/README.md` |
 | A project-level convenience script | `scripts/` |
 | A CI automation | `.github/workflows/` |
+
+## Skill Surface Changes
+
+When adding, renaming, or removing a skill, verify and update every repo surface that
+exposes skill inventory or skill-usage guidance, including as needed:
+
+- `AGENTS.md`
+- `README.md`
+- `docs/slash-commands/README.md`
+- `docs/workstation-setup.md`
+- `.claude/CODE_POINTERS.md`
+- `.claude/ARCHITECTURE.md`
+- Any setup, sync, uninstall, or example snippets that reference skill names
+
+Prefer inferred directory-based setup snippets over hardcoded skill-name lists where
+possible.
 
 ---
 

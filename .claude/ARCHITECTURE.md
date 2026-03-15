@@ -8,12 +8,12 @@ read_when: "You need to understand what lives where or where to add something ne
 
 ## What This Repo Is
 
-A pure markdown playbook — no code, no build system, no tests. It is the
-source of truth for how PaulMDiaz projects are built and how agents operate
-within them.
+A lightweight playbook repo — mostly markdown, plus a small helper script and
+GitHub Actions workflows. It is the source of truth for how PaulMDiaz projects
+are built and how agents operate within them.
 
 Two audiences:
-1. **Claude Code / Cursor / Codex** — Claude Code and Cursor load `CLAUDE.md` automatically; Codex reads `AGENTS.md`; all three reference `CODING_STANDARDS.md`
+1. **Claude Code / Cursor / Codex** — `AGENTS.md` is the canonical instruction file, `CLAUDE.md` redirects Claude Code/Cursor to it, and all three rely on `CODING_STANDARDS.md`
 2. **Humans** — reference for project conventions, security patterns, and tooling
 
 ---
@@ -24,14 +24,15 @@ Two audiences:
 
 ```
 agentic_engineering/
-├── CLAUDE.md                        # Entry point — auto-loaded by Claude Code/Cursor
-├── AGENTS.md                        # Entry point — read by Codex and AGENTS.md-aware agents
+├── CLAUDE.md                        # Claude Code / Cursor shim — redirects to AGENTS.md
+├── AGENTS.md                        # Canonical instruction file for agents in this repo
 ├── CODING_STANDARDS.md              # Universal rules (git, commits, design, errors, typing, shell...)
 ├── tools.md                         # Tool catalog (gh, git, claude CLI, Python/TS/Shell gates)
 ├── .gitignore
 │
 ├── skills/                          # Agent Skills (folder per skill, each with SKILL.md)
 │   ├── agent-review/SKILL.md        # Review a branch/PR — inline findings, no file output
+│   ├── check-ci/SKILL.md            # Local CI-equivalent verification with structured output
 │   ├── diff-summary/SKILL.md        # Walk through a diff — what it does and how
 │   ├── git-recap/SKILL.md           # Summarize recent work from git log (replaces NOTES.md)
 │   ├── implement/SKILL.md           # Methodical task implementation — understand, plan, implement, verify
@@ -47,7 +48,7 @@ agentic_engineering/
 │       └── README.md                # Index of slash commands and skills
 │
 ├── scripts/
-│   └── committer                    # Stage + commit helper; enforces Conventional Commits
+│   └── committer                    # Optional stage + commit helper; validates Conventional Commits
 │
 ├── .claude/
 │   ├── commands/                    # Slash commands — auto-loaded by Claude Code/Cursor
@@ -55,10 +56,11 @@ agentic_engineering/
 │   │   ├── commit.md                # /commit — conventional commit
 │   │   ├── implement.md             # /implement — methodical task flow
 │   │   ├── pr.md                    # /pr — create pull request
-│   │   └── security-check.md       # /security-check — pre-ship security review
+│   │   └── security-check.md        # /security-check — pre-ship security review
 │   └── ...                          # Second brain knowledge files — see this file (.claude/ARCHITECTURE.md)
 │
 └── .github/workflows/
+    ├── ci.yml                       # Docs/repo hygiene checks for this playbook
     └── cleanup-review-artifacts.yml # Auto-deletes *_review.md from main after merge
 ```
 
