@@ -4,7 +4,6 @@ Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md
 
 ## Rules
 
-- Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md` before doing any work in this workspace, not just coding work.
 - Use skills when appropriate.
 - Keep repo guidance and second-brain files up to date when workflow or conventions change.
 - Before ending meaningful work, update the second brain.
