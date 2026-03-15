@@ -55,7 +55,7 @@ Symlink skill folders to `~/.cursor/skills/`:
 ```bash
 mkdir -p ~/.cursor/skills
 
-for skill in agent-review diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
+for skill in agent-review check-ci diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
   ln -sf ~/Documents/Development/agentic_engineering/skills/$skill ~/.cursor/skills/$skill
 done
 ```
@@ -105,7 +105,7 @@ set -euo pipefail
 SRC="$HOME/Documents/Development/agentic_engineering/skills"
 DST="$HOME/.codex/skills"
 
-for skill in agent-review diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
+for skill in agent-review check-ci diff-summary git-recap implement init-second-brain load-second-brain security-check update-second-brain; do
   mkdir -p "$DST/$skill"
   rsync -a --delete "$SRC/$skill/" "$DST/$skill/"
 done
@@ -170,7 +170,7 @@ Notes:
 1. Open Cursor Settings (Cmd+Shift+J)
 2. Go to **Rules**:
    - **Development tab**: AGENTS.md should appear
-   - **Agent Decides section**: 8 skills listed
+   - **Agent Decides section**: 9 skills listed
 3. Type `/` in chat — commands should appear
 4. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
 5. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
@@ -191,14 +191,14 @@ Cursor symlinks apply immediately. For Codex, changes propagate on the next sync
 rm -f ~/.cursor/commands/{check,commit,implement,pr,security-check}.md
 
 # Skills
-rm -f ~/.cursor/skills/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
+rm -f ~/.cursor/skills/{agent-review,check-ci,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
 
 # Rules
 rm -f ~/Documents/Development/AGENTS.md
 
 # Codex
 rm -f ~/.codex/AGENTS.md
-rm -f ~/.codex/skills/{agent-review,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
+rm -f ~/.codex/skills/{agent-review,check-ci,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,update-second-brain}
 rm -f ~/.codex/scripts/sync-codex-skills.sh ~/.codex/scripts/sync-when-codex-running.sh
 launchctl unload ~/Library/LaunchAgents/com.codex-skill-sync.plist 2>/dev/null || true
 rm -f ~/Library/LaunchAgents/com.codex-skill-sync.plist
