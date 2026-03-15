@@ -1,31 +1,53 @@
----
-description: "Universal coding standards for all projects"
-alwaysApply: true
----
+# AGENTS.md
 
-# Coding Standards
-
-This development folder uses the agentic engineering playbook.
+Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md` before doing any work in this workspace. Treat it as mandatory startup context for all tasks.
 
 ## Rules
 
-Read and follow `agentic_engineering/CODING_STANDARDS.md` for all coding work.
+- Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md` before doing any work in this workspace, not just coding work.
+- Use skills when appropriate.
+- Keep repo guidance and second-brain files up to date when workflow or conventions change.
+- Before ending meaningful work, update the second brain.
+
+## Second Brain
+
+For any non-trivial session that needs project context, run the `load-second-brain` skill explicitly.
 
 ## Skills
 
-Skills are available via `/skill-name` in Cursor:
-
-| Skill | Use when |
-|-------|----------|
+| Command | When to use |
+| --- | --- |
 | /agent-review | Reviewing a PR or branch |
+| /check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
 | /diff-summary | Understanding what a diff does |
 | /git-recap | Summarizing recent work |
-| /implement | Working on a coding task methodically |
-| /init-second-brain | Bootstrapping .claude/ for a project |
-| /load-second-brain | Loading project context at session start |
-| /security-check | Reviewing changes for security issues |
-| /update-second-brain | Recording session work into .claude/ |
+| /implement | Implementing a planned change |
+| /init-second-brain | Initializing second-brain files for a repo that does not have them yet |
+| /load-second-brain | Loading repo context before work |
+| /security-check | Reviewing security-sensitive changes or posture |
+| /update-second-brain | Recording important repo changes/decisions after work |
 
-## Project-Specific Conventions
+## Quick Reference
 
-Check `.claude/CONVENTIONS.md` in the current project if it exists.
+`scripts/committer` is an optional convenience helper that stages the listed files and creates a commit with the message you provide.
+
+```bash
+# Commit
+./scripts/committer "✨ feat(scope): description" file1 file2
+```
+
+## Repository Structure
+
+- `CODING_STANDARDS.md` — universal coding/workflow rules
+- `AGENTS.md` — canonical agent instruction file for this repo
+- `CLAUDE.md` — shim that redirects Claude to `AGENTS.md`
+- `skills/` — reusable repo-specific agent skills
+- `docs/` — repo documentation
+- `.claude/` — second-brain context files
+
+## Session End
+
+Before ending meaningful work:
+- run or follow `update-second-brain`
+- leave instructions/docs in a consistent state
+- do not leave stale workflow guidance behind

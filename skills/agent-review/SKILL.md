@@ -47,10 +47,10 @@ Two modes: **inline** (default) and **PR comments** (when user says "for PR", "f
 
 ### Inline mode (default)
 
-Report findings ordered by severity (highest first):
+Report findings ordered by severity (highest first) and enumerate them in descending order:
 
 ```
-### [SEVERITY] Short title
+### 1. [SEVERITY] Short title
 
 **What:** Clear description of what is wrong.
 **Why:** Why this is problematic.
@@ -62,10 +62,11 @@ Report findings ordered by severity (highest first):
 
 When the user wants findings for GitHub PR comments, output each finding as a
 self-contained markdown block that can be copy-pasted directly into a GitHub review
-comment. Each finding should be its own code-fence-free block:
+comment. Enumerate findings in descending order here too. Each finding should be its own
+code-fence-free block:
 
 ```
-**[SEVERITY] Short title**
+**1. [SEVERITY] Short title**
 
 📍 `path/to/file:L<start>-L<end>`
 
@@ -99,7 +100,7 @@ Separate each finding with `---` so the user can copy individual blocks.
 
 End with a **Summary**: total findings by severity, overall quality assessment, merge readiness.
 
-If there are no findings: "No issues found. Ready to merge."
+If there are no findings: explicitly say so and still include the Summary section (for example: "No issues found. Ready to merge.").
 
 ---
 
