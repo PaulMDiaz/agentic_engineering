@@ -22,6 +22,8 @@ Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md
 
 ## Quick Reference
 
+`scripts/committer` is an optional convenience helper that stages the listed files and creates a commit with the message you provide.
+
 ```bash
 # Commit
 ./scripts/committer "✨ feat(scope): description" file1 file2
