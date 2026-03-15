@@ -21,7 +21,10 @@ For any non-trivial session that needs project context, run the `load-second-bra
 | /check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
 | /diff-summary | Understanding what a diff does |
 | /git-recap | Summarizing recent work |
+| /implement | Implementing a planned change |
+| /init-second-brain | Initializing second-brain files for a repo that does not have them yet |
 | /load-second-brain | Loading repo context before work |
+| /security-check | Reviewing security-sensitive changes or posture |
 | /update-second-brain | Recording important repo changes/decisions after work |
 
 ## Quick Reference
