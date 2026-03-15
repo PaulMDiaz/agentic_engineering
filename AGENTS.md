@@ -9,7 +9,7 @@ This development folder uses the agentic engineering playbook.
 
 ## Rules
 
-Read and follow `agentic_engineering/CODING_STANDARDS.md` for all coding work.
+Always read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md` before doing any work in this workspace, not just coding work. Treat it as mandatory startup context for all tasks.
 
 ## Skills
 
