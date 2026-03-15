@@ -24,7 +24,7 @@ Pair naturally with `agent-review` when the user asks to both review code and ve
 - Prefer **exact workflow-derived checks** when the repo defines them clearly.
 - If exact local parity is not practical, fall back to the **closest useful local equivalent**.
 - Prefer **repo evidence** over generic language/tool assumptions.
-- Do **not stop on first failure** — run the full derived check set when practical and report the full picture.
+- Do **not stop on first failure** when later checks are still practical and interpretable. If a failure makes later checks invalid or impossible to interpret, mark them as not run and explain why.
 - Default to **changed-files-oriented verification** when the user's request is generic (for example: "check CI" or "verify CI").
 - If the user explicitly says **"full CI check"** or **"check full CI"**, run the full repo CI-equivalent path.
 
@@ -37,9 +37,19 @@ Interpret user intent first:
 - Generic requests like **"check CI"** / **"verify CI"** → default to **changed-files-oriented** verification when the repo/workflow supports that interpretation.
 - Explicit requests like **"full CI check"** / **"check full CI"** → run the **whole repo** CI-equivalent path.
 
-If the repo/workflow does not provide a meaningful changed-files mode, say so and fall back to the closest useful whole-repo local equivalent.
+If the repo/workflow does not provide a meaningful changed-files mode, say so explicitly and fall back to the smallest honest whole-repo local equivalent.
 
-### Step 2: Inspect repo evidence before choosing commands
+### Step 2: Determine changed-file context when needed
+
+For changed-files-oriented verification, determine the changed set from the most relevant available context in this order:
+
+1. open PR diff, if the review is clearly tied to a PR
+2. branch diff against the likely base branch
+3. local staged/unstaged working tree changes
+
+If this cannot be determined confidently, say so and fall back to the smallest honest whole-repo check set.
+
+### Step 3: Inspect repo evidence before choosing commands
 
 Look for CI/task definitions in this order:
 
@@ -51,7 +61,7 @@ Look for CI/task definitions in this order:
 
 Goal: infer the local CI-equivalent commands from the repo itself.
 
-### Step 3: Choose the command set
+### Step 4: Choose the command set
 
 Follow this priority:
 
@@ -66,20 +76,21 @@ Be explicit in the final output about whether the result is:
 - **exact workflow-derived**, or
 - **closest useful local equivalent**
 
-### Step 4: Run the checks in workflow order
+### Step 5: Run the checks in workflow order
 
 Run the derived commands in the same order the workflow implies.
 
 Do not stop on first failure unless a later command literally cannot run because of a missing prerequisite. When that happens, report later checks as not run and explain why.
 
-### Step 5: Report in the required structure
+### Step 6: Report in the required structure
 
 Always use this structure.
 
 ## CI Check
 
 **Status:** one of:
-- `✅ Green`
+- `✅ Green (exact)`
+- `✅ Green (best-effort)`
 - `❌ Failing`
 - `⚠️ Partial / uncertain local CI verification`
 
@@ -138,12 +149,12 @@ Call the result **✅ Green** only when:
 - parity is correctly labeled.
 
 If exact workflow parity was possible and passed:
-- `Status: ✅ Green`
+- `Status: ✅ Green (exact)`
 - `Parity: exact workflow-derived`
 
 If exact parity was not possible, but the best inferred checks all passed:
 - still allow green, but make it explicit:
-  - `Status: ✅ Green`
+  - `Status: ✅ Green (best-effort)`
   - `Parity: closest useful local equivalent`
 
 ### Failing
@@ -161,7 +172,7 @@ Use **⚠️ Partial / uncertain local CI verification** when:
 - Prefer clarity over pretending certainty.
 - If changed-files-only verification is not well-defined for the repo, say so plainly.
 - If GitHub Actions is red but local CI is green, note that this may indicate workflow mismatch, environment drift, or provider-specific issues.
-- This skill reports CI state; it does not automatically fix failures unless the user asks.
+- This skill checks and reports CI state; it does not modify code or fix failures unless the user explicitly asks.
 
 ## Examples
 
