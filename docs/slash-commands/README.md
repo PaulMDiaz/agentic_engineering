@@ -22,6 +22,7 @@ Both commands and skills are invoked with `/name` in Cursor.
 | Skill | Purpose |
 |-------|---------|
 | `/agent-review` | Review current branch or PR for bugs and inconsistencies |
+| `/check-ci` | Verify local CI-equivalent checks for changed files or the full repo |
 | `/diff-summary` | Walk through a diff — what it does and how |
 | `/git-recap` | Summarize recent work from git history |
 | `/implement` | Methodical task approach — understand, plan, implement, verify |

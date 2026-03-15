@@ -181,7 +181,7 @@ Use **⚠️ Partial / uncertain local CI verification** when:
 ```md
 ## CI Check
 
-**Status:** ✅ Green
+**Status:** ✅ Green (exact)
 **Scope:** changed files
 **Parity:** exact workflow-derived
 

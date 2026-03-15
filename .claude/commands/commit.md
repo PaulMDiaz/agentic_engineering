@@ -11,7 +11,7 @@ Create well-formatted conventional commit. Runs checks by default.
 2. Stage appropriate files if none staged
 3. Run checks unless `--no-verify`
 4. Analyze changes → determine type + scope
-5. Write message: `type(scope): description`
+5. Write message in emoji conventional-commit style: `✨ feat(scope): description`
 6. Add body for complex changes (explain *why*)
 7. Execute commit
 

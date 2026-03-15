@@ -22,12 +22,12 @@ read_when: "You need to find where something lives"
 
 | What | Where |
 |---|---|
-| Claude Code / Cursor entry point | `CLAUDE.md` |
+| Canonical agent instruction file | `AGENTS.md` |
+| Claude Code / Cursor shim | `CLAUDE.md` |
 | Codex / AGENTS.md-aware agent entry point | `AGENTS.md` |
-| `@CODING_STANDARDS.md` import | `CLAUDE.md` line 1 |
-| Repo structure table | `CLAUDE.md` → Structure |
-| Quick reference commands | `CLAUDE.md` → Quick Reference |
-| How to use this repo in other projects | `CLAUDE.md` → Using in other repos |
+| Standards-loading rule for agents | `AGENTS.md` → Rules |
+| Repo structure overview | `AGENTS.md` → Repository Structure |
+| Commit helper quick reference | `AGENTS.md` → Quick Reference |
 
 ## Skills
 
@@ -40,6 +40,7 @@ read_when: "You need to find where something lives"
 | Walk through a diff — goal + approach | `skills/diff-summary/SKILL.md` |
 | Summarize recent work from git log | `skills/git-recap/SKILL.md` |
 | Methodical task implementation | `skills/implement/SKILL.md` |
+| Local CI-equivalent verification | `skills/check-ci/SKILL.md` |
 | Security review checklist | `skills/security-check/SKILL.md` |
 
 ## Slash Commands

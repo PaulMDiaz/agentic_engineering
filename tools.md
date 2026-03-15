@@ -37,9 +37,9 @@ trash path/to/file
 ## Scripting
 
 ### scripts/committer
-Stage specific files + commit. Enforces non-empty message.
+Optional convenience helper that stages the listed files and creates a commit. Validates conventional commit format.
 ```bash
-./scripts/committer "feat: add thing" src/thing.py tests/test_thing.py
+./scripts/committer "✨ feat(thing): add thing" src/thing.py tests/test_thing.py
 ```
 
 ## Platform
