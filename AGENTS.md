@@ -9,6 +9,10 @@ Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md
 - Keep repo guidance and second-brain files up to date when workflow or conventions change.
 - Before ending meaningful work, update the second brain.
 
+## Second Brain
+
+For any non-trivial session that needs project context, run the `load-second-brain` skill explicitly.
+
 ## Skills
 
 | Command | When to use |
