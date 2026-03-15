@@ -18,6 +18,7 @@ Skills are available via `/skill-name` in Cursor:
 | Skill | Use when |
 |-------|----------|
 | /agent-review | Reviewing a PR or branch |
+| /check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
 | /diff-summary | Understanding what a diff does |
 | /git-recap | Summarizing recent work |
 | /implement | Working on a coding task methodically |
