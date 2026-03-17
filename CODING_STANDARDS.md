@@ -57,6 +57,9 @@ Rules:
 - Change as few lines as possible while solving the problem.
 - Files: keep under ~500 LOC; split/refactor as needed.
 - Tests: write in the same context as implementation — don't waste context switching.
+- Prefer tests that validate observable behavior, public interfaces, and outcomes over tests tightly coupled to implementation details.
+- Good tests should still pass after internal refactors that preserve behavior.
+- Be suspicious of AI-generated tests that mirror code structure, mock too much, or only prove the current implementation path.
 - Bigger changes always get tests.
 - Fix root cause, not band-aid.
 - Make minimal, focused changes — solve the problem, nothing extra.
