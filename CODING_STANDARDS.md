@@ -52,6 +52,7 @@ Rules:
 
 - Read related files and understand the codebase before suggesting changes.
 - Check if logic already exists before writing new code.
+- Before adding a new helper, wrapper, abstraction, or pattern, check whether the repo already has something that solves the same class of problem. Prefer extending the existing approach over creating a parallel one unless there is a clear reason not to.
 - Respect existing code style and patterns.
 - Suggest only minimal changes related to the current task — no extra improvements.
 - Change as few lines as possible while solving the problem.
@@ -66,6 +67,7 @@ Rules:
 - Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
 - When you notice refactoring opportunities during work: flag them. Don't silently act on them — mention them to the user or add to `.claude/BACKLOG.md`. Let the human decide scope.
 - Comments in English only.
+- Comments and docstrings should capture verified behavior, constraints, or intent. Do not add explanatory text that merely paraphrases the code or describes what you assume it does. Misleading documentation is worse than sparse documentation.
 - CI: `gh run list/view`, fix until green before handoff.
 - Before handoff: run full gate (lint/typecheck/tests).
 
