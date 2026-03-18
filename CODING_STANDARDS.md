@@ -93,6 +93,7 @@ Rules:
 - Quick health check before adding: recent releases, active commits, adoption, known CVEs.
 - Prefer packages with CLIs — agents can use them directly.
 - Minimize deps; inline small helpers when reasonable.
+- Do not add a dependency just because it is the fastest way to make the current task disappear. Prefer built-in libraries, existing project dependencies, or a small local helper when the added package would be trivial, oversized, or weakly maintained.
 - Add to project configs (`pyproject.toml`, `package.json`), not one-off installs.
 - Install in virtual environments, not globally.
 - Update project configuration files when adding dependencies.
