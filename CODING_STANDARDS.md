@@ -19,7 +19,7 @@ Platform-agnostic — applies equally in Claude Code, Cursor, OpenClaw, or any o
 
 ## Commits (Conventional Commits)
 
-Format: `type(scope): description`
+Format: `[emoji] type(scope): description`
 
 Types:
 - ✨ `feat` — new feature
@@ -52,17 +52,22 @@ Rules:
 
 - Read related files and understand the codebase before suggesting changes.
 - Check if logic already exists before writing new code.
+- Before adding a new helper, wrapper, abstraction, or pattern, check whether the repo already has something that solves the same class of problem. Prefer extending the existing approach over creating a parallel one unless there is a clear reason not to.
 - Respect existing code style and patterns.
 - Suggest only minimal changes related to the current task — no extra improvements.
 - Change as few lines as possible while solving the problem.
 - Files: keep under ~500 LOC; split/refactor as needed.
 - Tests: write in the same context as implementation — don't waste context switching.
+- Prefer tests that validate observable behavior, public interfaces, and outcomes over tests tightly coupled to implementation details.
+- Good tests should still pass after internal refactors that preserve behavior.
+- Be suspicious of AI-generated tests that mirror code structure, mock too much, or only prove the current implementation path.
 - Bigger changes always get tests.
 - Fix root cause, not band-aid.
 - Make minimal, focused changes — solve the problem, nothing extra.
 - Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
 - When you notice refactoring opportunities during work: flag them. Don't silently act on them — mention them to the user or add to `.claude/BACKLOG.md`. Let the human decide scope.
 - Comments in English only.
+- Comments and docstrings should capture verified behavior, constraints, or intent. Do not add explanatory text that merely paraphrases the code or describes what you assume it does. Misleading documentation is worse than sparse documentation.
 - CI: `gh run list/view`, fix until green before handoff.
 - Before handoff: run full gate (lint/typecheck/tests).
 
@@ -88,6 +93,7 @@ Rules:
 - Quick health check before adding: recent releases, active commits, adoption, known CVEs.
 - Prefer packages with CLIs — agents can use them directly.
 - Minimize deps; inline small helpers when reasonable.
+- Do not add a dependency just because it is the fastest way to make the current task disappear. Prefer built-in libraries, existing project dependencies, or a small local helper when the added package would be trivial, oversized, or weakly maintained.
 - Add to project configs (`pyproject.toml`, `package.json`), not one-off installs.
 - Install in virtual environments, not globally.
 - Update project configuration files when adding dependencies.
