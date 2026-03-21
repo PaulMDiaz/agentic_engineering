@@ -93,9 +93,9 @@ Codex skill indexing may ignore pure symlinked skill folders. The reliable setup
 
 - keep source-of-truth skills in `~/Documents/Development/agentic_engineering/skills`
 - mirror them into **real folders** under `~/.codex/skills/<skill>/SKILL.md`
-- run sync automatically when Codex launches
+- run sync automatically when the source `skills/` directory changes
 
-Create sync scripts and LaunchAgent:
+Create the sync script and a LaunchAgent:
 
 ```bash
 mkdir -p ~/.codex/scripts
@@ -119,24 +119,7 @@ for skill_dir in "$SRC"/*; do
 done
 EOF
 
-cat > ~/.codex/scripts/sync-when-codex-running.sh <<'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
-last_pid=""
-while true; do
-  pid="$(pgrep -x Codex || true)"
-  if [[ -n "$pid" && "$pid" != "$last_pid" ]]; then
-    "$HOME/.codex/scripts/sync-codex-skills.sh"
-    last_pid="$pid"
-  elif [[ -z "$pid" ]]; then
-    last_pid=""
-  fi
-  sleep 2
-done
-EOF
-
-cat > ~/Library/LaunchAgents/com.codex-skill-sync.plist <<'EOF'
+cat > ~/Library/LaunchAgents/com.codex-skill-sync.plist <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -146,10 +129,13 @@ cat > ~/Library/LaunchAgents/com.codex-skill-sync.plist <<'EOF'
     <array>
       <string>/bin/bash</string>
       <string>-lc</string>
-      <string>$HOME/.codex/scripts/sync-when-codex-running.sh</string>
+      <string>$HOME/.codex/scripts/sync-codex-skills.sh</string>
     </array>
     <key>RunAtLoad</key><true/>
-    <key>KeepAlive</key><true/>
+    <key>WatchPaths</key>
+    <array>
+      <string>$HOME/Documents/Development/agentic_engineering/skills</string>
+    </array>
     <key>StandardOutPath</key><string>/tmp/codex-skill-sync.out</string>
     <key>StandardErrorPath</key><string>/tmp/codex-skill-sync.err</string>
   </dict>
@@ -157,7 +143,6 @@ cat > ~/Library/LaunchAgents/com.codex-skill-sync.plist <<'EOF'
 EOF
 
 chmod +x ~/.codex/scripts/sync-codex-skills.sh
-chmod +x ~/.codex/scripts/sync-when-codex-running.sh
 ```
 
 Load the LaunchAgent and run one initial sync:
@@ -171,6 +156,7 @@ launchctl load ~/Library/LaunchAgents/com.codex-skill-sync.plist
 Notes:
 - `~/.codex/skills/.system/*` can remain symlinks.
 - Codex should read mirrored **real folders** at `~/.codex/skills/<skill>/SKILL.md`.
+- LaunchAgent sync keeps the mirror fresh when repo-local skills change on disk. It does not force a running Codex window to re-index immediately.
 - Restart Codex to refresh the session skill index.
 
 ## Verify
@@ -190,7 +176,7 @@ cd ~/Documents/Development/agentic_engineering
 git pull
 ```
 
-Cursor symlinks apply immediately. For Codex, changes propagate on the next sync (or run `~/.codex/scripts/sync-codex-skills.sh` manually).
+Cursor symlinks apply immediately. For Codex, changes propagate when the `skills/` source directory changes and the LaunchAgent fires, or when you run `~/.codex/scripts/sync-codex-skills.sh` manually.
 
 ## Uninstall
 
@@ -207,7 +193,7 @@ rm -f ~/Documents/Development/AGENTS.md
 # Codex
 rm -f ~/.codex/AGENTS.md
 rm -f ~/.codex/skills/{agent-review,check-ci,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,sync-second-brain,update-second-brain}
-rm -f ~/.codex/scripts/sync-codex-skills.sh ~/.codex/scripts/sync-when-codex-running.sh
+rm -f ~/.codex/scripts/sync-codex-skills.sh
 launchctl unload ~/Library/LaunchAgents/com.codex-skill-sync.plist 2>/dev/null || true
 rm -f ~/Library/LaunchAgents/com.codex-skill-sync.plist
 
@@ -226,5 +212,6 @@ ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
 mkdir -p ~/.codex/skills
 mkdir -p ~/.codex/scripts
 # set SRC in ~/.codex/scripts/sync-codex-skills.sh to ~/code/agentic_engineering/skills
+# update WatchPaths in ~/Library/LaunchAgents/com.codex-skill-sync.plist to ~/code/agentic_engineering/skills
 ~/.codex/scripts/sync-codex-skills.sh
 ```

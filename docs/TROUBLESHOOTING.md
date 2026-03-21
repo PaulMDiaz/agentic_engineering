@@ -11,6 +11,7 @@ read_when: "A setup step fails, a skill does not appear, or CI/docs checks are f
 
 ## Codex skills do not appear
 - confirm mirrored real folders exist under `~/.codex/skills/<skill>/SKILL.md`
+- confirm `launchctl print gui/$(id -u)/com.codex-skill-sync` shows the LaunchAgent is loaded
 - rerun `~/.codex/scripts/sync-codex-skills.sh`
 - restart Codex after syncing
 

@@ -6,6 +6,21 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
+### Codex skill mirroring uses `WatchPaths`, not a PID watcher
+
+**When:** 2026-03-21
+**Why:** The original Step 6 setup used a long-lived `pgrep` loop to notice Codex launches
+and then mirror repo-local skills into `~/.codex/skills`. In practice that model was too
+fragile: opening a new window is not the same as a fresh app launch, missed detections
+left the mirror stale, and there was no meaningful audit trail when it failed. Launchd
+`WatchPaths` is simpler and more reliable for the actual goal, which is keeping the
+mirrored skill folders up to date when the source `skills/` directory changes.
+**Trade-off:** The mirror now updates on source changes rather than strictly on app
+launch. Codex may still need a restart to refresh its in-memory skill index, but the
+files on disk stay current without a long-lived polling process.
+
+---
+
 ### Second-brain sync uses a dedicated `second-brain` worktree
 
 **When:** 2026-03-21
