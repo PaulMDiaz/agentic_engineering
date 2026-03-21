@@ -6,6 +6,31 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
+### Codex mirror uninstall is owned by `sync-codex-skills`
+
+**When:** 2026-03-21
+**Why:** Codex skills are mirrored as real directories, so shelling out to ad hoc `rm`
+commands in docs is both error-prone and unable to distinguish repo-managed mirrors from
+user-owned custom skills. Reusing `scripts/sync-codex-skills` for uninstall keeps the
+ownership logic and marker checks in one place.
+**Trade-off:** The script now has two modes instead of one. That extra branch is worth it
+to give setup and uninstall a single source of truth.
+
+---
+
+### Workstation scripts use a zero-dependency shell regression harness
+
+**When:** 2026-03-21
+**Why:** The repo's executable surface is almost entirely bash scripts, so the fastest
+reliable test coverage is a small shell harness that runs in temp directories without
+pulling in external frameworks. That keeps CI simple, avoids dependency health questions,
+and directly exercises the documented workstation flows.
+**Trade-off:** The harness is more minimal than a dedicated shell test framework, so it
+provides fewer built-in matchers and reporting features. The reduced setup burden is worth
+it for this repo's size and script-focused scope.
+
+---
+
 ### Playbook repo git hooks drive workstation skill sync
 
 **When:** 2026-03-21

@@ -8,8 +8,8 @@ read_when: "You need to understand what lives where or where to add something ne
 
 ## What This Repo Is
 
-A lightweight playbook repo — mostly markdown, plus a small helper script and
-GitHub Actions workflows. It is the source of truth for how PaulMDiaz projects
+A lightweight playbook repo — mostly markdown, plus a small set of helper scripts,
+shell regression tests, and GitHub Actions workflows. It is the source of truth for how PaulMDiaz projects
 are built and how agents operate within them.
 
 Two audiences:
@@ -51,9 +51,18 @@ agentic_engineering/
 ├── scripts/
 │   ├── committer                    # Optional stage + commit helper; validates Conventional Commits
 │   ├── install-skill-hooks          # Installs repo-local git hooks that sync workstation skills
-│   ├── sync-codex-skills            # Mirrors repo skills into ~/.codex/skills
+│   ├── sync-codex-skills            # Mirrors repo skills into ~/.codex/skills and can uninstall repo-managed mirrors
 │   ├── sync-cursor-skills           # Creates missing ~/.cursor skill symlinks
 │   └── sync-workstation-skills      # Runs both workstation sync flows from one entry point
+│
+├── tests/
+│   ├── run                          # Zero-dependency shell test runner
+│   ├── helpers/assert.sh            # Small assertion helpers shared by test files
+│   ├── committer.bash               # Regression tests for commit helper behavior
+│   ├── install-skill-hooks.bash     # Regression tests for managed git hook installation
+│   ├── sync-cursor-skills.bash      # Regression tests for Cursor skill symlink sync
+│   ├── sync-codex-skills.bash       # Regression tests for Codex skill mirroring and cleanup
+│   └── sync-workstation-skills.bash # Integration test for the one-command workstation sync wrapper
 │
 ├── .claude/
 │   ├── commands/                    # Slash commands — auto-loaded by Claude Code/Cursor
@@ -65,7 +74,7 @@ agentic_engineering/
 │   └── ...                          # Second brain knowledge files — see this file (.claude/ARCHITECTURE.md)
 │
 └── .github/workflows/
-    ├── ci.yml                       # Docs/repo hygiene checks for this playbook
+    ├── ci.yml                       # Shell regression tests plus docs/repo hygiene checks
     └── cleanup-review-artifacts.yml # Auto-deletes *_review.md from main after merge
 ```
 

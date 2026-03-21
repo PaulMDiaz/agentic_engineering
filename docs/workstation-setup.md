@@ -164,7 +164,7 @@ rm -f ~/Documents/Development/AGENTS.md
 
 # Codex
 rm -f ~/.codex/AGENTS.md
-rm -f ~/.codex/skills/{agent-review,check-ci,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,sync-second-brain,update-second-brain}
+~/Documents/Development/agentic_engineering/scripts/sync-codex-skills uninstall
 
 # Hook automation
 cd ~/Documents/Development/agentic_engineering
