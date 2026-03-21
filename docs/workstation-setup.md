@@ -50,22 +50,38 @@ Commands available: `/check`, `/commit`, `/implement`, `/pr`, `/security-check`
 
 ## Step 3: Install skills
 
-Symlink skill folders to `~/.cursor/skills/`:
+Create the initial Cursor skill symlinks:
 
 ```bash
 mkdir -p ~/.cursor/skills
-
-for skill_dir in ~/Documents/Development/agentic_engineering/skills/*; do
-  [ -d "$skill_dir" ] || continue
-  [ -f "$skill_dir/SKILL.md" ] || continue
-  skill="$(basename "$skill_dir")"
-  ln -sf "$skill_dir" ~/.cursor/skills/$skill
-done
+~/Documents/Development/agentic_engineering/scripts/sync-cursor-skills
 ```
+
+Notes:
+- Cursor reads skill folders through symlinks in `~/.cursor/skills`.
+- Existing linked skills update immediately because the targets are live.
+- New skill folders need another sync pass to create the new symlink.
 
 Skills appear in Cursor Settings → Rules → Agent Decides.
 
-## Step 4: Install development-wide rules
+## Step 4: Install skill sync hooks in the playbook repo
+
+Install repo-local git hooks so sync runs automatically whenever this source-of-truth repo
+changes branch, merges, or records a new commit:
+
+```bash
+cd ~/Documents/Development/agentic_engineering
+./scripts/install-skill-hooks
+./scripts/sync-workstation-skills
+```
+
+Notes:
+- Hooks are installed only in `agentic_engineering/.git/hooks`, which is sufficient because this repo is the source of truth for the `skills/` directory.
+- `post-checkout`, `post-merge`, and `post-commit` all call `scripts/sync-workstation-skills`.
+- Hook-triggered sync warns on failure but does not block the git operation. Running the sync scripts yourself still fails loudly.
+- Cursor uses symlinks. Codex uses mirrored real folders.
+
+## Step 5: Install development-wide rules
 
 Symlink `AGENTS.md` to your development folder root. Cursor picks it up and applies
 it to all projects underneath:
@@ -76,7 +92,7 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/Documents/Develop
 
 Shows in Cursor Settings → Rules → Development.
 
-## Step 5: Install Codex development-wide rules (optional)
+## Step 6: Install Codex development-wide rules (optional)
 
 If you use Codex agents, symlink the same `AGENTS.md` into `~/.codex/`:
 
@@ -87,90 +103,27 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
 
 This makes Codex pick up the same coding standards and workflow guidance.
 
-## Step 6: Install Codex skills (optional, macOS)
+## Step 7: Install Codex skills (optional, macOS)
 
 Codex skill indexing may ignore pure symlinked skill folders. The reliable setup is:
 
 - keep source-of-truth skills in `~/Documents/Development/agentic_engineering/skills`
 - mirror them into **real folders** under `~/.codex/skills/<skill>/SKILL.md`
-- run sync automatically when Codex launches
+- run sync from this repo's git hooks or manually when needed
 
-Create sync scripts and LaunchAgent:
+Create the initial mirrored folders:
 
 ```bash
 mkdir -p ~/.codex/scripts
-mkdir -p ~/Library/LaunchAgents
-
-cat > ~/.codex/scripts/sync-codex-skills.sh <<'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
-SRC="$HOME/Documents/Development/agentic_engineering/skills"
-DST="$HOME/.codex/skills"
-
-mkdir -p "$DST"
-
-for skill_dir in "$SRC"/*; do
-  [ -d "$skill_dir" ] || continue
-  [ -f "$skill_dir/SKILL.md" ] || continue
-  skill="$(basename "$skill_dir")"
-  mkdir -p "$DST/$skill"
-  rsync -a --delete "$skill_dir/" "$DST/$skill/"
-done
-EOF
-
-cat > ~/.codex/scripts/sync-when-codex-running.sh <<'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
-last_pid=""
-while true; do
-  pid="$(pgrep -x Codex || true)"
-  if [[ -n "$pid" && "$pid" != "$last_pid" ]]; then
-    "$HOME/.codex/scripts/sync-codex-skills.sh"
-    last_pid="$pid"
-  elif [[ -z "$pid" ]]; then
-    last_pid=""
-  fi
-  sleep 2
-done
-EOF
-
-cat > ~/Library/LaunchAgents/com.codex-skill-sync.plist <<'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>Label</key><string>com.codex-skill-sync</string>
-    <key>ProgramArguments</key>
-    <array>
-      <string>/bin/bash</string>
-      <string>-lc</string>
-      <string>$HOME/.codex/scripts/sync-when-codex-running.sh</string>
-    </array>
-    <key>RunAtLoad</key><true/>
-    <key>KeepAlive</key><true/>
-    <key>StandardOutPath</key><string>/tmp/codex-skill-sync.out</string>
-    <key>StandardErrorPath</key><string>/tmp/codex-skill-sync.err</string>
-  </dict>
-</plist>
-EOF
-
-chmod +x ~/.codex/scripts/sync-codex-skills.sh
-chmod +x ~/.codex/scripts/sync-when-codex-running.sh
-```
-
-Load the LaunchAgent and run one initial sync:
-
-```bash
-launchctl unload ~/Library/LaunchAgents/com.codex-skill-sync.plist 2>/dev/null || true
-launchctl load ~/Library/LaunchAgents/com.codex-skill-sync.plist
-~/.codex/scripts/sync-codex-skills.sh
+~/Documents/Development/agentic_engineering/scripts/sync-codex-skills
 ```
 
 Notes:
 - `~/.codex/skills/.system/*` can remain symlinks.
 - Codex should read mirrored **real folders** at `~/.codex/skills/<skill>/SKILL.md`.
+- The playbook repo hooks keep the mirror fresh whenever `agentic_engineering` changes locally.
+- Codex cleanup only removes mirrored skills previously created by this repo. It preserves `~/.codex/skills/.system` and unrelated custom skills.
+- If a custom Codex skill uses the same folder name as one of this repo's skills, sync treats the repo skill as authoritative and refreshes that folder.
 - Restart Codex to refresh the session skill index.
 
 ## Verify
@@ -180,8 +133,9 @@ Notes:
    - **Development tab**: AGENTS.md should appear
    - **Agent Decides section**: 10 skills listed
 3. Type `/` in chat — commands should appear
-4. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
-5. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
+4. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
+5. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
+6. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
 
 ## Updating
 
@@ -190,7 +144,12 @@ cd ~/Documents/Development/agentic_engineering
 git pull
 ```
 
-Cursor symlinks apply immediately. For Codex, changes propagate on the next sync (or run `~/.codex/scripts/sync-codex-skills.sh` manually).
+The repo hooks should run automatically after `git pull`, branch switches, and new local commits in `agentic_engineering`. Manual fallback:
+
+```bash
+cd ~/Documents/Development/agentic_engineering
+./scripts/sync-workstation-skills
+```
 
 ## Uninstall
 
@@ -206,13 +165,14 @@ rm -f ~/Documents/Development/AGENTS.md
 
 # Codex
 rm -f ~/.codex/AGENTS.md
-rm -f ~/.codex/skills/{agent-review,check-ci,diff-summary,git-recap,implement,init-second-brain,load-second-brain,security-check,sync-second-brain,update-second-brain}
-rm -f ~/.codex/scripts/sync-codex-skills.sh ~/.codex/scripts/sync-when-codex-running.sh
-launchctl unload ~/Library/LaunchAgents/com.codex-skill-sync.plist 2>/dev/null || true
-rm -f ~/Library/LaunchAgents/com.codex-skill-sync.plist
+~/Documents/Development/agentic_engineering/scripts/sync-codex-skills uninstall
+
+# Hook automation
+cd ~/Documents/Development/agentic_engineering
+./scripts/install-skill-hooks uninstall
 
 # Clean up empty directories
-rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/scripts ~/.codex/skills ~/.codex 2>/dev/null
+rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/skills ~/.codex 2>/dev/null
 ```
 
 ## Different folder path?
@@ -223,8 +183,6 @@ For example, if you use `~/code/`:
 ```bash
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
 ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
-mkdir -p ~/.codex/skills
-mkdir -p ~/.codex/scripts
-# set SRC in ~/.codex/scripts/sync-codex-skills.sh to ~/code/agentic_engineering/skills
-~/.codex/scripts/sync-codex-skills.sh
+~/code/agentic_engineering/scripts/install-skill-hooks
+~/code/agentic_engineering/scripts/sync-workstation-skills
 ```

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+TEST_DIR="$ROOT_DIR/tests"
+
+total=0
+
+for test_file in "$TEST_DIR"/*.bash; do
+  [ -f "$test_file" ] || continue
+  total=$((total + 1))
+  printf 'RUN %s\n' "$(basename "$test_file")"
+  bash "$test_file"
+done
+
+printf 'PASS %s test files\n' "$total"

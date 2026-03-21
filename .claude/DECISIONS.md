@@ -6,6 +6,81 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
+### Codex sync is authoritative for repo-owned skill names
+
+**When:** 2026-03-21
+**Why:** The Codex mirror exists to keep this repo's `skills/` tree reflected in
+`~/.codex/skills`, so a destination folder with the same skill name should converge to the
+repo version instead of preserving divergent local contents. Existing sync behavior and
+tests already refresh same-name folders to the repo copy.
+**Trade-off:** Users cannot keep a different custom Codex skill under the same name as a
+repo-managed skill. Custom skills need distinct names if they should survive sync.
+
+---
+
+### Codex mirror uninstall is owned by `sync-codex-skills`
+
+**When:** 2026-03-21
+**Why:** Codex skills are mirrored as real directories, so shelling out to ad hoc `rm`
+commands in docs is both error-prone and unable to distinguish repo-managed mirrors from
+user-owned custom skills. Reusing `scripts/sync-codex-skills` for uninstall keeps the
+ownership logic and marker checks in one place.
+**Trade-off:** The script now has two modes instead of one. That extra branch is worth it
+to give setup and uninstall a single source of truth.
+
+---
+
+### Workstation scripts use a zero-dependency shell regression harness
+
+**When:** 2026-03-21
+**Why:** The repo's executable surface is almost entirely bash scripts, so the fastest
+reliable test coverage is a small shell harness that runs in temp directories without
+pulling in external frameworks. That keeps CI simple, avoids dependency health questions,
+and directly exercises the documented workstation flows.
+**Trade-off:** The harness is more minimal than a dedicated shell test framework, so it
+provides fewer built-in matchers and reporting features. The reduced setup burden is worth
+it for this repo's size and script-focused scope.
+
+---
+
+### Playbook repo git hooks drive workstation skill sync
+
+**When:** 2026-03-21
+**Why:** The source of truth for repo-local skills is the `agentic_engineering/skills`
+directory, so the most reliable place to trigger workstation sync is from git events in
+that repo itself. `post-checkout`, `post-merge`, and `post-commit` hooks run in the same
+repo context that already has access to the skill source tree, which avoids the launchd
+access and environment issues encountered when background jobs tried to read
+`~/Documents/Development/agentic_engineering/skills` directly.
+**Trade-off:** Sync now depends on this repo's git lifecycle rather than an OS-level file
+watcher. That is acceptable because new skills only matter when this repo changes, and
+manual fallback remains available via `scripts/sync-workstation-skills`.
+
+---
+
+### Cursor sync only creates missing symlinks
+
+**When:** 2026-03-21
+**Why:** Existing Cursor skill symlinks already reflect source-file edits automatically.
+The sync job only needs to create links for newly added skill folders. Keeping the sync
+narrow avoids unnecessary rewrites and matches the actual problem we need to solve.
+**Trade-off:** If an existing Cursor symlink becomes stale or mispointed, it is not
+auto-repaired by routine sync passes. Manual rerun or recreation is still straightforward.
+
+---
+
+### Codex cleanup only removes repo-managed mirrored skills
+
+**When:** 2026-03-21
+**Why:** The Codex mirror needs to converge when a repo-local skill is renamed or removed,
+but `~/.codex/skills` may also contain `.system` or user-created skills that do not
+belong to this repo. Tagging mirrored folders with a repo-managed marker lets sync clean
+up stale mirrors without deleting unrelated Codex-specific skills.
+**Trade-off:** The mirror carries a small hidden marker file in each repo-managed skill
+folder. That extra bookkeeping is worth it to preserve user-owned Codex skills safely.
+
+---
+
 ### Second-brain sync uses a dedicated `second-brain` worktree
 
 **When:** 2026-03-21

@@ -10,6 +10,17 @@ permissions:
   contents: read
 
 jobs:
+  shell-tests:
+    name: Shell Script Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run shell script tests
+        run: bash tests/run
+
   markdown-lint:
     name: Markdown Lint
     runs-on: ubuntu-latest

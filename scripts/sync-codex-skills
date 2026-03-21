@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# Hooks may run without HOME set, so derive the account home directory defensively.
+HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
+SRC="$ROOT_DIR/skills"
+DST="$HOME_DIR/.codex/skills"
+MANAGED_MARKER=".agentic-engineering-skill-source"
+MODE="${1:-sync}"
+
+# No-op on machines that do not have a Codex home directory.
+[ -d "$HOME_DIR/.codex" ] || exit 0
+
+mkdir -p "$DST"
+
+remove_repo_managed_skills() {
+  for dst_dir in "$DST"/*; do
+    [ -d "$dst_dir" ] || continue
+    skill="$(basename "$dst_dir")"
+    [ "$skill" = ".system" ] && continue
+    [ -f "$dst_dir/$MANAGED_MARKER" ] || continue
+    [ "$(cat "$dst_dir/$MANAGED_MARKER")" = "$ROOT_DIR" ] || continue
+    rm -rf "$dst_dir"
+  done
+}
+
+case "$MODE" in
+  sync)
+    ;;
+  uninstall)
+    remove_repo_managed_skills
+    exit 0
+    ;;
+  *)
+    printf 'Usage: %s [sync|uninstall]\n' "$(basename "$0")" >&2
+    exit 2
+    ;;
+esac
+
+for skill_dir in "$SRC"/*; do
+  [ -d "$skill_dir" ] || continue
+  [ -f "$skill_dir/SKILL.md" ] || continue
+  skill="$(basename "$skill_dir")"
+  # Codex indexes real folders more reliably than pure symlinked skills.
+  mkdir -p "$DST/$skill"
+  rsync -a --delete "$skill_dir/" "$DST/$skill/"
+  printf '%s\n' "$ROOT_DIR" > "$DST/$skill/$MANAGED_MARKER"
+done
+
+# Remove stale mirrored skills that were previously created by this repo, while leaving
+# .system and unrelated user-managed skills untouched.
+for dst_dir in "$DST"/*; do
+  [ -d "$dst_dir" ] || continue
+  skill="$(basename "$dst_dir")"
+  [ "$skill" = ".system" ] && continue
+  [ -f "$dst_dir/$MANAGED_MARKER" ] || continue
+  [ "$(cat "$dst_dir/$MANAGED_MARKER")" = "$ROOT_DIR" ] || continue
+  [ -d "$SRC/$skill" ] && [ -f "$SRC/$skill/SKILL.md" ] && continue
+  rm -rf "$dst_dir"
+done

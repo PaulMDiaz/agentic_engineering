@@ -59,8 +59,6 @@ read_when: "You need to find where something lives"
 
 | What | Where |
 |---|---|
-| Claude Code Stop hook registration | `docs/second-brain-hooks.md` → Claude Code |
-| Cursor session-end automation | `docs/second-brain-hooks.md` → Cursor |
 | Tool catalog (gh, git, claude CLI, quality gates) | `tools.md` |
 
 ## Scripts & CI
@@ -68,6 +66,19 @@ read_when: "You need to find where something lives"
 | What | Where |
 |---|---|
 | Stage + commit helper | `scripts/committer` |
+| Install repo-local skill sync hooks | `scripts/install-skill-hooks` |
+| Sync Cursor skill symlinks | `scripts/sync-cursor-skills` |
+| Sync Codex mirrored skill folders | `scripts/sync-codex-skills` |
+| Remove repo-managed Codex mirrored skill folders | `scripts/sync-codex-skills uninstall` |
+| Sync both workstation skill surfaces | `scripts/sync-workstation-skills` |
 | Conventional Commits regex | `scripts/committer` ~line 17 |
 | TTY detection (agent hard fail vs human prompt) | `scripts/committer` ~line 22 |
+| Zero-dependency shell test runner | `tests/run` |
+| Shell test assertions | `tests/helpers/assert.sh` |
+| Commit helper regression tests | `tests/committer.bash` |
+| Hook installer regression tests | `tests/install-skill-hooks.bash` |
+| Cursor skill sync regression tests | `tests/sync-cursor-skills.bash` |
+| Codex skill sync regression tests | `tests/sync-codex-skills.bash` |
+| Workstation sync wrapper regression tests | `tests/sync-workstation-skills.bash` |
+| Shell script test job | `.github/workflows/ci.yml` → `shell-tests` |
 | Auto-delete review artifacts post-merge | `.github/workflows/cleanup-review-artifacts.yml` |
