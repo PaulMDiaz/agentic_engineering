@@ -35,6 +35,7 @@ read_when: "You need to find where something lives"
 |---|---|
 | Bootstrap `.claude/` for a project | `skills/init-second-brain/SKILL.md` |
 | Load `.claude/` context at session start | `skills/load-second-brain/SKILL.md` |
+| Sync `.claude/` via a dedicated `second-brain` branch/worktree | `skills/sync-second-brain/SKILL.md` |
 | Record session work into `.claude/` | `skills/update-second-brain/SKILL.md` |
 | Review a branch or PR for bugs/inconsistencies | `skills/agent-review/SKILL.md` |
 | Walk through a diff — goal + approach | `skills/diff-summary/SKILL.md` |
