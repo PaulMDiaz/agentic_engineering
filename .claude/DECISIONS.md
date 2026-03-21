@@ -6,6 +6,18 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
+### Codex sync is authoritative for repo-owned skill names
+
+**When:** 2026-03-21
+**Why:** The Codex mirror exists to keep this repo's `skills/` tree reflected in
+`~/.codex/skills`, so a destination folder with the same skill name should converge to the
+repo version instead of preserving divergent local contents. Existing sync behavior and
+tests already refresh same-name folders to the repo copy.
+**Trade-off:** Users cannot keep a different custom Codex skill under the same name as a
+repo-managed skill. Custom skills need distinct names if they should survive sync.
+
+---
+
 ### Codex mirror uninstall is owned by `sync-codex-skills`
 
 **When:** 2026-03-21

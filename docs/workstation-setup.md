@@ -123,6 +123,7 @@ Notes:
 - Codex should read mirrored **real folders** at `~/.codex/skills/<skill>/SKILL.md`.
 - The playbook repo hooks keep the mirror fresh whenever `agentic_engineering` changes locally.
 - Codex cleanup only removes mirrored skills previously created by this repo. It preserves `~/.codex/skills/.system` and unrelated custom skills.
+- If a custom Codex skill uses the same folder name as one of this repo's skills, sync treats the repo skill as authoritative and refreshes that folder.
 - Restart Codex to refresh the session skill index.
 
 ## Verify

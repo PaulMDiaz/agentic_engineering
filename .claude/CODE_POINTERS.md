@@ -59,8 +59,6 @@ read_when: "You need to find where something lives"
 
 | What | Where |
 |---|---|
-| Claude Code Stop hook registration | `docs/second-brain-hooks.md` → Claude Code |
-| Cursor session-end automation | `docs/second-brain-hooks.md` → Cursor |
 | Tool catalog (gh, git, claude CLI, quality gates) | `tools.md` |
 
 ## Scripts & CI
