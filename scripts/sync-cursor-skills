@@ -2,10 +2,12 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# Hooks may run without HOME set, so derive the account home directory defensively.
 HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
 SRC="$ROOT_DIR/skills"
 DST="$HOME_DIR/.cursor/skills"
 
+# No-op on machines that do not have a Cursor home directory.
 [ -d "$HOME_DIR/.cursor" ] || exit 0
 
 mkdir -p "$DST"
@@ -14,5 +16,6 @@ for skill_dir in "$SRC"/*; do
   [ -d "$skill_dir" ] || continue
   [ -f "$skill_dir/SKILL.md" ] || continue
   skill="$(basename "$skill_dir")"
+  # Existing symlinks already reflect source edits, so only create missing ones.
   [ -e "$DST/$skill" ] || ln -s "$skill_dir" "$DST/$skill"
 done

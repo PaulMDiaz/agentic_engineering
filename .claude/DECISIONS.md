@@ -32,6 +32,18 @@ auto-repaired by routine sync passes. Manual rerun or recreation is still straig
 
 ---
 
+### Codex cleanup only removes repo-managed mirrored skills
+
+**When:** 2026-03-21
+**Why:** The Codex mirror needs to converge when a repo-local skill is renamed or removed,
+but `~/.codex/skills` may also contain `.system` or user-created skills that do not
+belong to this repo. Tagging mirrored folders with a repo-managed marker lets sync clean
+up stale mirrors without deleting unrelated Codex-specific skills.
+**Trade-off:** The mirror carries a small hidden marker file in each repo-managed skill
+folder. That extra bookkeeping is worth it to preserve user-owned Codex skills safely.
+
+---
+
 ### Second-brain sync uses a dedicated `second-brain` worktree
 
 **When:** 2026-03-21

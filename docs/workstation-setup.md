@@ -78,6 +78,7 @@ cd ~/Documents/Development/agentic_engineering
 Notes:
 - Hooks are installed only in `agentic_engineering/.git/hooks`, which is sufficient because this repo is the source of truth for the `skills/` directory.
 - `post-checkout`, `post-merge`, and `post-commit` all call `scripts/sync-workstation-skills`.
+- Hook-triggered sync warns on failure but does not block the git operation. Running the sync scripts yourself still fails loudly.
 - Cursor uses symlinks. Codex uses mirrored real folders.
 
 ## Step 5: Install development-wide rules
@@ -121,6 +122,7 @@ Notes:
 - `~/.codex/skills/.system/*` can remain symlinks.
 - Codex should read mirrored **real folders** at `~/.codex/skills/<skill>/SKILL.md`.
 - The playbook repo hooks keep the mirror fresh whenever `agentic_engineering` changes locally.
+- Codex cleanup only removes mirrored skills previously created by this repo. It preserves `~/.codex/skills/.system` and unrelated custom skills.
 - Restart Codex to refresh the session skill index.
 
 ## Verify
