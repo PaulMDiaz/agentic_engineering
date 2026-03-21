@@ -29,6 +29,7 @@ Both commands and skills are invoked with `/name` in Cursor.
 | `/init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
 | `/load-second-brain` | Load full project context at session start |
 | `/security-check` | Security review checklist |
+| `/sync-second-brain` | Sync `.claude/` using a dedicated `second-brain` worktree |
 | `/update-second-brain` | Record what was worked on this session |
 
 ## File Locations

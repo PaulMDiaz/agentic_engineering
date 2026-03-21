@@ -6,6 +6,18 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
+### Second-brain sync uses a dedicated `second-brain` worktree
+
+**When:** 2026-03-21
+**Why:** Syncing `.claude/` through a separate worktree keeps second-brain commits off
+feature branches and makes the lifecycle explicit: copy, review, commit, push, remove,
+return. The documented workflow avoids `rsync --delete` so deletions stay manual and
+reviewable instead of being applied blindly.
+**Trade-off:** Slightly more manual than a one-command mirror. Worth it for safer deletes
+and cleaner branch hygiene across repos.
+
+---
+
 ### Repo is Claude Code / Cursor only — no OpenClaw files
 
 **When:** 2026-02-21
