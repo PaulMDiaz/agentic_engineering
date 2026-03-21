@@ -6,18 +6,29 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
-### Codex skill mirroring uses `WatchPaths`, not a PID watcher
+### Playbook repo git hooks drive workstation skill sync
 
 **When:** 2026-03-21
-**Why:** The original Step 6 setup used a long-lived `pgrep` loop to notice Codex launches
-and then mirror repo-local skills into `~/.codex/skills`. In practice that model was too
-fragile: opening a new window is not the same as a fresh app launch, missed detections
-left the mirror stale, and there was no meaningful audit trail when it failed. Launchd
-`WatchPaths` is simpler and more reliable for the actual goal, which is keeping the
-mirrored skill folders up to date when the source `skills/` directory changes.
-**Trade-off:** The mirror now updates on source changes rather than strictly on app
-launch. Codex may still need a restart to refresh its in-memory skill index, but the
-files on disk stay current without a long-lived polling process.
+**Why:** The source of truth for repo-local skills is the `agentic_engineering/skills`
+directory, so the most reliable place to trigger workstation sync is from git events in
+that repo itself. `post-checkout`, `post-merge`, and `post-commit` hooks run in the same
+repo context that already has access to the skill source tree, which avoids the launchd
+access and environment issues encountered when background jobs tried to read
+`~/Documents/Development/agentic_engineering/skills` directly.
+**Trade-off:** Sync now depends on this repo's git lifecycle rather than an OS-level file
+watcher. That is acceptable because new skills only matter when this repo changes, and
+manual fallback remains available via `scripts/sync-workstation-skills`.
+
+---
+
+### Cursor sync only creates missing symlinks
+
+**When:** 2026-03-21
+**Why:** Existing Cursor skill symlinks already reflect source-file edits automatically.
+The sync job only needs to create links for newly added skill folders. Keeping the sync
+narrow avoids unnecessary rewrites and matches the actual problem we need to solve.
+**Trade-off:** If an existing Cursor symlink becomes stale or mispointed, it is not
+auto-repaired by routine sync passes. Manual rerun or recreation is still straightforward.
 
 ---
 

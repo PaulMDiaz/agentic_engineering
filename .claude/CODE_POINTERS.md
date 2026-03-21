@@ -68,6 +68,10 @@ read_when: "You need to find where something lives"
 | What | Where |
 |---|---|
 | Stage + commit helper | `scripts/committer` |
+| Install repo-local skill sync hooks | `scripts/install-skill-hooks` |
+| Sync Cursor skill symlinks | `scripts/sync-cursor-skills` |
+| Sync Codex mirrored skill folders | `scripts/sync-codex-skills` |
+| Sync both workstation skill surfaces | `scripts/sync-workstation-skills` |
 | Conventional Commits regex | `scripts/committer` ~line 17 |
 | TTY detection (agent hard fail vs human prompt) | `scripts/committer` ~line 22 |
 | Auto-delete review artifacts post-merge | `.github/workflows/cleanup-review-artifacts.yml` |

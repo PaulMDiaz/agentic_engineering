@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+HOOKS_DIR="$ROOT_DIR/.git/hooks"
+MODE="${1:-install}"
+MARKER="# agentic-engineering-skill-sync"
+
+install_hook() {
+  hook_name="$1"
+  hook_path="$HOOKS_DIR/$hook_name"
+
+  if [ -e "$hook_path" ] && ! grep -qF "$MARKER" "$hook_path"; then
+    printf 'Refusing to overwrite existing unmanaged hook: %s\n' "$hook_path" >&2
+    exit 1
+  fi
+
+  cat > "$hook_path" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+$MARKER
+
+REPO_ROOT="\$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[ -n "\$REPO_ROOT" ] || exit 0
+"\$REPO_ROOT/scripts/sync-workstation-skills" >/dev/null 2>&1 || true
+EOF
+
+  chmod +x "$hook_path"
+}
+
+uninstall_hook() {
+  hook_name="$1"
+  hook_path="$HOOKS_DIR/$hook_name"
+  [ -e "$hook_path" ] || return 0
+  grep -qF "$MARKER" "$hook_path" || return 0
+  rm -f "$hook_path"
+}
+
+mkdir -p "$HOOKS_DIR"
+
+case "$MODE" in
+  install)
+    install_hook post-checkout
+    install_hook post-commit
+    install_hook post-merge
+    ;;
+  uninstall)
+    uninstall_hook post-checkout
+    uninstall_hook post-commit
+    uninstall_hook post-merge
+    ;;
+  *)
+    printf 'Usage: %s [install|uninstall]\n' "$(basename "$0")" >&2
+    exit 2
+    ;;
+esac
