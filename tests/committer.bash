@@ -29,6 +29,20 @@ test_rejects_invalid_noninteractive_message() {
   assert_contains "$output" "Conventional Commits format" "committer should explain the format failure"
 }
 
+
+test_rejects_missing_emoji_in_noninteractive_message() {
+  repo_dir="$(make_repo)"
+  printf 'change\n' > "$repo_dir/tracked.txt"
+
+  set +e
+  output="$(cd "$repo_dir" && "$ROOT_DIR/scripts/committer" "feat(test): update tracked file" tracked.txt </dev/null 2>&1)"
+  status=$?
+  set -e
+
+  assert_eq "1" "$status" "committer should fail when the emoji is missing"
+  assert_contains "$output" "Expected: type(scope)?: emoji description" "committer should explain the emoji requirement"
+}
+
 test_commits_only_listed_files() {
   repo_dir="$(make_repo)"
   printf 'first change\n' > "$repo_dir/tracked.txt"
@@ -59,5 +73,6 @@ test_rejects_when_nothing_is_staged() {
 }
 
 test_rejects_invalid_noninteractive_message
+test_rejects_missing_emoji_in_noninteractive_message
 test_commits_only_listed_files
 test_rejects_when_nothing_is_staged

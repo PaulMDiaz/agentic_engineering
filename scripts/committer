@@ -18,11 +18,11 @@ shift
 [[ -z "$message" ]] && { echo "Error: commit message cannot be empty" >&2; exit 1; }
 
 # Validate Conventional Commits format
-# Expected: type(scope)?: [emoji ]description  e.g. feat(auth): ✨ add login
-cc_pattern='^(feat|fix|docs|refactor|style|perf|test|chore|wip|remove|security)(\(.+\))?: ([^[:alnum:][:space:]]+[[:space:]]+)?[^[:space:]].+'
+# Expected: type(scope)?: emoji description  e.g. feat(auth): ✨ add login
+cc_pattern='^(feat|fix|docs|refactor|style|perf|test|chore|wip|remove|security)(\(.+\))?: [^[:alnum:][:space:]]+[[:space:]]+[^[:space:]].+'
 if ! echo "$message" | grep -qE "$cc_pattern"; then
   printf 'Error: commit message does not follow Conventional Commits format.\n' >&2
-  printf '  Expected: type(scope)?: [emoji ]description\n' >&2
+  printf '  Expected: type(scope)?: emoji description\n' >&2
   printf '  Types: feat fix docs refactor style perf test chore wip remove security\n' >&2
   printf '  Example: feat(auth): ✨ add login flow\n' >&2
   if [ -t 0 ]; then
