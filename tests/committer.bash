@@ -36,7 +36,7 @@ test_commits_only_listed_files() {
 
   (
     cd "$repo_dir"
-    "$ROOT_DIR/scripts/committer" "✨ feat(test): update tracked file" tracked.txt
+    "$ROOT_DIR/scripts/committer" "feat(test): ✨ update tracked file" tracked.txt
   ) >/dev/null
 
   committed_files="$(git -C "$repo_dir" show --pretty='' --name-only HEAD)"
@@ -50,7 +50,7 @@ test_rejects_when_nothing_is_staged() {
   repo_dir="$(make_repo)"
 
   set +e
-  output="$(cd "$repo_dir" && "$ROOT_DIR/scripts/committer" "✨ feat(test): no-op" tracked.txt 2>&1)"
+  output="$(cd "$repo_dir" && "$ROOT_DIR/scripts/committer" "feat(test): ✨ no-op" tracked.txt 2>&1)"
   status=$?
   set -e
 

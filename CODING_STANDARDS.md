@@ -19,7 +19,7 @@ Platform-agnostic — applies equally in Claude Code, Cursor, OpenClaw, or any o
 
 ## Commits (Conventional Commits)
 
-Format: `[emoji] type(scope): description`
+Format: `type(scope): [emoji] description`
 
 Types:
 - ✨ `feat` — new feature

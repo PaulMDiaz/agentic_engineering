@@ -33,7 +33,7 @@ For any non-trivial session that needs project context, run the `load-second-bra
 
 ```bash
 # Commit
-./scripts/committer "✨ feat(scope): description" file1 file2
+./scripts/committer "feat(scope): ✨ description" file1 file2
 ```
 
 ## Repository Structure
