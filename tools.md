@@ -39,7 +39,7 @@ trash path/to/file
 ### scripts/committer
 Optional convenience helper that stages the listed files and creates a commit. Validates conventional commit format.
 ```bash
-./scripts/committer "✨ feat(thing): add thing" src/thing.py tests/test_thing.py
+./scripts/committer "feat(thing): ✨ add thing" src/thing.py tests/test_thing.py
 ```
 
 ## Platform
