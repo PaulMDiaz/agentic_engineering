@@ -35,6 +35,7 @@ agentic_engineering/
 │   ├── check-ci/SKILL.md            # Local CI-equivalent verification with structured output
 │   ├── diff-summary/SKILL.md        # Walk through a diff — what it does and how
 │   ├── git-recap/SKILL.md           # Summarize recent work from git log (replaces NOTES.md)
+│   ├── grill-with-docs/SKILL.md     # Stress-test plans against language, code, and docs
 │   ├── implement/SKILL.md           # Methodical task implementation — understand, plan, implement, verify
 │   ├── init-second-brain/SKILL.md   # Bootstrap .claude/ for a project
 │   ├── load-second-brain/SKILL.md   # Load .claude/ context at session start

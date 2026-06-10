@@ -40,6 +40,7 @@ read_when: "You need to find where something lives"
 | Review a branch or PR for bugs/inconsistencies | `skills/agent-review/SKILL.md` |
 | Walk through a diff — goal + approach | `skills/diff-summary/SKILL.md` |
 | Summarize recent work from git log | `skills/git-recap/SKILL.md` |
+| Stress-test plans against code, language, and docs | `skills/grill-with-docs/SKILL.md` |
 | Methodical task implementation | `skills/implement/SKILL.md` |
 | Local CI-equivalent verification | `skills/check-ci/SKILL.md` |
 | Security review checklist | `skills/security-check/SKILL.md` |

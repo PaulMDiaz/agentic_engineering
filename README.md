@@ -20,6 +20,7 @@ See [Workstation Setup](docs/workstation-setup.md) for installation and uninstal
 | check-ci | Verify local CI-equivalent checks for changed files or the full repo |
 | diff-summary | Explain what a diff is trying to accomplish |
 | git-recap | Summarize recent work from git history |
+| grill-with-docs | Stress-test a plan against code, project language, and docs |
 | implement | Methodical task approach — understand, plan, implement, verify |
 | init-second-brain | Bootstrap a `.claude/` knowledge base for a project |
 | load-second-brain | Load project context at session start |
