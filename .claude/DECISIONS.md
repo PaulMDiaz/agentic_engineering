@@ -6,6 +6,20 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
+### Grill-with-docs preserves target repo documentation conventions
+
+**When:** 2026-06-10
+**Why:** The upstream skill assumes a generic `CONTEXT.md` plus `docs/adr/` layout, but
+repos using this playbook may already have stronger conventions such as second-brain
+files, `docs/architecture/decision_records/`, frontmatter, proprietary headers, or
+planning artifacts. The repo-managed skill should improve documentation while respecting
+the local structure it finds.
+**Trade-off:** The skill is more verbose than the upstream version and has more discovery
+steps before it starts asking questions. That overhead is worth it to avoid creating
+parallel documentation systems in downstream repos.
+
+---
+
 ### Codex sync is authoritative for repo-owned skill names
 
 **When:** 2026-03-21

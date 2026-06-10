@@ -28,6 +28,7 @@ This repo exposes two different integration surfaces:
 | `check-ci` | Verify local CI-equivalent checks for changed files or the full repo |
 | `diff-summary` | Walk through a diff — what it does and how |
 | `git-recap` | Summarize recent work from git history |
+| `grill-with-docs` | Stress-test a plan against code, project language, and docs |
 | `implement` | Methodical task approach — understand, plan, implement, verify |
 | `init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
 | `load-second-brain` | Load full project context at session start |
