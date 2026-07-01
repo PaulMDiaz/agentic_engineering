@@ -27,6 +27,7 @@ See [Workstation Setup](docs/workstation-setup.md) for installation and uninstal
 | security-check | Security review — what to check for, how to report findings |
 | sync-second-brain | Sync `.claude/` through a dedicated `second-brain` branch/worktree |
 | update-second-brain | Record session work into `.claude/` |
+| work-items-analysis | Investigate Jira, GitHub, and local git work items over a date range |
 
 ## Philosophy
 

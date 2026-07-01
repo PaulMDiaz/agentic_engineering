@@ -41,7 +41,8 @@ agentic_engineering/
 │   ├── load-second-brain/SKILL.md   # Load .claude/ context at session start
 │   ├── security-check/SKILL.md      # Security review — what to check, how to report
 │   ├── sync-second-brain/SKILL.md   # Sync .claude/ on a dedicated second-brain worktree
-│   └── update-second-brain/SKILL.md # Record session work into .claude/
+│   ├── update-second-brain/SKILL.md # Record session work into .claude/
+│   └── work-items-analysis/SKILL.md # Analyze Jira, GitHub, and local git work items
 │
 ├── docs/
 │   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)
