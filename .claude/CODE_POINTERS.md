@@ -44,6 +44,7 @@ read_when: "You need to find where something lives"
 | Methodical task implementation | `skills/implement/SKILL.md` |
 | Local CI-equivalent verification | `skills/check-ci/SKILL.md` |
 | Security review checklist | `skills/security-check/SKILL.md` |
+| Work-item analysis across Jira, GitHub, and local git | `skills/work-items-analysis/SKILL.md` |
 
 ## Slash Commands
 

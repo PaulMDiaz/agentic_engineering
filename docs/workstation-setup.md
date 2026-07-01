@@ -131,7 +131,7 @@ Notes:
 1. Open Cursor Settings (Cmd+Shift+J)
 2. Go to **Rules**:
    - **Development tab**: AGENTS.md should appear
-   - **Agent Decides section**: 11 skills listed
+   - **Agent Decides section**: 12 skills listed
 3. Type `/` in chat — commands should appear
 4. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
 5. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
@@ -158,7 +158,7 @@ cd ~/Documents/Development/agentic_engineering
 rm -f ~/.cursor/commands/{check,commit,implement,pr,security-check}.md
 
 # Skills
-rm -f ~/.cursor/skills/{agent-review,check-ci,diff-summary,git-recap,grill-with-docs,implement,init-second-brain,load-second-brain,security-check,sync-second-brain,update-second-brain}
+rm -f ~/.cursor/skills/{agent-review,check-ci,diff-summary,git-recap,grill-with-docs,implement,init-second-brain,load-second-brain,security-check,sync-second-brain,update-second-brain,work-items-analysis}
 
 # Rules
 rm -f ~/Documents/Development/AGENTS.md

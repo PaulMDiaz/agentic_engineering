@@ -27,6 +27,7 @@ For any non-trivial session that needs project context, run the `load-second-bra
 | /security-check | Reviewing security-sensitive changes or posture |
 | /sync-second-brain | Syncing `.claude/` through a dedicated `second-brain` worktree |
 | /update-second-brain | Recording important repo changes/decisions after work |
+| /work-items-analysis | Investigating Jira, GitHub, and local git work items over a date range |
 
 ## Quick Reference
 

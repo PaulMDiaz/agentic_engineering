@@ -35,6 +35,7 @@ This repo exposes two different integration surfaces:
 | `security-check` | Security review checklist |
 | `sync-second-brain` | Sync `.claude/` using a dedicated `second-brain` worktree |
 | `update-second-brain` | Record what was worked on this session |
+| `work-items-analysis` | Investigate Jira, GitHub, and local git work items over a date range |
 
 ## File Locations
 
