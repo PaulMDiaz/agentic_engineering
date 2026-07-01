@@ -38,6 +38,7 @@ read_when: "You need to find where something lives"
 | Sync `.claude/` via a dedicated `second-brain` branch/worktree | `skills/sync-second-brain/SKILL.md` |
 | Record session work into `.claude/` | `skills/update-second-brain/SKILL.md` |
 | Review a branch or PR for bugs/inconsistencies | `skills/agent-review/SKILL.md` |
+| Triage GitHub PR review comments into a checklist | `skills/pr-review-triage/SKILL.md` |
 | Walk through a diff — goal + approach | `skills/diff-summary/SKILL.md` |
 | Summarize recent work from git log | `skills/git-recap/SKILL.md` |
 | Stress-test plans against code, language, and docs | `skills/grill-with-docs/SKILL.md` |

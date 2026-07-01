@@ -39,6 +39,7 @@ agentic_engineering/
 │   ├── implement/SKILL.md           # Methodical task implementation — understand, plan, implement, verify
 │   ├── init-second-brain/SKILL.md   # Bootstrap .claude/ for a project
 │   ├── load-second-brain/SKILL.md   # Load .claude/ context at session start
+│   ├── pr-review-triage/SKILL.md    # Triage GitHub PR comments into a checklist
 │   ├── security-check/SKILL.md      # Security review — what to check, how to report
 │   ├── sync-second-brain/SKILL.md   # Sync .claude/ on a dedicated second-brain worktree
 │   ├── update-second-brain/SKILL.md # Record session work into .claude/
