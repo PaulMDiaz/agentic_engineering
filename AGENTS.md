@@ -24,6 +24,7 @@ For any non-trivial session that needs project context, run the `load-second-bra
 | /implement | Implementing a planned change |
 | /init-second-brain | Initializing second-brain files for a repo that does not have them yet |
 | /load-second-brain | Loading repo context before work |
+| /pr-review-triage | Triaging GitHub PR review feedback into a checklist before implementation |
 | /security-check | Reviewing security-sensitive changes or posture |
 | /sync-second-brain | Syncing `.claude/` through a dedicated `second-brain` worktree |
 | /update-second-brain | Recording important repo changes/decisions after work |

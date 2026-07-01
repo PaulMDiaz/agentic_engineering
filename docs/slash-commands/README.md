@@ -32,6 +32,7 @@ This repo exposes two different integration surfaces:
 | `implement` | Methodical task approach — understand, plan, implement, verify |
 | `init-second-brain` | Bootstrap `.claude/` knowledge base for a project |
 | `load-second-brain` | Load full project context at session start |
+| `pr-review-triage` | Triage GitHub PR comments into a checklist before implementation |
 | `security-check` | Security review checklist |
 | `sync-second-brain` | Sync `.claude/` using a dedicated `second-brain` worktree |
 | `update-second-brain` | Record what was worked on this session |

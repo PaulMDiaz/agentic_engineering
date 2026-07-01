@@ -24,6 +24,7 @@ See [Workstation Setup](docs/workstation-setup.md) for installation and uninstal
 | implement | Methodical task approach — understand, plan, implement, verify |
 | init-second-brain | Bootstrap a `.claude/` knowledge base for a project |
 | load-second-brain | Load project context at session start |
+| pr-review-triage | Triage GitHub PR comments into a checklist before implementation |
 | security-check | Security review — what to check for, how to report findings |
 | sync-second-brain | Sync `.claude/` through a dedicated `second-brain` branch/worktree |
 | update-second-brain | Record session work into `.claude/` |
