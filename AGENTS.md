@@ -6,7 +6,7 @@ Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md
 
 - Use skills when appropriate.
 - Keep repo guidance and second-brain files up to date when workflow or conventions change.
-- Before ending meaningful work, update the second brain.
+- Before ending meaningful work, update the second brain when durable project knowledge changed; otherwise note that no update was needed.
 
 ## Second Brain
 
@@ -14,29 +14,28 @@ For any non-trivial session that needs project context, run the `load-second-bra
 
 ## Skills
 
-| Command | When to use |
+| Skill | When to use |
 | --- | --- |
-| /agent-review | Reviewing a PR or branch |
-| /check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
-| /diff-summary | Understanding what a diff does |
-| /git-recap | Summarizing recent work |
-| /grill-with-docs | Stress-testing a plan against code, project language, and docs |
-| /implement | Implementing a planned change |
-| /init-second-brain | Initializing second-brain files for a repo that does not have them yet |
-| /load-second-brain | Loading repo context before work |
-| /pr-review-triage | Triaging GitHub PR review feedback into a checklist before implementation |
-| /security-check | Reviewing security-sensitive changes or posture |
-| /sync-second-brain | Syncing `.claude/` through a dedicated `second-brain` worktree |
-| /update-second-brain | Recording important repo changes/decisions after work |
-| /work-items-analysis | Investigating Jira, GitHub, and local git work items over a date range |
+| agent-review | Reviewing a PR or branch |
+| check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
+| diff-summary | Understanding what a diff does |
+| git-recap | Summarizing recent work |
+| grill-with-docs | Stress-testing a plan against code, project language, and docs |
+| implement | Implementing a planned change |
+| init-second-brain | Initializing second-brain files for a repo that does not have them yet |
+| load-second-brain | Loading repo context before work |
+| pr-review-triage | Triaging GitHub PR review feedback into a checklist before implementation |
+| security-check | Reviewing security-sensitive changes or posture |
+| sync-second-brain | Syncing `.claude/` through a dedicated `second-brain` worktree |
+| update-second-brain | Recording important repo changes/decisions after work |
+| work-items-analysis | Investigating Jira, GitHub, and local git work items over a date range |
 
 ## Quick Reference
 
-`scripts/committer` is an optional convenience helper that stages the listed files and creates a commit with the message you provide.
-
 ```bash
-# Commit
-./scripts/committer "feat(scope): ✨ description" file1 file2
+# Commit explicit files
+git add file1 file2
+git commit -m "feat(scope): ✨ description"
 ```
 
 ## Repository Structure
@@ -51,6 +50,6 @@ For any non-trivial session that needs project context, run the `load-second-bra
 ## Session End
 
 Before ending meaningful work:
-- run or follow `update-second-brain`
+- run or follow `update-second-brain` when durable project knowledge changed
 - leave instructions/docs in a consistent state
 - do not leave stale workflow guidance behind

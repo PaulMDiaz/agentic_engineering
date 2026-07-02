@@ -5,10 +5,6 @@ read_when: "A setup step fails, a skill does not appear, or CI/docs checks are f
 
 # Troubleshooting
 
-## Cursor commands do not appear
-- confirm `.claude/commands/*.md` is symlinked into `~/.cursor/commands/`
-- restart Cursor if commands were added while it was running
-
 ## Cursor skills do not appear
 - confirm symlinks exist under `~/.cursor/skills/<skill>`
 - confirm `agentic_engineering/.git/hooks/post-checkout`, `post-commit`, and `post-merge` exist

@@ -26,13 +26,13 @@ read_when: "Before starting new work — check if it's already planned"
   OpenClaw-specific file. (`CLAUDE.md` → Structure section)
 - [x] **Reconcile `trash > rm` vs `-i` flag rule** — Shell section now leads with `trash`
   preference and falls back to `rm -i` only if `trash` is unavailable. (`CODING_STANDARDS.md`)
-- [x] **5 skills listed in slash command index have no backing command files** — Moved to
-  `.claude/commands/`; README index now separates slash commands from skills.
-- [x] Remove dead `/context-prime` from slash command index
+- [x] **Remove repo-managed slash command surface** — Cursor workflows now use skills
+  directly; `.claude/commands/` and `docs/slash-commands/` were removed.
 - [x] Fix `_validate_llm_output()` — pure function, `dict[str, Any]`, no in-place mutation
 - [x] Replace silent LLM parse failure fallback with propagate + clamping distinction note
 - [x] Remove OpenClaw section from `second-brain-hooks.md`
-- [x] Add Conventional Commits regex to `scripts/committer`; TTY split for agent vs human
+- [x] Remove committer helper — direct `git add` / `git commit -m` workflow now relies on
+  `CODING_STANDARDS.md` for Conventional Commit rules
 - [x] Replace `$ARGUMENTS` with plain instructions in skills
 - [x] Add `ruff format --check .` to `tools.md`
 - [x] Add `.gitignore`

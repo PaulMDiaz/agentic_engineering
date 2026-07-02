@@ -47,12 +47,9 @@ agentic_engineering/
 │
 ├── docs/
 │   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)
-│   ├── workstation-setup.md         # Install playbook globally via symlinks
-│   └── slash-commands/
-│       └── README.md                # Index of slash commands and skills
+│   └── workstation-setup.md         # Install playbook globally via symlinks
 │
 ├── scripts/
-│   ├── committer                    # Optional stage + commit helper; validates Conventional Commits
 │   ├── install-skill-hooks          # Installs repo-local git hooks that sync workstation skills
 │   ├── sync-codex-skills            # Mirrors repo skills into ~/.codex/skills and can uninstall repo-managed mirrors
 │   ├── sync-cursor-skills           # Creates missing ~/.cursor skill symlinks
@@ -61,19 +58,12 @@ agentic_engineering/
 ├── tests/
 │   ├── run                          # Zero-dependency shell test runner
 │   ├── helpers/assert.sh            # Small assertion helpers shared by test files
-│   ├── committer.bash               # Regression tests for commit helper behavior
 │   ├── install-skill-hooks.bash     # Regression tests for managed git hook installation
 │   ├── sync-cursor-skills.bash      # Regression tests for Cursor skill symlink sync
 │   ├── sync-codex-skills.bash       # Regression tests for Codex skill mirroring and cleanup
 │   └── sync-workstation-skills.bash # Integration test for the one-command workstation sync wrapper
 │
 ├── .claude/
-│   ├── commands/                    # Slash commands — auto-loaded by Claude Code/Cursor
-│   │   ├── check.md                 # /check — full quality gate
-│   │   ├── commit.md                # /commit — conventional commit
-│   │   ├── implement.md             # /implement — methodical task flow
-│   │   ├── pr.md                    # /pr — create pull request
-│   │   └── security-check.md        # /security-check — pre-ship security review
 │   └── ...                          # Second brain knowledge files — see this file (.claude/ARCHITECTURE.md)
 │
 └── .github/workflows/

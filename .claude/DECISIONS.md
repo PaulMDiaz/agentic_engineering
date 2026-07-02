@@ -150,6 +150,22 @@ without pulling in OpenClaw-specific behavior.
 while humans keep the forgiving prompt.
 **Trade-off:** Agents must format messages correctly on first attempt — the right behavior.
 
+> ⚠️ Superseded — `scripts/committer` was removed on 2026-07-02. Direct `git add` and
+> `git commit -m` with documented Conventional Commit rules are now the standard.
+
+---
+
+### Direct git commits replace committer helper
+
+**When:** 2026-07-02
+**Why:** The helper duplicated a workflow that plain git already handles clearly, added
+tests and documentation to maintain, and risked drifting from `CODING_STANDARDS.md`.
+The repo still keeps the Conventional Commit + emoji standard, but agents stage explicit
+files and commit directly.
+**Trade-off:** Commit format is no longer checked by a repo-local wrapper. This is
+acceptable because the standard is documented centrally and direct git commands reduce
+repo-specific tooling surface.
+
 ---
 
 ### Skills use plain instructions instead of `$ARGUMENTS`
@@ -224,6 +240,33 @@ Acceptable because: (1) untouched files are unlikely to have changed, (2) they'l
 verified when someone eventually touches them, (3) full audits can be requested explicitly.
 Significant token savings while keeping the knowledge base trustworthy for all agents
 (Cursor, Codex, fresh Claude Code sessions) that rely on it without conversation history.
+
+---
+
+### Second brain records durable knowledge only
+
+**When:** 2026-07-02
+**Why:** Newer coding agents handle longer context and routine testing well, but broad
+"update the second brain" instructions still encourage noisy session notes, trivial
+decision records, and code-pointer entries for implementation details. The durable
+threshold keeps `.claude/` useful as agent memory instead of a transcript.
+**Trade-off:** Some small decisions and helpers will not be recorded. That is acceptable
+because git history covers session progress, code search covers ordinary helpers, and
+`DECISIONS.md` should capture only choices that are hard to reverse, surprising without
+context, and involved real trade-offs.
+
+---
+
+### Skills replace repo-managed slash commands
+
+**When:** 2026-07-02
+**Why:** Cursor 2.4 moved slash-command-style workflows into Agent Skills and supports
+manual skill invocation with `/skill-name`, including `disable-model-invocation` for
+explicit-only behavior. This repo no longer needs a separate `.claude/commands/` surface
+or Cursor command symlink setup because the same workflows live in `skills/`.
+**Trade-off:** Claude Code-specific slash commands are no longer maintained. That is
+acceptable because this workflow currently targets Cursor and Codex skills as the active
+agent surfaces.
 
 ---
 

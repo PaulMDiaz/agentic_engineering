@@ -9,7 +9,7 @@ Read the .claude/ knowledge base to internalize project context before doing wor
 
 ## When to Use
 
-- At the start of a non-trivial session on a project that has a .claude/ directory
+- At the start of a non-trivial session that needs project context on a project with a `.claude/` directory
 - When the user asks you to "load context", "read the second brain", or "get up to speed"
 - Before making architectural decisions, to check existing decisions and conventions
 - Before touching code, to check code pointers and conventions
@@ -27,35 +27,33 @@ Important (ignore-safe detection):
 
 If .claude/ truly doesn't exist, tell the user and suggest running the init-second-brain skill.
 
-### Step 2: Detect legacy format
+### Step 2: Read knowledge files by relevance
 
-If `.claude/NOTES.md` exists, the project is using an older second brain format. Flag it:
-
-> "This project has a legacy second brain (NOTES.md still present). Run update-second-brain to migrate — it will archive NOTES.md and ensure core files exist."
-
-Still load whatever files exist — don't block on migration.
-
-### Step 3: Read knowledge files (batch)
-
-Read all of these files in a single parallel batch — do not read them one at a time:
+For most non-trivial work, first read these core files in one parallel batch:
 
 | File | Purpose | Priority |
 |------|---------|----------|
 | DECISIONS.md | Settled choices and their rationale | Core — avoid re-litigating |
 | CODE_POINTERS.md | File/function locations by subsystem | Core — fast navigation |
-| BACKLOG.md | Open items, planned work, tech debt | High — know what's pending |
-| ARCHITECTURE.md | Codebase shape, modules, data flow, infrastructure | High — understand structure |
-| CONVENTIONS.md | Code style, patterns, gatekeeping rules | Medium — follow when editing |
 
-Also read if present:
-- `NOTES.md` or `NOTES_ARCHIVE.md` — legacy session history (skim recent entries for context, don't rely on it as primary source)
-- `commands/` — slash commands (read if about to use one)
+Then read additional files only when they are relevant to the task:
+
+| File | Read when |
+|------|-----------|
+| BACKLOG.md | Planning work, triaging refactors, or checking known gaps |
+| ARCHITECTURE.md | Broad changes, new modules/components, data flow, infrastructure, or unfamiliar system shape |
+| CONVENTIONS.md | Editing code, docs, commands, skills, CI, or repo workflow |
+
+For broad, unfamiliar, architectural, or ambiguous work, read all available knowledge files
+in one parallel batch. For narrow tasks, stop once the loaded context is enough to work
+correctly.
 
 Skip any files that don't exist — the knowledge base may be partial.
 
-Implementation detail: attempt direct Read calls to each expected file path in parallel and treat "file not found" responses as missing files.
+Implementation detail: attempt direct Read calls to each selected file path in parallel
+and treat "file not found" responses as missing files.
 
-### Step 4: Internalize silently
+### Step 3: Internalize silently
 
 After reading, do not produce a summary unless the user asks for one. Simply proceed with full project context loaded. The knowledge base is for your benefit — the user already knows their project.
 
@@ -65,7 +63,7 @@ If the user explicitly asks for a summary or asks "what do you know", then provi
 - Key open items from backlog
 - Recent activity (from git log: `git log --oneline -10`)
 
-### Step 5: Apply context during the session
+### Step 4: Apply context during the session
 
 With the knowledge base loaded:
 - Check DECISIONS.md before proposing approaches that may have been already evaluated
@@ -76,7 +74,8 @@ With the knowledge base loaded:
 
 ## Guidelines
 
-- **Batch reads**: Always read files in parallel, never sequentially — minimizes latency.
+- **Batch reads**: Read selected files in parallel, never sequentially — minimizes latency.
+- **Load enough, then stop**: Use the smallest context set that materially improves correctness.
 - **Don't parrot back**: The user wrote these files. Don't summarize them back unprompted.
 - **Trust the knowledge base**: If a decision is recorded, respect it unless the user explicitly wants to revisit.
 - **Stale pointers**: CODE_POINTERS.md line numbers may drift after edits. Verify against actual files when navigating.
