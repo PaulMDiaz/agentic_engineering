@@ -44,8 +44,8 @@ Rules:
 
 ## Planning
 
-- Before non-trivial changes: create a plan in `/tmp/<feature>.md`.
-- Plan structure: current state, final state, files to change, task checklist.
+- Before non-trivial changes: identify the desired outcome, constraints, success criteria, files to change, and validation.
+- Create a `/tmp/<feature>.md` plan only for larger or multi-step work.
 - Keep plans minimal — only essential changes.
 
 ## Code Quality
@@ -54,8 +54,9 @@ Rules:
 - Check if logic already exists before writing new code.
 - Before adding a new helper, wrapper, abstraction, or pattern, check whether the repo already has something that solves the same class of problem. Prefer extending the existing approach over creating a parallel one unless there is a clear reason not to.
 - Do not import underscored/private helpers across module boundaries. Promote them to named internal APIs or keep usage within the defining module.
+- Avoid behavior-bearing magic strings. Use named constants, enums, literal types, or structured config for repeated values, external identifiers, states, modes, and cross-module contracts; leave one-off display text inline when naming it adds no clarity.
 - Respect existing code style and patterns.
-- Suggest only minimal changes related to the current task — no extra improvements.
+- Keep proposed changes focused on the current task. Include obvious local refactors when they reduce real complexity, duplication, or bug risk without expanding behavior.
 - Change as few lines as possible while solving the problem.
 - Files: keep under ~500 LOC; split/refactor as needed.
 - Tests: write in the same context as implementation — don't waste context switching.
@@ -63,15 +64,17 @@ Rules:
 - Prefer tests that validate observable behavior, public interfaces, and outcomes over tests tightly coupled to implementation details.
 - Good tests should still pass after internal refactors that preserve behavior.
 - Be suspicious of AI-generated tests that mirror code structure, mock too much, or only prove the current implementation path.
-- Bigger changes always get tests.
+- Add or update tests when behavior, public APIs, bug fixes, edge cases, or shared logic change.
+- Do not add tests for docs-only, formatting-only, or mechanically safe changes unless there is real regression risk.
 - Fix root cause, not band-aid.
-- Make minimal, focused changes — solve the problem, nothing extra.
+- Do not bundle unrelated cleanup into feature or bugfix work.
 - Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
-- When you notice refactoring opportunities during work: flag them. Don't silently act on them — mention them to the user or add to `.claude/BACKLOG.md`. Let the human decide scope.
+- Track large, risky, or cross-cutting refactors as tech debt in the project backlog (`.claude/BACKLOG.md` when present) or a GitHub issue. Do not hide them inside unrelated changes.
+- For research or source-backed answers, gather the smallest credible evidence set needed to answer correctly. If results are empty or suspiciously narrow, retry once with a different query/source before proceeding.
 - Comments in English only.
 - Comments and docstrings should capture verified behavior, constraints, or intent. Do not add explanatory text that merely paraphrases the code or describes what you assume it does. Misleading documentation is worse than sparse documentation.
-- CI: `gh run list/view`, fix until green before handoff.
-- Before handoff: run full gate (lint/typecheck/tests).
+- CI: `gh run list/view` for PR/CI-bound changes; fix until green when CI is in scope.
+- Before committing or handing off: run the most relevant validation for the change (lint/typecheck/tests/build). Run the full gate for broad, risky, or pre-merge work. If validation cannot run, say exactly why.
 
 ## Security
 
@@ -133,6 +136,7 @@ Rules:
 - Use OOP classes only for connectors and interfaces to external systems (APIs, DBs, queues).
 - Write pure functions: only modify return values, never input parameters or global state.
 - Never use default parameter values — make all parameters explicit.
+- Prefer explicit keyword/named arguments when calling functions with multiple same-type, boolean, optional, or non-obvious parameters. Positional arguments are fine for small, conventional calls where the meaning is clear.
 
 ## Error Handling
 
@@ -144,6 +148,11 @@ Rules:
 - No silent fallbacks — never return a fake default when a dependency fails. Let it propagate. Failures must be visible.
 - Security-clamping (constraining valid-but-injected LLM output to safe enum values) is not a fallback — it is a required validation layer and must be kept.
 
+## LLM Integrations
+
+- Prefer API-level structured outputs, schemas, and tool/function contracts over prose-only output instructions.
+- Keep tool-specific constraints near the tool contract instead of scattering them through general prompts.
+
 ## Typing
 
 - Use strict typing everywhere: function returns, parameters, variables, collections.
@@ -151,7 +160,7 @@ Rules:
 - Prefer structured data models over loose dicts — Pydantic, dataclasses, or interfaces.
 - Leverage language-specific type features: discriminated unions, enums, literal types.
 - Create proper type definitions for complex data structures rather than annotating inline.
-- `run date` when you need the current date — never hardcode or guess.
+- Use provided environment/system dates when available. Run `date` only when current clock precision, local timezone, or missing date context matters. Never hardcode or guess.
 
 ## Language / Stack
 
