@@ -14,8 +14,8 @@ Platform-agnostic — applies equally in Claude Code, Cursor, OpenClaw, or any o
 - No `--amend` unless asked.
 - Push only when asked.
 - Branch changes require explicit consent.
+- Stage only the intended files before committing.
 - Multi-agent: check `git status/diff` before edits; ship small commits.
-- Commit helper: use `scripts/committer` if present.
 
 ## Commits (Conventional Commits)
 
@@ -112,10 +112,13 @@ Rules:
 
 ## Knowledge Base (.claude/)
 
-- When making a non-trivial decision: add an entry to `.claude/DECISIONS.md` in the same commit.
-- When adding, renaming, or removing files/functions: update `.claude/CODE_POINTERS.md` in the same commit.
-- When the system shape changes (new module, table, data flow): update `.claude/ARCHITECTURE.md`.
+- Update `.claude/` only for durable project knowledge: decisions, architecture, conventions, important code pointers, or backlog items that future agents should know.
+- Add a `.claude/DECISIONS.md` entry only when the decision is hard to reverse, would be surprising without context, and involved a real trade-off.
+- Update `.claude/CODE_POINTERS.md` for important entry points, public APIs, cross-module contracts, workflows, commands, or files future agents need to find. Do not record every helper.
+- Update `.claude/ARCHITECTURE.md` when the system shape changes (new module, table, data flow).
+- Update `.claude/CONVENTIONS.md` or `.claude/BACKLOG.md` when patterns or tech debt change.
 - These files are the source of truth for agents without conversation context. Keep them accurate.
+- If no durable project knowledge changed, say that no second-brain update was needed.
 - If `.claude/` doesn't exist, skip — not all projects use a second brain.
 
 ## CI/CD
@@ -125,10 +128,10 @@ Rules:
 - Keep observable: logs, clear output.
 - Release: read `docs/RELEASING.md` if present.
 
-## Slash Commands
+## Skills
 
-- Repo-local slash commands live in `docs/slash-commands/` or `.claude/commands/`.
-- Run with `/command-name` in Claude Code or Cursor.
+- Reusable agent workflows live in `skills/<name>/SKILL.md`.
+- Prefer skills over slash commands. Cursor and Codex discover skills directly, and Cursor can manually invoke skills by typing `/skill-name`.
 
 ## Design
 

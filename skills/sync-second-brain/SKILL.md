@@ -147,7 +147,7 @@ Move into the extra worktree, stage only `.claude/`, commit, and push:
 ```bash
 cd ~/Documents/Development/example-repo-second-brain
 git add .claude
-git commit -m "📝 docs(second-brain): sync .claude"
+git commit -m "docs(second-brain): 📝 sync .claude"
 git push -u origin second-brain
 ```
 

@@ -1,12 +1,12 @@
 ---
-summary: "How to install the agentic engineering playbook on a workstation so all repos get coding standards, skills, and slash commands"
+summary: "How to install the agentic engineering playbook on a workstation so all repos get coding standards and skills"
 read_when: "Setting up a new machine or onboarding the playbook to a work laptop"
 ---
 
 # Workstation Setup
 
 Install the agentic engineering playbook once. All projects in your development
-folder get coding standards, skills, and slash commands — no per-repo setup needed.
+folder get coding standards and skills — no per-repo setup needed.
 
 ## Prerequisites
 
@@ -34,21 +34,7 @@ Your folder structure:
 └── ...
 ```
 
-## Step 2: Install slash commands
-
-Symlink commands to `~/.cursor/commands/`:
-
-```bash
-mkdir -p ~/.cursor/commands
-
-for cmd in check commit implement pr security-check; do
-  ln -sf ~/Documents/Development/agentic_engineering/.claude/commands/$cmd.md ~/.cursor/commands/$cmd.md
-done
-```
-
-Commands available: `/check`, `/commit`, `/implement`, `/pr`, `/security-check`
-
-## Step 3: Install skills
+## Step 2: Install skills
 
 Create the initial Cursor skill symlinks:
 
@@ -62,9 +48,9 @@ Notes:
 - Existing linked skills update immediately because the targets are live.
 - New skill folders need another sync pass to create the new symlink.
 
-Skills appear in Cursor Settings → Rules → Agent Decides.
+Skills appear in Cursor Customize → Skills.
 
-## Step 4: Install skill sync hooks in the playbook repo
+## Step 3: Install skill sync hooks in the playbook repo
 
 Install repo-local git hooks so sync runs automatically whenever this source-of-truth repo
 changes branch, merges, or records a new commit:
@@ -81,7 +67,7 @@ Notes:
 - Hook-triggered sync warns on failure but does not block the git operation. Running the sync scripts yourself still fails loudly.
 - Cursor uses symlinks. Codex uses mirrored real folders.
 
-## Step 5: Install development-wide rules
+## Step 4: Install development-wide rules
 
 Symlink `AGENTS.md` to your development folder root. Cursor picks it up and applies
 it to all projects underneath:
@@ -92,7 +78,7 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/Documents/Develop
 
 Shows in Cursor Settings → Rules → Development.
 
-## Step 6: Install Codex development-wide rules (optional)
+## Step 5: Install Codex development-wide rules (optional)
 
 If you use Codex agents, symlink the same `AGENTS.md` into `~/.codex/`:
 
@@ -103,7 +89,7 @@ ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
 
 This makes Codex pick up the same coding standards and workflow guidance.
 
-## Step 7: Install Codex skills (optional, macOS)
+## Step 6: Install Codex skills (optional, macOS)
 
 Codex skill indexing may ignore pure symlinked skill folders. The reliable setup is:
 
@@ -128,14 +114,13 @@ Notes:
 
 ## Verify
 
-1. Open Cursor Settings (Cmd+Shift+J)
-2. Go to **Rules**:
-   - **Development tab**: AGENTS.md should appear
-   - **Agent Decides section**: 13 skills listed
-3. Type `/` in chat — commands should appear
-4. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
-5. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
-6. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
+1. Open Cursor Customize (Cmd+Shift+J)
+2. Go to **Skills** and confirm 13 skills are listed
+3. Go to **Rules** and confirm AGENTS.md appears in the Development tab
+4. Type `/` in Agent chat and confirm skills such as `implement` and `security-check` are available
+5. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
+6. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
+7. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
 
 ## Updating
 
@@ -154,9 +139,6 @@ cd ~/Documents/Development/agentic_engineering
 ## Uninstall
 
 ```bash
-# Commands
-rm -f ~/.cursor/commands/{check,commit,implement,pr,security-check}.md
-
 # Skills
 rm -f ~/.cursor/skills/{agent-review,check-ci,diff-summary,git-recap,grill-with-docs,implement,init-second-brain,load-second-brain,pr-review-triage,security-check,sync-second-brain,update-second-brain,work-items-analysis}
 
@@ -172,7 +154,7 @@ cd ~/Documents/Development/agentic_engineering
 ./scripts/install-skill-hooks uninstall
 
 # Clean up empty directories
-rmdir ~/.cursor/commands ~/.cursor/skills ~/.codex/skills ~/.codex 2>/dev/null
+rmdir ~/.cursor/skills ~/.codex/skills ~/.codex 2>/dev/null
 ```
 
 ## Different folder path?

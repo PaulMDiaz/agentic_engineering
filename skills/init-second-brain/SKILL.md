@@ -6,7 +6,7 @@ argument-hint: "[optional: path to existing analysis/review docs to ingest]"
 
 # Initialize Second Brain
 
-Bootstrap a .claude/ knowledge base for the current project. This creates a structured set of files that act as persistent memory across coding agent sessions — capturing architecture, decisions, conventions, code pointers, and backlog items. Works for new projects and for migrating existing legacy second brains.
+Bootstrap a .claude/ knowledge base for the current project. This creates a structured set of files that act as persistent memory across coding agent sessions — capturing architecture, decisions, conventions, code pointers, and backlog items.
 
 ## Process
 
@@ -15,10 +15,9 @@ Bootstrap a .claude/ knowledge base for the current project. This creates a stru
 Check if `.claude/` already exists:
 
 - **No `.claude/`** — fresh init. Proceed normally.
-- **Has `.claude/` with `NOTES.md`** — legacy format. Migrate: rename `NOTES.md` → `NOTES_ARCHIVE.md`. Preserve all other existing files. Only create files that are missing.
-- **Has `.claude/` without `NOTES.md`** — already current format. Only create files that are missing. Don't overwrite existing content.
+- **Has `.claude/`** — already initialized or partially initialized. Preserve existing files, create only missing current files, and don't overwrite content.
 
-Always preserve `settings.local.json` and `commands/`.
+Always preserve `settings.local.json`.
 
 Then explore the project:
 
@@ -32,7 +31,6 @@ Then explore the project:
 
 ```
 .claude/
-├── commands/         # Slash commands (Claude Code + Cursor)
 ├── ARCHITECTURE.md   # How the codebase is shaped (update on structural changes only)
 ├── DECISIONS.md      # Why things are the way they are (core file — always maintain)
 ├── CODE_POINTERS.md  # Where to find important things (core file — always maintain)
@@ -60,13 +58,17 @@ Each file has a specific purpose. Populate with what you learned in Step 1:
 - **When**: timeframe
 - **Why**: rationale
 - **Trade-off**: what was given up
-- Seed with the most important architectural decisions visible in the code
+- Seed only decisions visible in the code or docs where all three are true:
+  1. The decision is hard to reverse.
+  2. The choice would be surprising without context.
+  3. The decision involved a real trade-off.
 
 **CODE_POINTERS.md** — Core file. Quick reference to important locations:
 - Organized by subsystem/concern
 - Tables with `| What | Where |` format
 - Include file paths with line numbers where useful
-- Include key constants, config classes, entry points
+- Include important entry points, public APIs, cross-module contracts, workflows,
+  commands, config classes, and files future agents need to find. Do not record every helper.
 
 **CONVENTIONS.md** — Gatekeeping rules:
 - Code style (linter, formatter, line length)
@@ -88,7 +90,7 @@ Create a CLAUDE.md at the project root (not inside `.claude/`). This file is aut
 
 - Project name and one-line description
 - A note: "If context is needed for a non-trivial session, run the `load-second-brain` skill explicitly."
-- A reminder: "Update DECISIONS.md when making decisions, CODE_POINTERS.md when adding files/functions"
+- A reminder: "Update the second brain only when durable project knowledge changes."
 - A quick reference section with the most common dev commands (test, lint, build, infra)
 - Key paths section pointing to the main source directories
 
@@ -101,8 +103,8 @@ If a project-level CLAUDE.md already exists, add the Second Brain section to it 
 Print a tree of everything created and a brief description of each file's contents. Remind the user:
 
 > Update the knowledge base organically as you work:
-> - **DECISIONS.md** — when a decision is made
-> - **CODE_POINTERS.md** — when files/functions are added or renamed
+> - **DECISIONS.md** — when a decision is hard to reverse, surprising without context, and involved a real trade-off
+> - **CODE_POINTERS.md** — when important entry points, public APIs, workflows, or commands are added or renamed
 > - **ARCHITECTURE.md** — when the system shape changes (new component, table, data flow)
 > - **BACKLOG.md** — when items are completed or discovered
 > - **CONVENTIONS.md** — when patterns change

@@ -1,12 +1,11 @@
 # Agentic Engineering
 
-A coding playbook for Claude Code, Cursor, and Codex — coding standards, skills, and slash commands that work across all your repos.
+A coding playbook for Cursor and Codex — coding standards and skills that work across all your repos.
 
 ## What's Included
 
 - **CODING_STANDARDS.md** — Universal rules for AI-assisted coding
 - **Skills** — Reusable workflows (code review, git recap, second-brain management)
-- **Slash Commands** — `/check`, `/commit`, `/implement`, `/pr`, `/security-check`
 
 ## Quick Start
 
@@ -23,11 +22,11 @@ See [Workstation Setup](docs/workstation-setup.md) for installation and uninstal
 | grill-with-docs | Stress-test a plan against code, project language, and docs |
 | implement | Methodical task approach — understand, plan, implement, verify |
 | init-second-brain | Bootstrap a `.claude/` knowledge base for a project |
-| load-second-brain | Load project context at session start |
+| load-second-brain | Load project context when needed |
 | pr-review-triage | Triage GitHub PR comments into a checklist before implementation |
 | security-check | Security review — what to check for, how to report findings |
 | sync-second-brain | Sync `.claude/` through a dedicated `second-brain` branch/worktree |
-| update-second-brain | Record session work into `.claude/` |
+| update-second-brain | Record durable project knowledge into `.claude/` |
 | work-items-analysis | Investigate Jira, GitHub, and local git work items over a date range |
 
 ## Philosophy

@@ -8,7 +8,7 @@ read_when: "Before editing, adding, or restructuring anything in this repo"
 
 ## This Repo is a Playbook Repo
 
-Mostly markdown, plus lightweight helper automation (for example `scripts/committer`
+Mostly markdown, plus lightweight helper automation (for example workstation sync scripts
 and GitHub Actions workflows). `CODING_STANDARDS.md` applies to other projects —
 conventions below apply to changes *to this repo itself*.
 
@@ -45,19 +45,10 @@ Use plain English: "If the user provided a path when invoking this skill, use it
 
 ---
 
-## Slash Command Format
-
-Files under `.claude/commands/` are the actual invokable slash commands:
-- Plain markdown — no front-matter (Claude Code uses the filename as the command name)
-- Must have a `# /command-name` heading and a `## Process` section with numbered steps
-- Must be listed in `docs/slash-commands/README.md` (the index)
-
----
-
 ## Commits
 
-`scripts/committer` is the preferred convenience helper, not a requirement. Conventional
-Commits format is enforced. All commit types: `feat fix docs refactor style perf test chore wip remove security`
+Use explicit `git add` and `git commit -m` commands. Conventional Commits format is
+expected. All commit types: `feat fix docs refactor style perf test chore wip remove security`
 
 ---
 
@@ -68,7 +59,6 @@ Commits format is enforced. All commit types: `feat fix docs refactor style perf
 | A universal coding rule | `CODING_STANDARDS.md` |
 | A reference pattern (security, architecture, etc.) | `docs/<topic>.md` with front-matter |
 | A reusable agent workflow | `skills/<name>/SKILL.md` |
-| A slash command | `.claude/commands/<name>.md` + update `docs/slash-commands/README.md` |
 | A project-level convenience script | `scripts/` |
 | A CI automation | `.github/workflows/` |
 
@@ -79,7 +69,6 @@ exposes skill inventory or skill-usage guidance, including as needed:
 
 - `AGENTS.md`
 - `README.md`
-- `docs/slash-commands/README.md`
 - `docs/workstation-setup.md`
 - `.claude/CODE_POINTERS.md`
 - `.claude/ARCHITECTURE.md`

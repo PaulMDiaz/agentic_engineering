@@ -1,14 +1,17 @@
 ---
 name: update-second-brain
-description: Update the .claude/ knowledge base with changes from this session. Use at end of session or when asked to update project notes. Verifies accuracy of entries related to touched files, then updates. Works with any agent (Claude Code, Cursor, OpenClaw).
+description: Update the .claude/ knowledge base when durable project knowledge changed. Verifies accuracy of entries related to touched files, then updates. Works with any agent (Claude Code, Cursor, OpenClaw).
 argument-hint: "[optional: focus area or notes to include]"
 ---
 
 # Update Second Brain
 
-Record what changed this session into the .claude/ knowledge base. Verifies accuracy
-of affected entries before writing — keeps the knowledge base trustworthy for all agents,
+Record durable project knowledge into the .claude/ knowledge base. Verifies accuracy of
+affected entries before writing — keeps the knowledge base trustworthy for all agents,
 including those without conversation history (e.g. Cursor).
+
+Do not add session notes. If no decisions, architecture, conventions, important code
+pointers, or backlog items changed, report that no second-brain update was needed.
 
 ## Why Accuracy Matters
 
@@ -17,16 +20,6 @@ on these files as their primary source of truth. A stale CODE_POINTERS.md entry 
 ARCHITECTURE.md claim actively misleads. Every update pass must verify what it touches.
 
 ## Process
-
-### Step 0: Check for legacy structure (one-time migration)
-
-If `.claude/NOTES.md` exists, the project is using the old second brain format. Migrate:
-
-1. **NOTES.md** — Do not delete. Rename to `.claude/NOTES_ARCHIVE.md` so history is preserved but the file is clearly retired. Do not append new entries to it.
-2. **Missing core files** — If `CODE_POINTERS.md` or `DECISIONS.md` don't exist, create them by scanning the codebase (same process as init-second-brain Step 1 + Step 3, scoped to those files).
-3. **Tell the user** what you migrated: "Migrated from legacy second brain format: archived NOTES.md, created CODE_POINTERS.md" (or whatever applies).
-
-This step is idempotent — if `NOTES.md` doesn't exist, skip it entirely.
 
 ### Step 1: Identify what changed
 
@@ -45,13 +38,19 @@ This scopes the verification — you only need to verify entries related to file
 
 ### Step 2: Reflect on the session
 
-Review the conversation (or git log if conversation is unavailable) to identify:
+Review the conversation (or git log if conversation is unavailable) to identify durable
+knowledge changes:
 
-1. **Decisions made** — choices about approach, architecture, tools, trade-offs
-2. **New files or functions** — added, renamed, or removed
+1. **Decisions made** — choices that were hard to reverse, surprising without context,
+   and involved a real trade-off
+2. **Important code pointers** — entry points, public APIs, cross-module contracts,
+   workflows, commands, or files future agents need to find
 3. **Structural changes** — new modules, services, tables, data flow changes
 4. **Backlog changes** — items completed, discovered, or reprioritized
 5. **Convention changes** — new patterns established or rules changed
+
+If none of those changed, stop after scoped verification and tell the user:
+"No durable second-brain update was needed."
 
 ### Step 3: Scoped verification
 
@@ -62,7 +61,9 @@ touched."
 **CODE_POINTERS.md** (most likely to drift)
 - For each changed file: find CODE_POINTERS entries referencing it
 - Verify: file still exists, function/class names are correct, line numbers are approximately right
-- Fix stale entries, add new entries for important new files/functions, remove entries for deleted code
+- Fix stale entries, add new entries only for important entry points, public APIs,
+  cross-module contracts, workflows, commands, or files future agents need to find
+- Remove entries for deleted code or tools
 - If line numbers shifted significantly, update them
 
 **ARCHITECTURE.md** (verify claims about touched areas)
@@ -74,7 +75,10 @@ touched."
 **DECISIONS.md** (verify status claims)
 - For entries that reference changed files: verify status claims ("removed X", "replaced by Y", "not yet implemented") against actual code
 - Mark superseded decisions: append `> ⚠️ Superseded — reason` below the entry
-- Add new entries for decisions made this session
+- Add new entries only for decisions where all three are true:
+  1. The decision is hard to reverse.
+  2. The choice would be surprising without context.
+  3. The decision involved a real trade-off.
 - Format: `### Title` / `**When:** YYYY-MM-DD` / `**Why:** ...` / `**Trade-off:** ...`
 
 **CONVENTIONS.md** (rarely drifts)
@@ -96,10 +100,11 @@ touched."
 Apply all changes in one pass per file. Verify before writing — read the actual source
 file to confirm any claim you're about to add or correct.
 
-Then commit:
+If the user asked you to commit the second-brain updates, stage the `.claude/` files and
+commit directly:
 ```bash
 git add .claude/
-git commit -m "docs: update second brain — <brief summary>"
+git commit -m "docs(second-brain): 📝 update <brief summary>"
 ```
 
 ### Step 5: Summary
@@ -122,6 +127,8 @@ If nothing needed updating: "Verified entries for touched files — knowledge ba
 - **Always verify what you touch** — the scoped check is cheap and prevents rot.
 - **Don't verify everything** — full-file audits are expensive and rarely catch issues in untouched areas.
 - **No session notes** — git log handles session history. Use the `git-recap` skill.
+- **Durable knowledge only** — skip updates for transient progress, obvious/reversible
+  choices, and implementation details future agents do not need.
 - **Verify before writing** — read actual source files to confirm claims. Don't write from memory.
 - **Be concise** — entries should be scannable. Tables and bullets over prose.
 - **One commit** for all .claude/ changes, not one per file.
