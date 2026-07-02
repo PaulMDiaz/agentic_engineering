@@ -17,6 +17,7 @@ read_when: "You need to find where something lives"
 | Typing rules (`dict[str, Any]`, no `Any`) | `CODING_STANDARDS.md` → Typing |
 | Git / commit rules | `CODING_STANDARDS.md` → Git + Commits |
 | Security rules (`trash > rm`, no external installs) | `CODING_STANDARDS.md` → Security |
+| LLM integration rules (structured outputs, tool contracts) | `CODING_STANDARDS.md` → LLM Integrations |
 
 ## Entry Point
 
