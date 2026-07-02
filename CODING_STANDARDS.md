@@ -53,11 +53,13 @@ Rules:
 - Read related files and understand the codebase before suggesting changes.
 - Check if logic already exists before writing new code.
 - Before adding a new helper, wrapper, abstraction, or pattern, check whether the repo already has something that solves the same class of problem. Prefer extending the existing approach over creating a parallel one unless there is a clear reason not to.
+- Do not import underscored/private helpers across module boundaries. Promote them to named internal APIs or keep usage within the defining module.
 - Respect existing code style and patterns.
 - Suggest only minimal changes related to the current task — no extra improvements.
 - Change as few lines as possible while solving the problem.
 - Files: keep under ~500 LOC; split/refactor as needed.
 - Tests: write in the same context as implementation — don't waste context switching.
+- In tests, do not define `async def` helpers that contain no asynchronous operation. Use `AsyncMock`, a real awaited operation, or a synchronous helper wrapped by the code under test.
 - Prefer tests that validate observable behavior, public interfaces, and outcomes over tests tightly coupled to implementation details.
 - Good tests should still pass after internal refactors that preserve behavior.
 - Be suspicious of AI-generated tests that mirror code structure, mock too much, or only prove the current implementation path.
