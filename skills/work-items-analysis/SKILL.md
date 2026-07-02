@@ -14,7 +14,7 @@ Parse the user request for:
 
 - **Date range**: Accept a previous date (`since 2026-05-09`), natural language (`past month`), or an explicit range. If only a previous date is supplied, use that date through today.
 - **Person**: Default to the current Atlassian user and GitHub user. If the user names a person, use that person where Jira/GitHub queries support it.
-- **Output target**: Default to a Markdown report in `/Users/pauldiaz/Documents/work-item-analyses/`. Use a concise filename such as `work-items-analysis-YYYY-MM-DD-to-YYYY-MM-DD.md`.
+- **Output target**: Default to a Markdown report in `~/Documents/work-item-analyses/`. Use a concise filename such as `work-items-analysis-YYYY-MM-DD-to-YYYY-MM-DD.md`.
 
 Always use exact calendar dates in the report header.
 
@@ -34,9 +34,10 @@ Examples:
 Use Atlassian MCP tools, not browser scraping, when available.
 
 1. Call `getAccessibleAtlassianResources`.
-2. Select the resource whose URL matches the expected Atlassian site, usually `https://slingshotaero.atlassian.net`.
-3. Confirm the resource includes Jira scopes such as `read:jira-work`.
-4. Call `atlassianUserInfo` to identify the current Jira account.
+2. Select a resource that includes Jira scopes such as `read:jira-work`.
+3. Store both the resource `id` and `url`. Use the `id` as `cloudId` for Jira tool calls and the `url` as the Jira base URL for report links.
+4. If more than one Jira-capable resource is available and the correct site is ambiguous, ask the user which site to use.
+5. Call `atlassianUserInfo` to identify the current Jira account.
 
 If MCP access fails:
 
@@ -170,7 +171,7 @@ Group related items by theme:
 
 ### Step 7: Write The Report
 
-Create a Markdown file in `/Users/pauldiaz/Documents/work-item-analyses/` unless the user asks for a different location or only asks for chat output.
+Create a Markdown file in `~/Documents/work-item-analyses/` unless the user asks for a different location or only asks for chat output.
 
 Use this structure:
 
@@ -234,6 +235,6 @@ In progress / blocked:
 - Do not claim Jira state from GitHub alone when the Jira issue was not fetched.
 - Do not infer completion from a merged PR if Jira says the item is still open or blocked; state both facts.
 - Prefer concise executive language but keep item-level evidence concrete.
-- Include direct links for every Jira issue and GitHub PR/issue used in the final report.
+- Include direct links for every Jira issue and GitHub PR/issue used in the final report. Build Jira links from the selected MCP resource URL, for example `<JIRA_BASE_URL>/browse/<KEY>`, unless the Jira tool returns a more specific URL.
 - Mask secrets and do not read `.env` files.
 - If network or auth blocks part of the analysis, explain exactly what failed and what evidence was still used.
