@@ -9,7 +9,7 @@ read_when: "You need to find where something lives"
 ## Core Standards
 
 | What | Where |
-|---|---|
+| --- | --- |
 | All universal coding rules | `CODING_STANDARDS.md` |
 | Design rules (pure functions, no default params) | `CODING_STANDARDS.md` → Design |
 | Error handling (no silent fallbacks, clamping note) | `CODING_STANDARDS.md` → Error Handling |
@@ -22,7 +22,7 @@ read_when: "You need to find where something lives"
 ## Entry Point
 
 | What | Where |
-|---|---|
+| --- | --- |
 | Canonical agent instruction file | `AGENTS.md` |
 | Claude Code / Cursor shim | `CLAUDE.md` |
 | Codex / AGENTS.md-aware agent entry point | `AGENTS.md` |
@@ -33,7 +33,7 @@ read_when: "You need to find where something lives"
 ## Skills
 
 | What | Where |
-|---|---|
+| --- | --- |
 | Bootstrap `.claude/` for a project | `skills/init-second-brain/SKILL.md` |
 | Load `.claude/` context at session start | `skills/load-second-brain/SKILL.md` |
 | Sync `.claude/` via a dedicated `second-brain` branch/worktree | `skills/sync-second-brain/SKILL.md` |
@@ -51,13 +51,13 @@ read_when: "You need to find where something lives"
 ## Reference Docs
 
 | What | Where |
-|---|---|
+| --- | --- |
 | Tool catalog (gh, git, claude CLI, quality gates) | `tools.md` |
 
 ## Scripts & CI
 
 | What | Where |
-|---|---|
+| --- | --- |
 | Install repo-local skill sync hooks | `scripts/install-skill-hooks` |
 | Sync Cursor skill symlinks | `scripts/sync-cursor-skills` |
 | Sync Codex mirrored skill folders | `scripts/sync-codex-skills` |
