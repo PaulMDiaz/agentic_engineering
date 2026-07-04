@@ -65,13 +65,22 @@ jobs:
     name: Duplicate Code Detection
     runs-on: ubuntu-latest
     env:
-      JSCPD_VERSION: 5.0.11
+      CPD_VERSION: v5.0.11
+      CPD_TARBALL: cpd-linux-x64-gnu.tar.gz
+      CPD_SHA256: a2c42f87527478a6c0a93c12e452d0226565e7e209a7affa5f5d0c4364dc9e4a
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
 
-      - name: Run jscpd
+      - name: Install cpd
         run: |
-          npm exec --yes --package "jscpd@${JSCPD_VERSION}" -- \
-            jscpd --min-lines 10 --min-tokens 50 --reporters console --ignore "**/*.json,**/NOTES_ARCHIVE.md" .
+          set -euo pipefail
+          curl -fsSLO "https://github.com/kucherenko/jscpd/releases/download/${CPD_VERSION}/${CPD_TARBALL}"
+          printf '%s  %s\n' "$CPD_SHA256" "$CPD_TARBALL" | sha256sum -c -
+          tar -xzf "$CPD_TARBALL"
+          sudo install -m 755 cpd /usr/local/bin/cpd
+
+      - name: Run cpd
+        run: |
+          cpd --min-lines 10 --min-tokens 50 --reporters console --ignore "**/*.json,**/NOTES_ARCHIVE.md" .
