@@ -28,7 +28,7 @@ This triggers `update-second-brain` manually. Human-in-the-loop is intentional.
 ## Platform summary
 
 | Feature | Claude Code | Cursor |
-|---|---|---|
+| --- | --- | --- |
 | Auto-load CLAUDE.md on start | ✅ | ✅ |
 | Context loading | On demand (`load-second-brain`) | On demand (`load-second-brain`) |
 | Session end update | Manual ("update second brain") | Manual ("update second brain") |
