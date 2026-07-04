@@ -23,11 +23,11 @@ See [Workstation Setup](docs/workstation-setup.md) for installation and uninstal
 | implement | Methodical task approach — understand, plan, implement, verify |
 | init-second-brain | Bootstrap a `.claude/` knowledge base for a project |
 | load-second-brain | Load project context when needed |
-| pr-review-triage | Triage GitHub PR comments into a checklist before implementation |
+| pr-review-triage | Triage GitHub PR comments into a checklist before implementation (mainly useful in Paul's workstation flow) |
 | security-check | Security review — what to check for, how to report findings |
 | sync-second-brain | Sync `.claude/` through a dedicated `second-brain` branch/worktree |
 | update-second-brain | Record durable project knowledge into `.claude/` |
-| work-items-analysis | Investigate Jira, GitHub, and local git work items over a date range |
+| work-items-analysis | Investigate Jira, GitHub, and local git work items over a date range (workstation-specific, with local Atlassian/GitHub tooling assumptions) |
 
 ## Philosophy
 

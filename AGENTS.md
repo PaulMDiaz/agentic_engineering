@@ -27,8 +27,8 @@ For any non-trivial session that needs project context, run the `load-second-bra
 | pr-review-triage | Triaging GitHub PR review feedback into a checklist before implementation |
 | security-check | Reviewing security-sensitive changes or posture |
 | sync-second-brain | Syncing `.claude/` through a dedicated `second-brain` worktree |
-| update-second-brain | Recording important repo changes/decisions after work |
-| work-items-analysis | Investigating Jira, GitHub, and local git work items over a date range |
+| update-second-brain | Recording durable project knowledge after work when it actually changed |
+| work-items-analysis | Investigating Jira, GitHub, and local git work items over a date range in Paul's workstation setup |
 
 ## Quick Reference
 

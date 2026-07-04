@@ -13,7 +13,7 @@ shell regression tests, and GitHub Actions workflows. It is the source of truth 
 are built and how agents operate within them.
 
 Two audiences:
-1. **Claude Code / Cursor / Codex** — `AGENTS.md` is the canonical instruction file, `CLAUDE.md` redirects Claude Code/Cursor to it, and all three rely on `CODING_STANDARDS.md`
+1. **Cursor / Codex agents** — `AGENTS.md` is the canonical instruction file, and both rely on `CODING_STANDARDS.md`
 2. **Humans** — reference for project conventions, security patterns, and tooling
 
 ---
@@ -24,7 +24,7 @@ Two audiences:
 
 ```
 agentic_engineering/
-├── CLAUDE.md                        # Claude Code / Cursor shim — redirects to AGENTS.md
+├── CLAUDE.md                        # Compatibility shim — redirects Claude-style entry points to AGENTS.md
 ├── AGENTS.md                        # Canonical instruction file for agents in this repo
 ├── CODING_STANDARDS.md              # Universal rules (git, commits, design, errors, typing, shell...)
 ├── tools.md                         # Tool catalog (gh, git, claude CLI, Python/TS/Shell gates)
@@ -38,11 +38,11 @@ agentic_engineering/
 │   ├── grill-with-docs/SKILL.md     # Stress-test plans against language, code, and docs
 │   ├── implement/SKILL.md           # Methodical task implementation — understand, plan, implement, verify
 │   ├── init-second-brain/SKILL.md   # Bootstrap .claude/ for a project
-│   ├── load-second-brain/SKILL.md   # Load .claude/ context at session start
+│   ├── load-second-brain/SKILL.md   # Load .claude/ context on demand when project context is needed
 │   ├── pr-review-triage/SKILL.md    # Triage GitHub PR comments into a checklist
 │   ├── security-check/SKILL.md      # Security review — what to check, how to report
 │   ├── sync-second-brain/SKILL.md   # Sync .claude/ on a dedicated second-brain worktree
-│   ├── update-second-brain/SKILL.md # Record session work into .claude/
+│   ├── update-second-brain/SKILL.md # Record durable project knowledge into .claude/ when needed
 │   └── work-items-analysis/SKILL.md # Analyze Jira, GitHub, and local git work items
 │
 ├── docs/
@@ -80,8 +80,8 @@ agentic_engineering/
 @path/to/agentic_engineering/CODING_STANDARDS.md
 ```
 
-Or copy locally and reference. The `@` import is Claude Code's native include
-mechanism — Cursor reads it as part of CLAUDE.md context.
+Or copy locally and reference. The `@` import remains useful for Claude-style entry
+points, while Cursor reads it as part of `CLAUDE.md` context when present.
 
 ---
 
@@ -96,4 +96,4 @@ read_when: "Condition that triggers loading this doc"
 ---
 ```
 
-Skills under `skills/` carry name + description front-matter (Claude Code skill format).
+Skills under `skills/` carry name + description front-matter in a format compatible with current agent skill loaders.

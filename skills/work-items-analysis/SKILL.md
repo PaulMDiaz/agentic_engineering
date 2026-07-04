@@ -1,12 +1,14 @@
 ---
 name: work-items-analysis
-description: "Investigate work items for a person over a date range by combining Jira/Atlassian MCP data, GitHub CLI PR/issue data, and local git activity. Use when asked for work-item analysis, monthly summaries, executive summaries, Jira/GitHub activity reports, or itemized breakdowns of assigned/worked-on items."
+description: "Workstation-specific skill for investigating work items over a date range by combining Jira/Atlassian MCP data, GitHub CLI PR/issue data, and local git activity. Use when asked for work-item analysis, monthly summaries, executive summaries, Jira/GitHub activity reports, or itemized breakdowns of assigned/worked-on items."
 argument-hint: "[since date or date range, optional person/account]"
 ---
 
 # work-items-analysis
 
 Produce an evidence-backed Markdown report of work items assigned to, reported by, or worked on by a user over a date range. Combine Jira data from the Atlassian MCP with GitHub CLI data and local git history.
+
+This skill is workstation-specific. It assumes Paul's local tooling and accounts are already configured. Do not treat its setup notes as portable repo-wide defaults.
 
 ## Inputs
 
@@ -45,13 +47,13 @@ If MCP access fails:
 - Continue with GitHub/local git evidence if useful.
 - Add a clear caveat that Jira coverage is blocked.
 
-Known fix for `Unauthorized` with Atlassian remote MCP:
+Known macOS/Homebrew workstation fix for `Unauthorized` with Atlassian remote MCP:
 
 ```toml
 [mcp_servers.atlassian_mcp]
 enabled = true
 command = "/opt/homebrew/bin/node"
-args = ["/opt/homebrew/lib/node_modules/npm/bin/npx-cli.js", "-y", "mcp-remote@latest", "https://mcp.atlassian.com/v1/mcp/authv2"]
+args = ["/opt/homebrew/lib/node_modules/npm/bin/npx-cli.js", "-y", "mcp-remote@<PINNED_VERSION>", "https://mcp.atlassian.com/v1/mcp/authv2"]
 startup_timeout_sec = 120
 ```
 
