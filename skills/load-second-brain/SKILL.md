@@ -32,14 +32,14 @@ If .claude/ truly doesn't exist, tell the user and suggest running the init-seco
 For most non-trivial work, first read these core files in one parallel batch:
 
 | File | Purpose | Priority |
-|------|---------|----------|
+| --- | --- | --- |
 | DECISIONS.md | Settled choices and their rationale | Core — avoid re-litigating |
 | CODE_POINTERS.md | File/function locations by subsystem | Core — fast navigation |
 
 Then read additional files only when they are relevant to the task:
 
 | File | Read when |
-|------|-----------|
+| --- | --- |
 | BACKLOG.md | Planning work, triaging refactors, or checking known gaps |
 | ARCHITECTURE.md | Broad changes, new modules/components, data flow, infrastructure, or unfamiliar system shape |
 | CONVENTIONS.md | Editing code, docs, commands, skills, CI, or repo workflow |

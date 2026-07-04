@@ -55,7 +55,7 @@ expected. All commit types: `feat fix docs refactor style perf test chore wip re
 ## Adding New Content
 
 | Adding... | Goes in... |
-|---|---|
+| --- | --- |
 | A universal coding rule | `CODING_STANDARDS.md` |
 | A reference pattern (security, architecture, etc.) | `docs/<topic>.md` with front-matter |
 | A reusable agent workflow | `skills/<name>/SKILL.md` |
