@@ -60,7 +60,7 @@ read_when: "You need to find where something lives"
 | What | Where |
 | --- | --- |
 | Install repo-local skill sync hooks | `scripts/install-skill-hooks` |
-| Sync Cursor skill symlinks | `scripts/sync-cursor-skills` |
+| Sync or uninstall repo-managed Cursor skill symlinks | `scripts/sync-cursor-skills [sync|uninstall]` |
 | Sync Codex mirrored skill folders | `scripts/sync-codex-skills` |
 | Remove repo-managed Codex mirrored skill folders | `scripts/sync-codex-skills uninstall` |
 | Sync both workstation skill surfaces | `scripts/sync-workstation-skills` |

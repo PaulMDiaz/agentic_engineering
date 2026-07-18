@@ -6,9 +6,33 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
 SRC="$ROOT_DIR/skills"
 DST="$HOME_DIR/.cursor/skills"
+MODE="${1:-sync}"
 
 # No-op on machines that do not have a Cursor home directory.
 [ -d "$HOME_DIR/.cursor" ] || exit 0
+
+remove_repo_managed_symlinks() {
+  for cursor_skill in "$DST"/*; do
+    [ -L "$cursor_skill" ] || continue
+    target="$(readlink "$cursor_skill")"
+    case "$target" in
+      "$SRC"/*) rm -- "$cursor_skill" ;;
+    esac
+  done
+}
+
+case "$MODE" in
+  sync)
+    ;;
+  uninstall)
+    remove_repo_managed_symlinks
+    exit 0
+    ;;
+  *)
+    printf 'Usage: %s [sync|uninstall]\n' "$(basename "$0")" >&2
+    exit 2
+    ;;
+esac
 
 mkdir -p "$DST"
 

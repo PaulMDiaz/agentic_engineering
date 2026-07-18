@@ -57,6 +57,29 @@ test_preserves_existing_entries() {
     "sync-cursor-skills should leave existing entries alone"
 }
 
+test_uninstall_removes_only_repo_managed_symlinks() {
+  home_dir="$(make_home)"
+  fixture_root="$(make_script_fixture)"
+  mkdir -p "$home_dir/.cursor/skills" "$home_dir/custom-skill"
+  ln -s "$fixture_root/skills/implement" "$home_dir/.cursor/skills/implement"
+  ln -s "$fixture_root/skills/removed-skill" "$home_dir/.cursor/skills/removed-skill"
+  ln -s "$home_dir/custom-skill" "$home_dir/.cursor/skills/custom"
+
+  HOME="$home_dir" "$fixture_root/scripts/sync-cursor-skills" uninstall
+
+  assert_not_exists \
+    "$home_dir/.cursor/skills/implement" \
+    "uninstall should remove managed current skill symlinks"
+  assert_not_exists \
+    "$home_dir/.cursor/skills/removed-skill" \
+    "uninstall should remove managed dangling skill symlinks"
+  assert_symlink_target \
+    "$home_dir/.cursor/skills/custom" \
+    "$home_dir/custom-skill" \
+    "uninstall should preserve custom skill symlinks"
+}
+
 test_noops_without_cursor_home
 test_creates_symlinks_for_valid_skills_only
 test_preserves_existing_entries
+test_uninstall_removes_only_repo_managed_symlinks

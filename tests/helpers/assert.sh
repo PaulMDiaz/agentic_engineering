@@ -60,7 +60,7 @@ assert_exists() {
 assert_not_exists() {
   path="$1"
   message="$2"
-  if [ -e "$path" ]; then
+  if [ -e "$path" ] || [ -L "$path" ]; then
     fail "$message ($path)"
   fi
 }

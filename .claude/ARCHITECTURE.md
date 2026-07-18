@@ -53,7 +53,7 @@ agentic_engineering/
 ├── scripts/
 │   ├── install-skill-hooks          # Installs repo-local git hooks that sync workstation skills
 │   ├── sync-codex-skills            # Mirrors repo skills into ~/.codex/skills and can uninstall repo-managed mirrors
-│   ├── sync-cursor-skills           # Creates missing ~/.cursor skill symlinks
+│   ├── sync-cursor-skills           # Syncs or removes repo-managed ~/.cursor skill symlinks
 │   └── sync-workstation-skills      # Runs both workstation sync flows from one entry point
 │
 ├── tests/
