@@ -118,6 +118,11 @@ Rules:
 - Update `.claude/ARCHITECTURE.md` when the system shape changes (new module, table, data flow).
 - Update `.claude/CONVENTIONS.md` or `.claude/BACKLOG.md` when patterns or tech debt change.
 - These files are the source of truth for agents without conversation context. Keep them accurate.
+- Treat second-brain maintenance as agent-owned during change-producing work. Users
+  should not need to invoke a maintenance skill explicitly.
+- When `CONVENTIONS.md` declares section sources, verify and update sections whose
+  sources changed. Reserve full audits for legacy, overdue, contradictory, or explicitly
+  requested guidance.
 - If no durable project knowledge changed, say that no second-brain update was needed.
 - If `.claude/` doesn't exist, skip — not all projects use a second brain.
 

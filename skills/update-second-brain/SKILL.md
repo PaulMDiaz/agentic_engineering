@@ -1,17 +1,28 @@
 ---
 name: update-second-brain
-description: Update the .claude/ knowledge base when durable project knowledge changed. Verifies accuracy of entries related to touched files, then updates. Works with any agent (Claude Code, Cursor, OpenClaw).
+description: Maintain the .claude/ knowledge base organically when durable project knowledge or declared convention sources change. Verifies affected entries without requiring the user to invoke it explicitly.
 argument-hint: "[optional: focus area or notes to include]"
 ---
 
 # Update Second Brain
 
-Record durable project knowledge into the .claude/ knowledge base. Verifies accuracy of
-affected entries before writing — keeps the knowledge base trustworthy for all agents,
-including those without conversation history (e.g. Cursor).
+Record durable project knowledge into the `.claude/` knowledge base. This is an
+agent-owned completion responsibility for change-producing work; the user does not need
+to invoke the skill explicitly. Verification remains scoped to affected entries so
+ordinary sessions do not pay for a full repository audit.
 
 Do not add session notes. If no decisions, architecture, conventions, important code
 pointers, or backlog items changed, report that no second-brain update was needed.
+
+If `CONVENTIONS.md` lacks source annotations, its `last_full_audit` is more than 90 days
+old, or the user requested full verification, run or follow `audit-second-brain` instead
+of treating this scoped workflow as a full audit.
+
+## Permission Boundary
+
+- During a change-producing task, update affected second-brain guidance in the same task.
+- During a read-only task, inspect and report stale guidance without editing repository
+  files. A maintenance trigger does not broaden the user's requested mutation scope.
 
 ## Why Accuracy Matters
 
@@ -34,7 +45,10 @@ Or if working on the same branch across sessions:
 git diff --name-only HEAD~N  # where N = approximate commits this session
 ```
 
-This scopes the verification — you only need to verify entries related to files you touched.
+This scopes the verification — you only need to verify entries related to files you
+touched. Also read each relevant `CONVENTIONS.md` section's `Sources:` line. A changed
+path that matches a declared source makes that section part of the maintenance scope,
+even when the session did not set out to change documentation.
 
 ### Step 2: Reflect on the session
 
@@ -81,10 +95,15 @@ touched."
   3. The decision involved a real trade-off.
 - Format: `### Title` / `**When:** YYYY-MM-DD` / `**Why:** ...` / `**Trade-off:** ...`
 
-**CONVENTIONS.md** (rarely drifts)
-- Only verify if conventions-related files changed (linter config, CI, Makefile, pyproject.toml)
+**CONVENTIONS.md** (source-driven maintenance)
+- Verify sections whose declared `Sources:` paths or globs changed
 - Verify tool commands still match config (e.g. `ruff check .` still works)
-- Update when patterns change
+- Update stale claims in the same change-producing task
+- For a legacy section touched by the current work, add its `Sources:` line after
+  verification; leave full-file migration to `audit-second-brain`
+- Use `Sources: normative repository policy` only for intentional rules, not as a
+  substitute for evidence about factual repository behavior
+- Do not advance `last_full_audit` during a scoped update
 
 **BACKLOG.md** (update as items change)
 - Check off completed items: `- [x]`
@@ -98,7 +117,8 @@ touched."
 ### Step 4: Write updates
 
 Apply all changes in one pass per file. Verify before writing — read the actual source
-file to confirm any claim you're about to add or correct.
+file to confirm any claim you're about to add or correct. Preserve source annotations
+and keep them concise when authoritative paths change.
 
 If the user asked you to commit the second-brain updates, stage the `.claude/` files and
 commit directly:
@@ -125,7 +145,10 @@ If nothing needed updating: "Verified entries for touched files — knowledge ba
 ## Guidelines
 
 - **Always verify what you touch** — the scoped check is cheap and prevents rot.
-- **Don't verify everything** — full-file audits are expensive and rarely catch issues in untouched areas.
+- **Don't verify everything here** — use `audit-second-brain` for full-file verification
+  and legacy migration.
+- **Maintenance is agent-owned** — source-aware updates happen organically during
+  change-producing work; they do not depend on a separate user request.
 - **No session notes** — git log handles session history. Use the `git-recap` skill.
 - **Durable knowledge only** — skip updates for transient progress, obvious/reversible
   choices, and implementation details future agents do not need.

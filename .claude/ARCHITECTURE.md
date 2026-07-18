@@ -32,21 +32,22 @@ agentic_engineering/
 │
 ├── skills/                          # Agent Skills (folder per skill, each with SKILL.md)
 │   ├── agent-review/SKILL.md        # Review a branch/PR — inline findings, no file output
+│   ├── audit-second-brain/SKILL.md  # Full conventions verification and legacy migration
 │   ├── check-ci/SKILL.md            # Local CI-equivalent verification with structured output
 │   ├── diff-summary/SKILL.md        # Walk through a diff — what it does and how
 │   ├── git-recap/SKILL.md           # Summarize recent work from git log (replaces NOTES.md)
 │   ├── grill-with-docs/SKILL.md     # Stress-test plans against language, code, and docs
 │   ├── implement/SKILL.md           # Methodical task implementation — understand, plan, implement, verify
 │   ├── init-second-brain/SKILL.md   # Bootstrap .claude/ for a project
-│   ├── load-second-brain/SKILL.md   # Load .claude/ context on demand when project context is needed
+│   ├── load-second-brain/SKILL.md   # Load context and run the lightweight trust gate
 │   ├── pr-review-triage/SKILL.md    # Triage GitHub PR comments into a checklist
 │   ├── security-check/SKILL.md      # Security review — what to check, how to report
 │   ├── sync-second-brain/SKILL.md   # Sync .claude/ on a dedicated second-brain worktree
-│   ├── update-second-brain/SKILL.md # Record durable project knowledge into .claude/ when needed
+│   ├── update-second-brain/SKILL.md # Source-aware maintenance during ordinary agent work
 │   └── work-items-analysis/SKILL.md # Analyze Jira, GitHub, and local git work items
 │
 ├── docs/
-│   ├── second-brain-hooks.md        # Wiring session-start/end hooks (Claude Code + Cursor)
+│   ├── second-brain-hooks.md        # Organic maintenance and full-audit workflow
 │   └── workstation-setup.md         # Install playbook globally via symlinks
 │
 ├── scripts/
@@ -59,6 +60,7 @@ agentic_engineering/
 │   ├── run                          # Zero-dependency shell test runner
 │   ├── helpers/assert.sh            # Small assertion helpers shared by test files
 │   ├── install-skill-hooks.bash     # Regression tests for managed git hook installation
+│   ├── skills.bash                  # Skill inventory and second-brain contract checks
 │   ├── sync-cursor-skills.bash      # Regression tests for Cursor skill symlink sync
 │   ├── sync-codex-skills.bash       # Regression tests for Codex skill mirroring and cleanup
 │   └── sync-workstation-skills.bash # Integration test for the one-command workstation sync wrapper

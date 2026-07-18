@@ -17,6 +17,7 @@ For any non-trivial session that needs project context, run the `load-second-bra
 | Skill | When to use |
 | --- | --- |
 | agent-review | Reviewing a PR or branch |
+| audit-second-brain | Fully verifying or migrating second-brain conventions |
 | check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
 | diff-summary | Understanding what a diff does |
 | git-recap | Summarizing recent work |
@@ -27,7 +28,7 @@ For any non-trivial session that needs project context, run the `load-second-bra
 | pr-review-triage | Triaging GitHub PR review feedback into a checklist before implementation |
 | security-check | Reviewing security-sensitive changes or posture |
 | sync-second-brain | Syncing `.claude/` through a dedicated `second-brain` worktree |
-| update-second-brain | Recording durable project knowledge after work when it actually changed |
+| update-second-brain | Maintaining durable project knowledge organically during change-producing work |
 | work-items-analysis | Investigating Jira, GitHub, and local git work items over a date range in Paul's workstation setup |
 
 ## Quick Reference
@@ -50,6 +51,7 @@ git commit -m "feat(scope): ✨ description"
 ## Session End
 
 Before ending meaningful work:
-- run or follow `update-second-brain` when durable project knowledge changed
+- run or follow `update-second-brain` when durable project knowledge or a declared
+  convention source changed
 - leave instructions/docs in a consistent state
 - do not leave stale workflow guidance behind

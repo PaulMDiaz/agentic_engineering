@@ -115,7 +115,7 @@ Notes:
 ## Verify
 
 1. Open Cursor Customize (Cmd+Shift+J)
-2. Go to **Skills** and confirm 13 skills are listed
+2. Go to **Skills** and confirm 14 skills are listed
 3. Go to **Rules** and confirm AGENTS.md appears in the Development tab
 4. Type `/` in Agent chat and confirm skills such as `implement` and `security-check` are available
 5. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
@@ -140,7 +140,7 @@ cd ~/Documents/Development/agentic_engineering
 
 ```bash
 # Skills
-rm -f ~/.cursor/skills/{agent-review,check-ci,diff-summary,git-recap,grill-with-docs,implement,init-second-brain,load-second-brain,pr-review-triage,security-check,sync-second-brain,update-second-brain,work-items-analysis}
+rm -f ~/.cursor/skills/{agent-review,audit-second-brain,check-ci,diff-summary,git-recap,grill-with-docs,implement,init-second-brain,load-second-brain,pr-review-triage,security-check,sync-second-brain,update-second-brain,work-items-analysis}
 
 # Rules
 rm -f ~/Documents/Development/AGENTS.md

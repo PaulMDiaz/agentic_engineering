@@ -71,12 +71,23 @@ Each file has a specific purpose. Populate with what you learned in Step 1:
   commands, config classes, and files future agents need to find. Do not record every helper.
 
 **CONVENTIONS.md** — Gatekeeping rules:
+- Include `last_full_audit: YYYY-MM-DD` in front matter only after the initial full audit
+- Add a `Sources:` line immediately after every top-level `##` section heading
+- Cite concrete repository paths or globs for derived facts
+- Use the exact reserved value `normative repository policy` for intentional rules whose
+  authority is the convention itself
 - Code style (linter, formatter, line length)
 - Package/module structure patterns
 - Testing patterns (markers, fixtures, test isolation)
 - Git/versioning conventions
 - Infrastructure conventions
 - Any domain-specific conventions
+
+After populating a new conventions file, run or follow `audit-second-brain`. Set
+`last_full_audit` only when every section is verified or explicitly normative. If an
+existing conventions file is legacy, preserve it first, then migrate it through the audit
+workflow during a change-producing task; a read-only invocation reports the migration
+debt without writing.
 
 **BACKLOG.md** — Known issues and planned work:
 - Organized by priority or phase
@@ -118,3 +129,5 @@ Print a tree of everything created and a brief description of each file's conten
 - **File:line references**: Code pointers should be specific enough to navigate to, not vague.
 - **No duplication**: Each file has its own concern. Architecture describes shape, Decisions explains why, Conventions says what to follow. Don't repeat the same info across files.
 - **Adapt to the project**: A Python data pipeline needs different agents/skills than a React frontend or a Rust CLI tool. Tailor everything to the actual codebase.
+- **Audit the initial state**: Initialization is the first full conventions audit, not a
+  license to write plausible but unverified guidance.

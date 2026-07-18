@@ -88,7 +88,7 @@ For architectural or product decisions:
 For second-brain repos:
 
 - Before handoff, run or follow `update-second-brain` if the session changed decisions,
-  code pointers, architecture, conventions, or backlog.
+  code pointers, architecture, conventions, backlog, or a declared convention source.
 - Verify every second-brain claim you add against the actual files.
 
 ## Guardrails

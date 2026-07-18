@@ -73,7 +73,8 @@ Prefer the smallest correct plan. Do not create ceremony for trivial work.
 ### 6. Close out
 Before handoff:
 - update docs if behavior or workflow changed
-- update second-brain files if project knowledge changed
+- perform source-aware second-brain maintenance if project knowledge or a declared
+  convention source changed; the user does not need to invoke that maintenance explicitly
 - note any follow-up risks, open questions, or refactor opportunities
 
 ## Handoff Format
@@ -100,4 +101,4 @@ When reporting back after implementation, prefer this structure:
 - [ ] Plan matched task size
 - [ ] Change implemented with minimal scope
 - [ ] Verification run honestly
-- [ ] Docs / second brain updated if needed
+- [ ] Docs / source-aware second-brain maintenance completed if needed
