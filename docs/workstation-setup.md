@@ -140,7 +140,7 @@ cd ~/Documents/Development/agentic_engineering
 
 ```bash
 # Skills
-rm -f ~/.cursor/skills/{agent-review,audit-second-brain,check-ci,diff-summary,git-recap,grill-with-docs,implement,init-second-brain,load-second-brain,pr-review-triage,security-check,sync-second-brain,update-second-brain,work-items-analysis}
+~/Documents/Development/agentic_engineering/scripts/sync-cursor-skills uninstall
 
 # Rules
 rm -f ~/Documents/Development/AGENTS.md
