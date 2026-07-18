@@ -6,6 +6,19 @@ read_when: "Before proposing a structural change or adding a new doc/skill"
 
 # Decisions
 
+### Second-brain conventions are source-annotated and agent-maintained
+
+**When:** 2026-07-18
+**Why:** Requiring users to remember a maintenance skill allowed durable guidance to
+drift away from repository configuration. Section-level source declarations let agents
+update affected claims during ordinary change-producing work, while a lightweight
+90-day trust gate reserves full audits for recovery and migration.
+**Trade-off:** Convention files carry a small amount of source metadata and one audit
+date. This avoids unconditional context loading, scheduled scans, and lifecycle hooks,
+but read-only tasks can only report maintenance debt rather than repair it.
+
+---
+
 ### Grill-with-docs preserves target repo documentation conventions
 
 **When:** 2026-06-10

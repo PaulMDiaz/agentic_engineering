@@ -16,4 +16,5 @@ Thanks for contributing to `agentic_engineering`.
 When behavior or workflow guidance changes:
 - update the relevant docs
 - keep examples accurate
-- update `.claude/` second-brain files when needed
+- perform source-aware `.claude/` maintenance when durable knowledge or a declared
+  convention source changed

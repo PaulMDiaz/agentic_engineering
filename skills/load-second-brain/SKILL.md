@@ -5,7 +5,10 @@ description: Load the .claude/ knowledge base ("second brain") for the current p
 
 # Load Second Brain
 
-Read the .claude/ knowledge base to internalize project context before doing work. This is the complement to init-second-brain (creates the knowledge base) and update-second-brain (records session work).
+Read the .claude/ knowledge base to internalize project context before doing work. This is
+the complement to `init-second-brain` (creates the knowledge base),
+`update-second-brain` (performs source-aware scoped maintenance), and
+`audit-second-brain` (restores full trust when needed).
 
 ## When to Use
 
@@ -53,7 +56,31 @@ Skip any files that don't exist — the knowledge base may be partial.
 Implementation detail: attempt direct Read calls to each selected file path in parallel
 and treat "file not found" responses as missing files.
 
-### Step 3: Internalize silently
+### Step 3: Run the lightweight conventions trust gate
+
+When `CONVENTIONS.md` is relevant, inspect only its front matter and section source lines
+before trusting its claims:
+
+- every top-level `##` section should have a `Sources:` line
+- front matter should contain `last_full_audit: YYYY-MM-DD`
+- the full audit is overdue when that date is more than 90 days before the current system
+  date
+
+Missing source lines indicate a legacy or partially migrated file. A missing or overdue
+date indicates that full verification is due.
+
+Respond according to the current task boundary:
+
+- **Change-producing task:** run or follow `audit-second-brain` and migrate or refresh the
+  conventions before handoff.
+- **Read-only task:** verify only claims needed for the request, report the audit debt,
+  and do not edit repository files.
+
+For a current change, compare the changed file paths with the relevant section's declared
+sources. Verify that section before relying on it and ensure the change-producing workflow
+updates stale claims. Do not load unrelated configuration merely to perform this check.
+
+### Step 4: Internalize silently
 
 After reading, do not produce a summary unless the user asks for one. Simply proceed with full project context loaded. The knowledge base is for your benefit — the user already knows their project.
 
@@ -63,7 +90,7 @@ If the user explicitly asks for a summary or asks "what do you know", then provi
 - Key open items from backlog
 - Recent activity (from git log: `git log --oneline -10`)
 
-### Step 4: Apply context during the session
+### Step 5: Apply context during the session
 
 With the knowledge base loaded:
 - Check DECISIONS.md before proposing approaches that may have been already evaluated
@@ -76,6 +103,8 @@ With the knowledge base loaded:
 
 - **Batch reads**: Read selected files in parallel, never sequentially — minimizes latency.
 - **Load enough, then stop**: Use the smallest context set that materially improves correctness.
+- **Trust before use**: Treat missing source annotations or an overdue audit date as
+  visible audit debt, not as permission to assume the claims are current.
 - **Don't parrot back**: The user wrote these files. Don't summarize them back unprompted.
 - **Trust the knowledge base**: If a decision is recorded, respect it unless the user explicitly wants to revisit.
 - **Stale pointers**: CODE_POINTERS.md line numbers may drift after edits. Verify against actual files when navigating.

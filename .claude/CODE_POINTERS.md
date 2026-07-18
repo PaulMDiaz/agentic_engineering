@@ -35,9 +35,10 @@ read_when: "You need to find where something lives"
 | What | Where |
 | --- | --- |
 | Bootstrap `.claude/` for a project | `skills/init-second-brain/SKILL.md` |
-| Load `.claude/` context on demand when project context is needed | `skills/load-second-brain/SKILL.md` |
+| Full conventions verification and legacy migration | `skills/audit-second-brain/SKILL.md` |
+| Load context and run the lightweight conventions trust gate | `skills/load-second-brain/SKILL.md` |
 | Sync `.claude/` via a dedicated `second-brain` branch/worktree | `skills/sync-second-brain/SKILL.md` |
-| Record durable project knowledge into `.claude/` when needed | `skills/update-second-brain/SKILL.md` |
+| Source-aware scoped second-brain maintenance | `skills/update-second-brain/SKILL.md` |
 | Review a branch or PR for bugs/inconsistencies | `skills/agent-review/SKILL.md` |
 | Triage GitHub PR review comments into a checklist | `skills/pr-review-triage/SKILL.md` |
 | Walk through a diff — goal + approach | `skills/diff-summary/SKILL.md` |
@@ -66,6 +67,7 @@ read_when: "You need to find where something lives"
 | Zero-dependency shell test runner | `tests/run` |
 | Shell test assertions | `tests/helpers/assert.sh` |
 | Hook installer regression tests | `tests/install-skill-hooks.bash` |
+| Skill inventory and second-brain contract tests | `tests/skills.bash` |
 | Cursor skill sync regression tests | `tests/sync-cursor-skills.bash` |
 | Codex skill sync regression tests | `tests/sync-codex-skills.bash` |
 | Workstation sync wrapper regression tests | `tests/sync-workstation-skills.bash` |
