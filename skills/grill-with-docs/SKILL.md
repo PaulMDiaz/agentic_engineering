@@ -25,8 +25,9 @@ instead of asking the user.
    - Check `CONVENTIONS.md`, `CODE_POINTERS.md`, `DECISIONS.md`, and `ARCHITECTURE.md`
      when they exist and are relevant.
 2. Discover local documentation structure before creating anything:
-   - Context docs: prefer an existing `CONTEXT-MAP.md`, root `CONTEXT.md`, or nearest
-     context-specific `CONTEXT.md`.
+   - Terminology docs: use an existing glossary, context document, architecture doc, or
+     decision record when one already captures the relevant language. Do not create a
+     `CONTEXT.md` merely because the repo has no existing terminology document.
    - Decision docs: prefer the repo's existing decision-record location. Common paths
      include `docs/architecture/decision_records/`, `docs/adr/`, `docs/adrs/`, and
      `.claude/DECISIONS.md`.
@@ -68,11 +69,12 @@ resolved and the repo convention supports immediate edits.
 
 For glossary or domain language:
 
-- Update the appropriate `CONTEXT.md` using `CONTEXT-FORMAT.md`.
-- Keep context docs free of implementation details. They are glossaries, not specs,
-  scratch pads, or decision logs.
-- If no context doc exists, create one lazily only after the first project-specific term
-  is resolved.
+- Update an existing glossary or context document only when the repository already uses
+  one for that purpose.
+- Otherwise, capture terminology in the repository's established documentation or a
+  decision record only when it is durable and necessary to understand the decision.
+- Do not create a standalone glossary or `CONTEXT.md` unless the user explicitly asks
+  for one.
 
 For architectural or product decisions:
 
@@ -95,6 +97,8 @@ For second-brain repos:
 
 - Preserve existing docs and local templates. Do not replace a repo's decision-record
   system with `docs/adr/` just because the fallback format exists.
+- Do not introduce a glossary or context-document convention where the repository does
+  not already use one.
 - Keep edits narrow. Capture decisions and vocabulary, not full implementation plans
   unless the target document is already a planning artifact.
 - Do not create an ADR for an obvious, reversible, or purely mechanical choice.
