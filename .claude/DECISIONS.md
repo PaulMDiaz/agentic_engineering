@@ -26,7 +26,8 @@ but read-only tasks can only report maintenance debt rather than repair it.
 repos using this playbook may already have stronger conventions such as second-brain
 files, `docs/architecture/decision_records/`, frontmatter, proprietary headers, or
 planning artifacts. The repo-managed skill should improve documentation while respecting
-the local structure it finds.
+the local structure it finds, and must not create a generic `CONTEXT.md` fallback where
+the target repository has not adopted that convention.
 **Trade-off:** The skill is more verbose than the upstream version and has more discovery
 steps before it starts asking questions. That overhead is worth it to avoid creating
 parallel documentation systems in downstream repos.
