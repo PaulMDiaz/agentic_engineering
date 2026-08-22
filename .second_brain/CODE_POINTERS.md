@@ -43,4 +43,3 @@
 | Portable-template migration and validation | `tests/second_brain_template.bash` |
 | Shell assertion helpers | `tests/helpers/assert.sh` |
 | GitHub Actions gate | `.github/workflows/ci.yml` |
-

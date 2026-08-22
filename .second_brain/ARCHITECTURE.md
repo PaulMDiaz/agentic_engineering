@@ -35,4 +35,3 @@ repository's operating policy and the source template installed skills copy into
 Cursor skills infer this repository root through their symlink target. Codex mirrors read
 the adjacent `.agentic-engineering-skill-source` marker. Adopted repositories remain
 self-contained and have no runtime dependency on Agentic Engineering.
-
