@@ -36,6 +36,8 @@ Removing patterns is half the job. Sterile, voiceless writing is just as obvious
 
 ## Patterns to detect and fix
 
+<!-- markdownlint-disable MD029 -->
+
 ### Content
 
 1. **Puffery.** "pivotal moment", "testament to", "evolving landscape", "setting the stage for", "indelible mark", "deeply rooted". Cut puffery, state what happened.
@@ -93,6 +95,8 @@ One more check: if the sentence could appear unchanged in another project's docs
 ### Local additions
 
 32. **Context-sensitive AI vocabulary.** Treat `corpus`, `corpora`, and `canonical` as prompts to check whether a plainer, more exact word is available. Keep them when they name an established technical concept.
+
+<!-- markdownlint-enable MD029 -->
 
 ## Source and license
 
