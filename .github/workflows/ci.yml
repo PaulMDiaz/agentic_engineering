@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Check shell syntax
-        run: bash -n scripts/install-skill-hooks scripts/sync-codex-skills scripts/sync-cursor-skills scripts/sync-workstation-skills tests/run tests/*.bash tests/helpers/*.sh skills/audit-second-brain/scripts/validate_portable_template.sh
+        run: bash -n scripts/install-skill-hooks scripts/sync-codex-skills scripts/sync-cursor-skills scripts/sync-claude-skills scripts/sync-agent-guidance scripts/sync-workstation-skills tests/run tests/*.bash tests/helpers/*.sh skills/audit-second-brain/scripts/validate_portable_template.sh
 
       - name: Run shell script tests
         run: bash tests/run

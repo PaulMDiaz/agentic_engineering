@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# Hooks may run without HOME set, so derive the account home directory defensively.
+HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
+SRC="$ROOT_DIR/skills"
+DST="$HOME_DIR/.claude/skills"
+MODE="${1:-sync}"
+
+# No-op on machines that do not have a Claude Code home directory.
+[ -d "$HOME_DIR/.claude" ] || exit 0
+
+remove_repo_managed_symlinks() {
+  for claude_skill in "$DST"/*; do
+    [ -L "$claude_skill" ] || continue
+    target="$(readlink "$claude_skill")"
+    case "$target" in
+      "$SRC"/*) rm -- "$claude_skill" ;;
+    esac
+  done
+}
+
+case "$MODE" in
+  sync)
+    ;;
+  uninstall)
+    remove_repo_managed_symlinks
+    exit 0
+    ;;
+  *)
+    printf 'Usage: %s [sync|uninstall]\n' "$(basename "$0")" >&2
+    exit 2
+    ;;
+esac
+
+mkdir -p "$DST"
+
+for skill_dir in "$SRC"/*; do
+  [ -d "$skill_dir" ] || continue
+  [ -f "$skill_dir/SKILL.md" ] || continue
+  skill="$(basename "$skill_dir")"
+  # Existing symlinks already reflect source edits, so only create missing ones.
+  [ -e "$DST/$skill" ] || ln -s "$skill_dir" "$DST/$skill"
+done

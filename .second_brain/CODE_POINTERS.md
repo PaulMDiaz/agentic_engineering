@@ -31,7 +31,10 @@
 | Remove managed Git hooks | `scripts/install-skill-hooks::uninstall_hook` |
 | Remove Agentic-managed Cursor links | `scripts/sync-cursor-skills::remove_repo_managed_symlinks` |
 | Remove Agentic-managed Codex mirrors | `scripts/sync-codex-skills::remove_repo_managed_skills` |
-| Run both synchronization paths | `scripts/sync-workstation-skills` |
+| Remove Agentic-managed Claude Code links | `scripts/sync-claude-skills::remove_repo_managed_symlinks` |
+| Link shared guidance into every surface | `scripts/sync-agent-guidance::link_guidance` |
+| Resolve guidance destinations per surface | `scripts/sync-agent-guidance::guidance_destinations` |
+| Run every synchronization path | `scripts/sync-workstation-skills` |
 | Workstation procedure | `docs/workstation-setup.md` |
 | Setup and synchronization diagnosis | `docs/TROUBLESHOOTING.md` |
 

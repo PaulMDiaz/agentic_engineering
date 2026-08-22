@@ -34,18 +34,25 @@ Sources: `skills/*/SKILL.md`, `README.md`, `AGENTS.md`, `AGENTS.local.md`, `scri
   quotations, code, commands, schemas, logs, and user-supplied copy.
 
 ## Workstation synchronization
-Sources: `scripts/install-skill-hooks`, `scripts/sync-cursor-skills`, `scripts/sync-codex-skills`, `scripts/sync-workstation-skills`, `docs/workstation-setup.md`, `tests/*skills.bash`
+Sources: `scripts/install-skill-hooks`, `scripts/sync-cursor-skills`, `scripts/sync-codex-skills`, `scripts/sync-claude-skills`, `scripts/sync-agent-guidance`, `scripts/sync-workstation-skills`, `docs/workstation-setup.md`, `tests/*skills.bash`
 
-- Cursor uses symlinks into this repository's `skills/` directory.
+- Cursor and Claude Code use symlinks into this repository's `skills/` directory.
 - Codex uses real directory mirrors marked with `.agentic-engineering-skill-source`.
-- Cursor synchronization leaves existing destinations untouched.
+- Cursor and Claude Code synchronization leaves existing destinations untouched.
 - Codex synchronization treats same-name skill directories as replaceable, including
   unmarked directories. Codex uninstall and stale cleanup remove only mirrors marked as
   Agentic-managed.
-- Development-wide and Codex agent-guidance links use `AGENTS.local.md`; root `AGENTS.md`
-  remains repository-local.
-- Managed repository Git hooks refresh both skill surfaces after checkout, merge, and
-  commit.
+- Every sync surface no-ops when its agent home directory is absent.
+- Every agent-guidance destination links to `AGENTS.local.md`; root `AGENTS.md` remains
+  repository-local.
+- Guidance destinations are Cursor's development-folder `AGENTS.md`, `~/.codex/AGENTS.md`,
+  and `~/.claude/CLAUDE.md`. Claude Code reads user-level `CLAUDE.md`, not `AGENTS.md`.
+- The development folder is derived from the clone's parent directory, never a hardcoded
+  path, and is skipped when it is the account home.
+- Guidance sync repoints links this repository owns and claims empty placeholder files. It
+  preserves non-empty files and links to other sources, reporting each skip on stderr.
+- Managed repository Git hooks refresh every skill and guidance surface after checkout,
+  merge, and commit.
 - Do not document concurrent installation with another distribution that manages the same
   destination names.
 

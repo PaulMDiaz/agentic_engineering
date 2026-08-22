@@ -16,6 +16,7 @@ with another playbook that manages the same shared guidance paths or skill names
 - Git installed
 - Cursor IDE
 - Codex CLI (optional, if you use Codex agents)
+- Claude Code (optional, if you use Claude Code agents)
 - A development folder where your repos live (e.g., `~/Documents/Development/`)
 
 ## Step 1: Clone the repo
@@ -68,7 +69,7 @@ Notes:
 - Hooks are installed only in `agentic_engineering/.git/hooks`, which is sufficient because this repo is the source of truth for the `skills/` directory.
 - `post-checkout`, `post-merge`, and `post-commit` all call `scripts/sync-workstation-skills`.
 - Hook-triggered sync warns on failure but does not block the git operation. Running the sync scripts yourself still fails loudly.
-- Cursor uses symlinks. Codex uses mirrored real folders.
+- Cursor and Claude Code use symlinks. Codex uses mirrored real folders.
 
 ## Step 4: Review the shared guidance source
 
@@ -79,30 +80,36 @@ contract.
 The tracked default assumes the clone path shown in this guide. Review and customize
 `AGENTS.local.md` before installing it, especially if the clone lives elsewhere.
 
-## Step 5: Install development-wide Cursor rules
+## Step 5: Install development-wide agent guidance
 
-Symlink `AGENTS.local.md` to your development folder root as `AGENTS.md`. Cursor picks it
-up and applies it to all projects underneath:
-
-```bash
-ln -sf ~/Documents/Development/agentic_engineering/AGENTS.local.md ~/Documents/Development/AGENTS.md
-```
-
-Shows in Cursor Settings → Rules → Development.
-
-## Step 6: Install Codex development-wide rules (optional)
-
-If you use Codex agents, symlink the same `AGENTS.local.md` into `~/.codex/` as
-`AGENTS.md`:
+`scripts/sync-agent-guidance` links `AGENTS.local.md` into every guidance surface, so all
+three agents load the same coding standards and workflow rules:
 
 ```bash
-mkdir -p ~/.codex
-ln -sf ~/Documents/Development/agentic_engineering/AGENTS.local.md ~/.codex/AGENTS.md
+~/Documents/Development/agentic_engineering/scripts/sync-agent-guidance
 ```
 
-This makes Codex pick up the same coding standards and workflow guidance.
+| Surface | Destination | Effect |
+| --- | --- | --- |
+| Cursor | `<development folder>/AGENTS.md` | Applies to every repo underneath |
+| Codex | `~/.codex/AGENTS.md` | Applies to every Codex session |
+| Claude Code | `~/.claude/CLAUDE.md` | Applies to every Claude Code session |
 
-## Step 7: Install Codex skills (optional, macOS)
+Notes:
+- The development folder is derived from the clone location, so a non-default clone path
+  needs no edits here.
+- Claude Code loads user-level guidance from `CLAUDE.md` and ignores `~/.claude/AGENTS.md`,
+  so that surface is linked under the name Claude Code reads.
+- Codex and Claude Code are skipped when `~/.codex` or `~/.claude` does not exist.
+- Sync repoints links it already owns, and claims an empty placeholder file.
+- A non-empty file you wrote, or a link pointing at another playbook, is preserved and
+  reported instead of overwritten.
+- Step 3's git hooks rerun this, so the links repair themselves after checkout, merge, and
+  commit.
+
+Cursor shows the result in Settings → Rules → Development.
+
+## Step 6: Install Codex skills (optional, macOS)
 
 Codex skill indexing may ignore pure symlinked skill folders. The reliable setup is:
 
@@ -125,6 +132,23 @@ Notes:
 - If a custom Codex skill uses the same folder name as one of this repo's skills, sync treats the repo skill as authoritative and refreshes that folder.
 - Restart Codex to refresh the session skill index.
 
+## Step 7: Install Claude Code skills (optional)
+
+Claude Code reads personal skills from `~/.claude/skills/<skill>/SKILL.md` and follows
+symlinked skill folders, so it uses the same symlink setup as Cursor:
+
+```bash
+mkdir -p ~/.claude/skills
+~/Documents/Development/agentic_engineering/scripts/sync-claude-skills
+```
+
+Notes:
+- Sync no-ops on machines without a `~/.claude` directory.
+- Existing linked skills update immediately because the targets are live.
+- New skill folders need another sync pass to create the new symlink.
+- Sync never replaces an existing entry, so a custom skill sharing a repo skill name wins.
+- Start a new Claude Code session to refresh the session skill index.
+
 ## Verify
 
 1. Open Cursor Customize (Cmd+Shift+J)
@@ -132,8 +156,9 @@ Notes:
 3. Go to **Rules** and confirm AGENTS.md appears in the Development tab
 4. Type `/` in Agent chat and confirm skills such as `implement` and `security-check` are available
 5. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
-6. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.local.md`
+6. (Guidance) run `ls -l ~/Documents/Development/AGENTS.md ~/.codex/AGENTS.md ~/.claude/CLAUDE.md` and confirm each points to `agentic_engineering/AGENTS.local.md`
 7. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
+8. (Claude Code skills) run `ls -l ~/.claude/skills` and confirm the symlinks point into `agentic_engineering/skills`, then type `/` in a new Claude Code session
 
 ## Updating
 
@@ -155,19 +180,21 @@ cd ~/Documents/Development/agentic_engineering
 # Skills
 ~/Documents/Development/agentic_engineering/scripts/sync-cursor-skills uninstall
 
-# Rules
-rm -f ~/Documents/Development/AGENTS.md
+# Rules for every surface
+~/Documents/Development/agentic_engineering/scripts/sync-agent-guidance uninstall
 
 # Codex
-rm -f ~/.codex/AGENTS.md
 ~/Documents/Development/agentic_engineering/scripts/sync-codex-skills uninstall
+
+# Claude Code
+~/Documents/Development/agentic_engineering/scripts/sync-claude-skills uninstall
 
 # Hook automation
 cd ~/Documents/Development/agentic_engineering
 ./scripts/install-skill-hooks uninstall
 
 # Clean up empty directories
-rmdir ~/.cursor/skills ~/.codex/skills ~/.codex 2>/dev/null
+rmdir ~/.cursor/skills ~/.codex/skills ~/.codex ~/.claude/skills 2>/dev/null
 ```
 
 ## Different folder path?
@@ -176,10 +203,11 @@ If your development folder isn't `~/Documents/Development/`, adjust all paths ab
 For example, if you use `~/code/`:
 
 ```bash
-ln -sf ~/code/agentic_engineering/AGENTS.local.md ~/code/AGENTS.md
-ln -sf ~/code/agentic_engineering/AGENTS.local.md ~/.codex/AGENTS.md
 ~/code/agentic_engineering/scripts/install-skill-hooks
 ~/code/agentic_engineering/scripts/sync-workstation-skills
 ```
+
+Guidance links need no path edits — `sync-agent-guidance` derives the development folder
+from the clone location and writes `~/code/AGENTS.md`.
 
 Also update the `CODING_STANDARDS.md` path inside `AGENTS.local.md` to match the clone.

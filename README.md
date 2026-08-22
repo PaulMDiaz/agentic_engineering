@@ -14,8 +14,8 @@ points, and other `AGENTS.md`-aware tools.
 - `AGENTS.second-brain.snippet.md` — merge-safe project guidance for second-brain adopters.
 - `skills/` — reusable implementation, review, documentation, security, CI, and context
   workflows.
-- `scripts/` — independent Cursor and Codex skill synchronization with explicit collision
-  and cleanup rules.
+- `scripts/` — independent Cursor, Codex, and Claude Code skill and guidance
+  synchronization with explicit collision and cleanup rules.
 
 ## Workstation setup
 

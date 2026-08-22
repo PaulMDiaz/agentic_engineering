@@ -203,14 +203,28 @@ test_repository_and_installed_agents_guidance_are_separate() {
   if grep -qF '<!-- second-brain-guidance: portable-v1 -->' "$installed_guidance"; then
     fail 'installed shared guidance should not embed repository-local second-brain policy'
   fi
+  guidance_script="$ROOT_DIR/scripts/sync-agent-guidance"
+
   assert_file_contains \
     "$workstation_doc" \
-    'agentic_engineering/AGENTS.local.md ~/Documents/Development/AGENTS.md' \
-    'Cursor setup should install AGENTS.local.md'
+    'scripts/sync-agent-guidance' \
+    'workstation setup should install guidance through the sync script'
   assert_file_contains \
-    "$workstation_doc" \
-    'agentic_engineering/AGENTS.local.md ~/.codex/AGENTS.md' \
-    'Codex setup should install AGENTS.local.md'
+    "$guidance_script" \
+    'SRC="$ROOT_DIR/AGENTS.local.md"' \
+    'guidance sync should install AGENTS.local.md'
+  assert_file_contains \
+    "$guidance_script" \
+    '$DEV_DIR/AGENTS.md' \
+    'guidance sync should cover the Cursor development folder'
+  assert_file_contains \
+    "$guidance_script" \
+    '$HOME_DIR/.codex/AGENTS.md' \
+    'guidance sync should cover Codex'
+  assert_file_contains \
+    "$guidance_script" \
+    '$HOME_DIR/.claude/CLAUDE.md' \
+    'guidance sync should cover Claude Code under the filename it reads'
 }
 
 test_skill_ownership_guidance_matches_sync_behavior() {

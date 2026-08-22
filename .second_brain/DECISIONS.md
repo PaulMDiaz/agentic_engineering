@@ -1,5 +1,48 @@
 # Decisions
 
+### Shared agent guidance is synced by script, not by documented manual symlinks
+
+**When:** 2026-08-22
+**Why:** Skill synchronization had a script, Git hooks, and regression tests, while
+guidance installation was three `ln -sf` lines run once by hand. That asymmetry let the
+guidance half of an installation drift silently: a workstation was found with no
+development-folder `AGENTS.md` at all and a zero-byte `~/.codex/AGENTS.md`, so Cursor and
+Codex loaded no shared guidance while skills stayed current. Moving guidance into
+`scripts/sync-agent-guidance` and the hook-driven entry point makes the links self-healing
+and testable on the same terms as skills.
+**Trade-off:** Sync now writes outside the agent home directories, into the development
+folder above the clone. Ownership checks, an account-home guard, and preserve-and-report
+behavior for user-authored files keep that write conservative.
+
+---
+
+### Claude Code guidance is installed as `CLAUDE.md`, not `AGENTS.md`
+
+**When:** 2026-08-22
+**Why:** Claude Code was tested with markers in both `~/.claude/CLAUDE.md` and
+`~/.claude/AGENTS.md`; only the `CLAUDE.md` content reached the loaded instructions.
+Linking the same `AGENTS.local.md` source under the filename Claude Code actually reads
+keeps one guidance source across all three surfaces.
+**Trade-off:** Destination filenames differ per surface, so the sync script maps surfaces
+to destinations rather than reusing one name. The repository-local `CLAUDE.md` shim is
+unaffected and still redirects to `AGENTS.md`.
+
+---
+
+### Claude Code skill sync uses symlinks, not Codex-style mirrors
+
+**When:** 2026-08-22
+**Why:** Claude Code reads personal skills from `~/.claude/skills/<skill>/SKILL.md` and was
+verified to index a symlinked skill folder, so it does not need the real-directory mirror
+that Codex requires. Reusing the Cursor symlink approach means source edits appear
+immediately without a sync pass, and `scripts/sync-claude-skills` stays a small variant of
+`scripts/sync-cursor-skills` with one destination constant changed.
+**Trade-off:** Two sync shapes now exist across three surfaces, and the symlink and mirror
+scripts share structure without sharing code. Keeping them separate is worth it because
+each surface's ownership and cleanup rules differ.
+
+---
+
 ### Repository-local and installed agent guidance use separate files
 
 **When:** 2026-08-22
