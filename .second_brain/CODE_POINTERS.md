@@ -27,14 +27,12 @@
 
 | What | Where |
 | --- | --- |
-| Install managed Git hooks | `scripts/install-skill-hooks::install_hook` |
-| Remove managed Git hooks | `scripts/install-skill-hooks::uninstall_hook` |
-| Remove Agentic-managed Cursor links | `scripts/sync-cursor-skills::remove_repo_managed_symlinks` |
-| Remove Agentic-managed Codex mirrors | `scripts/sync-codex-skills::remove_repo_managed_skills` |
-| Remove Agentic-managed Claude Code links | `scripts/sync-claude-skills::remove_repo_managed_symlinks` |
-| Link shared guidance into every surface | `scripts/sync-agent-guidance::link_guidance` |
-| Resolve guidance destinations per surface | `scripts/sync-agent-guidance::guidance_destinations` |
-| Run every synchronization path | `scripts/sync-workstation-skills` |
+| Install and reconcile every detected agent | `scripts/install` |
+| Enroll and detect shared-guidance sync | `scripts/install::agents_sync_enabled` |
+| Install shared guidance safely | `scripts/install::install_guidance_link` |
+| Install managed Git hooks | `scripts/install::install_hook` |
+| Remove this clone's workstation files | `scripts/uninstall` |
+| Remove managed Git hooks | `scripts/uninstall::remove_hook` |
 | Workstation procedure | `docs/workstation-setup.md` |
 | Setup and synchronization diagnosis | `docs/TROUBLESHOOTING.md` |
 

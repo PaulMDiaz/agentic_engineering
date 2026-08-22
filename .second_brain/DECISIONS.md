@@ -1,5 +1,21 @@
 # Decisions
 
+### Two scripts own the workstation lifecycle and guidance requires one-time enrollment
+
+**When:** 2026-08-22
+**Why:** Separate scripts for each agent, guidance, hooks, and wrapper made the documented
+workflow longer than the behavior required. `scripts/install` can detect Cursor, Codex, and
+Claude Code, apply each surface's ownership rules, and install its own hooks. Because shared
+guidance affects every repository or session under its destination, a populated
+`AGENTS.local.md` proves readiness but does not grant installation consent. An explicit
+first `--with-agents` run records this clone in local Git configuration; later plain and
+hook-driven installs honor that enrollment.
+**Trade-off:** The two lifecycle scripts are larger than the old single-purpose helpers,
+and first-time guidance setup needs a flag. In return, setup, repair, automation, and
+removal use one public command each without making guidance installation implicit.
+
+---
+
 ### Shared agent guidance is synced by script, not by documented manual symlinks
 
 **When:** 2026-08-22
@@ -13,6 +29,10 @@ and testable on the same terms as skills.
 **Trade-off:** Sync now writes outside the agent home directories, into the development
 folder above the clone. Ownership checks, an account-home guard, and preserve-and-report
 behavior for user-authored files keep that write conservative.
+
+> ⚠️ Superseded — `scripts/install` now owns guidance sync alongside skills and hooks.
+> Its first `--with-agents` run enrolls the clone; later hook runs repair guidance through
+> the same installer.
 
 ---
 
@@ -40,6 +60,9 @@ immediately without a sync pass, and `scripts/sync-claude-skills` stays a small 
 **Trade-off:** Two sync shapes now exist across three surfaces, and the symlink and mirror
 scripts share structure without sharing code. Keeping them separate is worth it because
 each surface's ownership and cleanup rules differ.
+
+> ⚠️ Superseded — Claude Code still uses symlinked skills, but the shared implementation
+> now lives in `scripts/install` and `scripts/uninstall` instead of per-agent scripts.
 
 ---
 
@@ -156,6 +179,9 @@ ownership logic and marker checks in one place.
 **Trade-off:** The script now has two modes instead of one. That extra branch is worth it
 to give setup and uninstall a single source of truth.
 
+> ⚠️ Superseded — `scripts/uninstall` now owns marker-checked Codex mirror removal as part
+> of the two-script workstation lifecycle.
+
 ---
 
 ### Workstation scripts use a zero-dependency shell regression harness
@@ -182,7 +208,7 @@ environment issues encountered when background jobs tried to read the repository
 outside its Git lifecycle.
 **Trade-off:** Sync now depends on this repo's git lifecycle rather than an OS-level file
 watcher. That is acceptable because new skills only matter when this repo changes, and
-manual fallback remains available via `scripts/sync-workstation-skills`.
+manual fallback remains available via `scripts/install`.
 
 ---
 

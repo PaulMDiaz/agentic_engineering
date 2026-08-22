@@ -7,20 +7,24 @@ points, and other `AGENTS.md`-aware tools.
 
 - `CODING_STANDARDS.md` — portable engineering and workflow rules.
 - `AGENTS.md` — repository-local guidance for Agentic Engineering itself.
-- `AGENTS.local.md` — shared guidance installed for development-wide Cursor and Codex use.
+- `AGENTS.local.md` — shared guidance installed for Cursor, Codex, and Claude Code use.
 - `CLAUDE.md` — compatibility shim that redirects to `AGENTS.md`.
 - `SECOND_BRAIN.md` — directly copyable portable policy for repository-owned durable
   context.
 - `AGENTS.second-brain.snippet.md` — merge-safe project guidance for second-brain adopters.
 - `skills/` — reusable implementation, review, documentation, security, CI, and context
   workflows.
-- `scripts/` — independent Cursor, Codex, and Claude Code skill and guidance
-  synchronization with explicit collision and cleanup rules.
+- `scripts/install` and `scripts/uninstall` — the complete workstation lifecycle for
+  Cursor, Codex, and Claude Code skills and shared guidance.
 
 ## Workstation setup
 
 See [Workstation Setup](docs/workstation-setup.md) for installation, synchronization, and
 uninstallation instructions.
+
+The recommended personal setup is `scripts/install --with-agents`. The flag enrolls the
+clone as the shared-guidance source once; later plain installs and managed Git hooks remember
+that choice. Run `scripts/install` without the flag when you want skills only.
 
 Agentic Engineering is a complete independent distribution. Do not install it concurrently
 with another playbook that manages the same shared guidance paths or skill names.
@@ -79,8 +83,9 @@ See [Second-Brain Workflow](docs/second-brain-hooks.md) for the complete contrac
 
 ## Philosophy
 
-One versioned playbook, installed deliberately where it is the chosen distribution. Cursor
-sync leaves existing destinations untouched. Codex sync treats a directory with the same
+One versioned playbook, installed deliberately where it is the chosen distribution. The
+public workstation interface is two scripts: install and uninstall. Cursor and Claude Code
+skill sync leave existing destinations untouched. Codex treats a directory with the same
 name as an Agentic skill as replaceable; uninstall and stale cleanup remove only mirrors
 marked as Agentic-managed.
 

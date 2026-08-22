@@ -68,9 +68,10 @@ git commit -m "feat(scope): ✨ description"
 
 - `CODING_STANDARDS.md` — universal coding/workflow rules
 - `AGENTS.md` — canonical agent instruction file for this repo
-- `AGENTS.local.md` — development-wide and Codex shared-guidance source
+- `AGENTS.local.md` — shared-guidance source for Cursor, Codex, and Claude Code
 - `CLAUDE.md` — shim that redirects Claude to `AGENTS.md`
 - `skills/` — reusable repo-specific agent skills
+- `scripts/install` and `scripts/uninstall` — complete workstation installation lifecycle
 - `docs/` — repo documentation
 - `SECOND_BRAIN.md` — portable repository-owned second-brain policy
 - `.second_brain/` — durable repository context files

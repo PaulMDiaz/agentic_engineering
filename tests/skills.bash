@@ -203,34 +203,37 @@ test_repository_and_installed_agents_guidance_are_separate() {
   if grep -qF '<!-- second-brain-guidance: portable-v1 -->' "$installed_guidance"; then
     fail 'installed shared guidance should not embed repository-local second-brain policy'
   fi
-  guidance_script="$ROOT_DIR/scripts/sync-agent-guidance"
+  installer="$ROOT_DIR/scripts/install"
+  script_count="$(find "$ROOT_DIR/scripts" -maxdepth 1 -type f | wc -l | tr -d ' ')"
 
   assert_file_contains \
     "$workstation_doc" \
-    'scripts/sync-agent-guidance' \
-    'workstation setup should install guidance through the sync script'
+    'scripts/install --with-agents' \
+    'workstation setup should document explicit guidance enrollment'
   assert_file_contains \
-    "$guidance_script" \
-    'SRC="$ROOT_DIR/AGENTS.local.md"' \
-    'guidance sync should install AGENTS.local.md'
+    "$installer" \
+    'AGENTS_SOURCE="$ROOT_DIR/AGENTS.local.md"' \
+    'installer should use AGENTS.local.md as shared guidance'
   assert_file_contains \
-    "$guidance_script" \
-    '$DEV_DIR/AGENTS.md' \
-    'guidance sync should cover the Cursor development folder'
+    "$installer" \
+    '$CURSOR_AGENTS_ROOT/AGENTS.md' \
+    'installer should cover the Cursor development folder'
   assert_file_contains \
-    "$guidance_script" \
-    '$HOME_DIR/.codex/AGENTS.md' \
-    'guidance sync should cover Codex'
+    "$installer" \
+    '$codex_home/AGENTS.md' \
+    'installer should cover Codex guidance'
   assert_file_contains \
-    "$guidance_script" \
-    '$HOME_DIR/.claude/CLAUDE.md' \
-    'guidance sync should cover Claude Code under the filename it reads'
+    "$installer" \
+    '$claude_home/CLAUDE.md' \
+    'installer should cover Claude Code under the filename it reads'
+  assert_eq "2" "$script_count" 'the workstation interface should contain only install and uninstall scripts'
+  assert_exists "$ROOT_DIR/scripts/uninstall" 'the workstation interface should include an uninstaller'
 }
 
 test_skill_ownership_guidance_matches_sync_behavior() {
   assert_file_contains \
     "$ROOT_DIR/README.md" \
-    'Codex sync treats a directory with the same' \
+    'Codex treats a directory with the same' \
     'README should disclose authoritative same-name Codex synchronization'
   assert_file_contains \
     "$ROOT_DIR/.second_brain/CONVENTIONS.md" \
