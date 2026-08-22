@@ -6,14 +6,16 @@ points, and other `AGENTS.md`-aware tools.
 ## What's included
 
 - `CODING_STANDARDS.md` — portable engineering and workflow rules.
-- `AGENTS.md` — canonical shared guidance installed by this distribution.
+- `AGENTS.md` — repository-local guidance for Agentic Engineering itself.
+- `AGENTS.local.md` — shared guidance installed for development-wide Cursor and Codex use.
 - `CLAUDE.md` — compatibility shim that redirects to `AGENTS.md`.
 - `SECOND_BRAIN.md` — directly copyable portable policy for repository-owned durable
   context.
 - `AGENTS.second-brain.snippet.md` — merge-safe project guidance for second-brain adopters.
 - `skills/` — reusable implementation, review, documentation, security, CI, and context
   workflows.
-- `scripts/` — independent Cursor and Codex skill synchronization with ownership checks.
+- `scripts/` — independent Cursor and Codex skill synchronization with explicit collision
+  and cleanup rules.
 
 ## Workstation setup
 
@@ -77,9 +79,10 @@ See [Second-Brain Workflow](docs/second-brain-hooks.md) for the complete contrac
 
 ## Philosophy
 
-One versioned playbook, installed deliberately where it is the chosen distribution. Source
-files stay authoritative, generated mirrors remain replaceable, and installers preserve
-paths they cannot prove they own.
+One versioned playbook, installed deliberately where it is the chosen distribution. Cursor
+sync leaves existing destinations untouched. Codex sync treats a directory with the same
+name as an Agentic skill as replaceable; uninstall and stale cleanup remove only mirrors
+marked as Agentic-managed.
 
 ## License
 

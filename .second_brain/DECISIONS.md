@@ -1,5 +1,19 @@
 # Decisions
 
+### Repository-local and installed agent guidance use separate files
+
+**When:** 2026-08-22
+**Why:** Root `AGENTS.md` now carries Agentic Engineering's repository-specific portable
+second-brain contract, while development-wide Cursor and Codex guidance must work for
+repositories that have not adopted that contract. Keeping `AGENTS.local.md` as the shared
+installation source prevents repo-local paths and maintenance rules from leaking into
+unrelated projects.
+**Trade-off:** Public skill inventory and shared defaults appear in two guidance files.
+Regression tests must keep them aligned, and non-default clone locations require updating
+the coding-standards path in `AGENTS.local.md`.
+
+---
+
 ### Agentic Engineering is an independent playbook distribution
 
 **When:** 2026-08-22

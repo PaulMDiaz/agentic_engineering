@@ -1,5 +1,9 @@
 # AGENTS.md
 
+This file is repository-local guidance for agents working on Agentic Engineering. Do not
+install it as development-wide or home-level guidance. The installable shared source is
+`AGENTS.local.md`.
+
 <!-- second-brain-guidance: portable-v1 -->
 ## Second Brain — Primary Repository Guidance
 
@@ -64,6 +68,7 @@ git commit -m "feat(scope): ✨ description"
 
 - `CODING_STANDARDS.md` — universal coding/workflow rules
 - `AGENTS.md` — canonical agent instruction file for this repo
+- `AGENTS.local.md` — development-wide and Codex shared-guidance source
 - `CLAUDE.md` — shim that redirects Claude to `AGENTS.md`
 - `skills/` — reusable repo-specific agent skills
 - `docs/` — repo documentation

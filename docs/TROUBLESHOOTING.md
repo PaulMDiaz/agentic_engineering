@@ -8,6 +8,8 @@ read_when: "A setup step fails, a skill does not appear, or CI/docs checks are f
 ## Cursor skills do not appear
 
 - confirm symlinks exist under `~/.cursor/skills/<skill>`
+- confirm the development-folder `AGENTS.md` points to
+  `agentic_engineering/AGENTS.local.md`, not the repository-local `AGENTS.md`
 - confirm `agentic_engineering/.git/hooks/post-checkout`, `post-commit`, and `post-merge` exist
 - rerun `~/Documents/Development/agentic_engineering/scripts/sync-cursor-skills`
 - restart Cursor if the settings UI still looks stale
@@ -15,6 +17,7 @@ read_when: "A setup step fails, a skill does not appear, or CI/docs checks are f
 ## Codex skills do not appear
 
 - confirm mirrored real folders exist under `~/.codex/skills/<skill>/SKILL.md`
+- confirm `~/.codex/AGENTS.md` points to `agentic_engineering/AGENTS.local.md`
 - confirm `agentic_engineering/.git/hooks/post-checkout`, `post-commit`, and `post-merge` exist
 - if a hook printed a sync warning, rerun `~/Documents/Development/agentic_engineering/scripts/sync-workstation-skills` manually so the error fails loudly
 - rerun `~/Documents/Development/agentic_engineering/scripts/sync-codex-skills`

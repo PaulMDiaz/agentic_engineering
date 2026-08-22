@@ -70,29 +70,39 @@ Notes:
 - Hook-triggered sync warns on failure but does not block the git operation. Running the sync scripts yourself still fails loudly.
 - Cursor uses symlinks. Codex uses mirrored real folders.
 
-## Step 4: Install development-wide rules
+## Step 4: Review the shared guidance source
 
-Symlink `AGENTS.md` to your development folder root. Cursor picks it up and applies
-it to all projects underneath:
+`AGENTS.local.md` is the development-wide guidance source. Root `AGENTS.md` remains
+repository-local to Agentic Engineering because it contains this repository's second-brain
+contract.
+
+The tracked default assumes the clone path shown in this guide. Review and customize
+`AGENTS.local.md` before installing it, especially if the clone lives elsewhere.
+
+## Step 5: Install development-wide Cursor rules
+
+Symlink `AGENTS.local.md` to your development folder root as `AGENTS.md`. Cursor picks it
+up and applies it to all projects underneath:
 
 ```bash
-ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/Documents/Development/AGENTS.md
+ln -sf ~/Documents/Development/agentic_engineering/AGENTS.local.md ~/Documents/Development/AGENTS.md
 ```
 
 Shows in Cursor Settings → Rules → Development.
 
-## Step 5: Install Codex development-wide rules (optional)
+## Step 6: Install Codex development-wide rules (optional)
 
-If you use Codex agents, symlink the same `AGENTS.md` into `~/.codex/`:
+If you use Codex agents, symlink the same `AGENTS.local.md` into `~/.codex/` as
+`AGENTS.md`:
 
 ```bash
 mkdir -p ~/.codex
-ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
+ln -sf ~/Documents/Development/agentic_engineering/AGENTS.local.md ~/.codex/AGENTS.md
 ```
 
 This makes Codex pick up the same coding standards and workflow guidance.
 
-## Step 6: Install Codex skills (optional, macOS)
+## Step 7: Install Codex skills (optional, macOS)
 
 Codex skill indexing may ignore pure symlinked skill folders. The reliable setup is:
 
@@ -122,7 +132,7 @@ Notes:
 3. Go to **Rules** and confirm AGENTS.md appears in the Development tab
 4. Type `/` in Agent chat and confirm skills such as `implement` and `security-check` are available
 5. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
-6. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
+6. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.local.md`
 7. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
 
 ## Updating
@@ -166,8 +176,10 @@ If your development folder isn't `~/Documents/Development/`, adjust all paths ab
 For example, if you use `~/code/`:
 
 ```bash
-ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
-ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
+ln -sf ~/code/agentic_engineering/AGENTS.local.md ~/code/AGENTS.md
+ln -sf ~/code/agentic_engineering/AGENTS.local.md ~/.codex/AGENTS.md
 ~/code/agentic_engineering/scripts/install-skill-hooks
 ~/code/agentic_engineering/scripts/sync-workstation-skills
 ```
+
+Also update the `CODING_STANDARDS.md` path inside `AGENTS.local.md` to match the clone.

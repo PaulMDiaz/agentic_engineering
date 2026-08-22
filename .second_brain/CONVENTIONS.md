@@ -8,14 +8,15 @@ last_full_audit: 2026-08-22
 Sources: `README.md`, `.second_brain/ARCHITECTURE.md`, `CODING_STANDARDS.md`
 
 - Agentic Engineering is a reusable coding and agent-workflow playbook.
-- It remains independently installable and owns only paths its scripts can identify as
-  Agentic-managed.
+- It remains independently installable and documents ownership behavior for each
+  installation surface, including the authoritative same-name Codex skill policy.
 - Do not add a runtime dependency on another playbook repository.
 
 ## Documentation
-Sources: `AGENTS.md`, `CLAUDE.md`, `SECOND_BRAIN.md`, `README.md`, `docs/*.md`, normative repository policy
+Sources: `AGENTS.md`, `AGENTS.local.md`, `CLAUDE.md`, `SECOND_BRAIN.md`, `README.md`, `docs/*.md`, normative repository policy
 
-- `AGENTS.md` is the canonical instruction file; `CLAUDE.md` is a compatibility shim.
+- `AGENTS.md` is repository-local, `AGENTS.local.md` is the installed shared-guidance
+  source, and `CLAUDE.md` is a compatibility shim to repository-local guidance.
 - Files under `docs/` use `summary` and `read_when` YAML front matter.
 - The marked `SECOND_BRAIN.md` portable baseline remains self-contained and
   repository-relative.
@@ -23,12 +24,12 @@ Sources: `AGENTS.md`, `CLAUDE.md`, `SECOND_BRAIN.md`, `README.md`, `docs/*.md`, 
   portable baseline.
 
 ## Skill layout and inventory
-Sources: `skills/*/SKILL.md`, `README.md`, `AGENTS.md`, `scripts/sync-*-skills`, normative repository policy
+Sources: `skills/*/SKILL.md`, `README.md`, `AGENTS.md`, `AGENTS.local.md`, `scripts/sync-*-skills`, normative repository policy
 
 - Skills live in `skills/<name>/SKILL.md`; supporting files stay in the same skill folder.
 - Skill front matter uses a name that matches the containing directory.
 - Portable skill instructions do not rely on tool-specific argument interpolation.
-- `README.md` and `AGENTS.md` list every public skill.
+- `README.md`, `AGENTS.md`, and `AGENTS.local.md` list every public skill.
 - `unslop` applies to every agent-authored response and document while preserving exact
   quotations, code, commands, schemas, logs, and user-supplied copy.
 
@@ -37,7 +38,12 @@ Sources: `scripts/install-skill-hooks`, `scripts/sync-cursor-skills`, `scripts/s
 
 - Cursor uses symlinks into this repository's `skills/` directory.
 - Codex uses real directory mirrors marked with `.agentic-engineering-skill-source`.
-- Synchronization and uninstall preserve entries the scripts cannot prove they own.
+- Cursor synchronization leaves existing destinations untouched.
+- Codex synchronization treats same-name skill directories as replaceable, including
+  unmarked directories. Codex uninstall and stale cleanup remove only mirrors marked as
+  Agentic-managed.
+- Development-wide and Codex agent-guidance links use `AGENTS.local.md`; root `AGENTS.md`
+  remains repository-local.
 - Managed repository Git hooks refresh both skill surfaces after checkout, merge, and
   commit.
 - Do not document concurrent installation with another distribution that manages the same

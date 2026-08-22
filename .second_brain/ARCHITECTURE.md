@@ -7,7 +7,8 @@ and verification surfaces.
 
 | Area | Responsibility |
 | --- | --- |
-| `AGENTS.md` | Canonical shared and repository guidance |
+| `AGENTS.md` | Repository-local guidance for Agentic Engineering |
+| `AGENTS.local.md` | Shared guidance installed at development-wide and Codex locations |
 | `CLAUDE.md` | Compatibility shim that directs Claude-style entry points to `AGENTS.md` |
 | `CODING_STANDARDS.md` | Portable engineering rules distributed to other repositories |
 | `SECOND_BRAIN.md` | Directly copyable portable second-brain baseline used by this repository and adopters |
@@ -21,8 +22,9 @@ and verification surfaces.
 ## Workstation synchronization
 
 Cursor receives live symlinks to `skills/<name>/`. Codex receives real directory mirrors
-tagged with `.agentic-engineering-skill-source`. Repository-local Git hooks run the shared
-sync wrapper after checkout, merge, and commit.
+tagged with `.agentic-engineering-skill-source`. Development-wide and Codex `AGENTS.md`
+links point to `AGENTS.local.md`, leaving root `AGENTS.md` repository-local. Repository Git
+hooks run the shared skill-sync wrapper after checkout, merge, and commit.
 
 Agentic Engineering is an independent distribution. Its installer is not designed to run
 concurrently with another playbook that manages the same destination skill names or shared

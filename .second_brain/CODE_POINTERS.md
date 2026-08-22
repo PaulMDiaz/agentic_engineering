@@ -5,6 +5,7 @@
 | What | Where |
 | --- | --- |
 | Canonical repository guidance | `AGENTS.md` |
+| Installable shared guidance | `AGENTS.local.md` |
 | Claude compatibility entry point | `CLAUDE.md` |
 | Universal engineering rules | `CODING_STANDARDS.md` |
 | Portable second-brain baseline | `SECOND_BRAIN.md` |

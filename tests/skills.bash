@@ -22,7 +22,11 @@ test_public_skill_inventory_is_complete() {
     assert_file_contains \
       "$ROOT_DIR/AGENTS.md" \
       "| $skill_name |" \
-      "shared guidance should list every public skill"
+      "repository guidance should list every public skill"
+    assert_file_contains \
+      "$ROOT_DIR/AGENTS.local.md" \
+      "| $skill_name |" \
+      "installed shared guidance should list every public skill"
   done
 }
 
@@ -179,6 +183,51 @@ test_second_brain_primary_guidance_contract_is_integrated() {
     'portable policy should define second-brain authority'
 }
 
+test_repository_and_installed_agents_guidance_are_separate() {
+  repository_guidance="$ROOT_DIR/AGENTS.md"
+  installed_guidance="$ROOT_DIR/AGENTS.local.md"
+  workstation_doc="$ROOT_DIR/docs/workstation-setup.md"
+
+  assert_file_contains \
+    "$repository_guidance" \
+    'development-wide or home-level guidance.' \
+    'repository guidance should reject global installation'
+  assert_file_contains \
+    "$installed_guidance" \
+    'Follow repository-local `AGENTS.md` files' \
+    'installed guidance should defer to repository-local guidance'
+  assert_file_contains \
+    "$installed_guidance" \
+    '~/Documents/Development/agentic_engineering/CODING_STANDARDS.md' \
+    'installed guidance should resolve the default standards source explicitly'
+  if grep -qF '<!-- second-brain-guidance: portable-v1 -->' "$installed_guidance"; then
+    fail 'installed shared guidance should not embed repository-local second-brain policy'
+  fi
+  assert_file_contains \
+    "$workstation_doc" \
+    'agentic_engineering/AGENTS.local.md ~/Documents/Development/AGENTS.md' \
+    'Cursor setup should install AGENTS.local.md'
+  assert_file_contains \
+    "$workstation_doc" \
+    'agentic_engineering/AGENTS.local.md ~/.codex/AGENTS.md' \
+    'Codex setup should install AGENTS.local.md'
+}
+
+test_skill_ownership_guidance_matches_sync_behavior() {
+  assert_file_contains \
+    "$ROOT_DIR/README.md" \
+    'Codex sync treats a directory with the same' \
+    'README should disclose authoritative same-name Codex synchronization'
+  assert_file_contains \
+    "$ROOT_DIR/.second_brain/CONVENTIONS.md" \
+    'Codex synchronization treats same-name skill directories as replaceable' \
+    'durable conventions should match Codex synchronization behavior'
+  assert_file_contains \
+    "$ROOT_DIR/.second_brain/CONVENTIONS.md" \
+    'Codex uninstall and stale cleanup remove only mirrors marked as' \
+    'durable conventions should scope marker ownership to cleanup behavior'
+}
+
 test_agent_review_requires_validated_synthesis() {
   agent_review="$ROOT_DIR/skills/agent-review/SKILL.md"
 
@@ -305,9 +354,13 @@ test_conventional_commit_guidance_allows_custom_types() {
 
 test_unslop_is_default_shared_guidance() {
   assert_file_contains \
-    "$ROOT_DIR/AGENTS.md" \
+    "$ROOT_DIR/AGENTS.local.md" \
     'Apply `unslop` to every agent-authored response and document.' \
     'shared guidance should make unslop the default'
+  assert_file_contains \
+    "$ROOT_DIR/AGENTS.md" \
+    'Apply `unslop` to every agent-authored response and document.' \
+    'repository guidance should make unslop the default'
   assert_file_contains \
     "$ROOT_DIR/skills/unslop/SKILL.md" \
     'Do not rewrite quotations,' \
@@ -319,6 +372,8 @@ test_second_brain_audit_contract_is_integrated
 test_second_brain_loading_reuses_current_context
 test_second_brain_pointer_and_presentation_contract_is_integrated
 test_second_brain_primary_guidance_contract_is_integrated
+test_repository_and_installed_agents_guidance_are_separate
+test_skill_ownership_guidance_matches_sync_behavior
 test_agent_review_requires_validated_synthesis
 test_init_second_brain_adopts_existing_knowledge
 test_agentic_conventions_follow_source_contract
