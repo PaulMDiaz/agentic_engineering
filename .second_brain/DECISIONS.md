@@ -1,10 +1,67 @@
----
-summary: "Why things are the way they are in agentic_engineering"
-read_when: "Before proposing a structural change or adding a new doc/skill"
----
-<!-- Format per entry: ### Title / **When:** YYYY-MM-DD / **Why:** ... / **Trade-off:** ... / optional > ⚠️ Superseded — reason (immediately after the entry, before the next ---). Horizontal rule (---) between entries. -->
-
 # Decisions
+
+### Repository-local and installed agent guidance use separate files
+
+**When:** 2026-08-22
+**Why:** Root `AGENTS.md` now carries Agentic Engineering's repository-specific portable
+second-brain contract, while development-wide Cursor and Codex guidance must work for
+repositories that have not adopted that contract. Keeping `AGENTS.local.md` as the shared
+installation source prevents repo-local paths and maintenance rules from leaking into
+unrelated projects.
+**Trade-off:** Public skill inventory and shared defaults appear in two guidance files.
+Regression tests must keep them aligned, and non-default clone locations require updating
+the coding-standards path in `AGENTS.local.md`.
+
+---
+
+### Agentic Engineering is an independent playbook distribution
+
+**When:** 2026-08-22
+**Why:** Agentic Engineering and other playbooks may carry overlapping skills and complete
+installers for different environments. Keeping Agentic independently installable preserves
+its usefulness without introducing a runtime dependency or precedence scheme between
+distributions. Each installer remains authoritative only where it is deliberately used.
+**Trade-off:** Installing two distributions that manage the same destination names is
+unsupported. Users must choose one distribution for a given workstation or isolate their
+installation targets.
+
+---
+
+### The repository adopts the portable-v5 second-brain contract
+
+**When:** 2026-08-22
+**Why:** A committed root policy makes durable context loading and maintenance
+self-contained for agents that do not have this playbook installed. The marked portable
+baseline stays byte-for-byte compatible with the reusable contract, while project knowledge
+lives in `.second_brain/` and repository-specific rules remain outside the marked baseline.
+**Trade-off:** Portable policy changes require an explicit versioned migration and
+validation pass. This costs more than editing unversioned prose, but prevents silent drift
+or loss of adopter-owned guidance.
+
+---
+
+### Core knowledge files use minimal presentation and stable pointers
+
+**When:** 2026-08-22
+**Why:** Predictable headings and front-matter rules make migrations idempotent. Stable
+`path::symbol` references reduce line-number churn for code entry points, while
+configuration and prose keep verified fallback locations when no symbol exists.
+**Trade-off:** Symbols can still be renamed and every converted pointer must be verified.
+Some line-based fallbacks remain intentionally.
+
+---
+
+### Unslop is the default for agent-authored prose
+
+**When:** 2026-08-22
+**Why:** Reviews, documentation, and handoffs should use direct, specific language rather
+than stock generated phrasing. Shared guidance applies the skill consistently while its
+exact-material boundary preserves quotations, code, commands, schemas, logs, and
+user-supplied copy.
+**Trade-off:** Agents must distinguish original prose from material that must remain exact.
+The preference applies across repositories that install Agentic's shared guidance.
+
+---
 
 ### Second-brain conventions are source-annotated and agent-maintained
 
@@ -37,10 +94,10 @@ parallel documentation systems in downstream repos.
 ### Codex sync is authoritative for repo-owned skill names
 
 **When:** 2026-03-21
-**Why:** The Codex mirror exists to keep this repo's `skills/` tree reflected in
-`~/.codex/skills`, so a destination folder with the same skill name should converge to the
-repo version instead of preserving divergent local contents. Existing sync behavior and
-tests already refresh same-name folders to the repo copy.
+**Why:** The Codex mirror exists to keep this repo's `skills/` tree reflected in the
+configured Codex skills directory. A destination folder with the same skill name should
+converge to the repo version instead of preserving divergent local contents. Existing sync
+behavior and tests already refresh same-name folders to the repo copy.
 **Trade-off:** Users cannot keep a different custom Codex skill under the same name as a
 repo-managed skill. Custom skills need distinct names if they should survive sync.
 
@@ -77,9 +134,9 @@ it for this repo's size and script-focused scope.
 **Why:** The source of truth for repo-local skills is the `agentic_engineering/skills`
 directory, so the most reliable place to trigger workstation sync is from git events in
 that repo itself. `post-checkout`, `post-merge`, and `post-commit` hooks run in the same
-repo context that already has access to the skill source tree, which avoids the launchd
-access and environment issues encountered when background jobs tried to read
-`~/Documents/Development/agentic_engineering/skills` directly.
+repo context that already has access to the skill source tree, which avoids the access and
+environment issues encountered when background jobs tried to read the repository from
+outside its Git lifecycle.
 **Trade-off:** Sync now depends on this repo's git lifecycle rather than an OS-level file
 watcher. That is acceptable because new skills only matter when this repo changes, and
 manual fallback remains available via `scripts/sync-workstation-skills`.
@@ -101,7 +158,7 @@ auto-repaired by routine sync passes. Manual rerun or recreation is still straig
 
 **When:** 2026-03-21
 **Why:** The Codex mirror needs to converge when a repo-local skill is renamed or removed,
-but `~/.codex/skills` may also contain `.system` or user-created skills that do not
+but the destination may also contain system or user-created skills that do not
 belong to this repo. Tagging mirrored folders with a repo-managed marker lets sync clean
 up stale mirrors without deleting unrelated Codex-specific skills.
 **Trade-off:** The mirror carries a small hidden marker file in each repo-managed skill
@@ -112,7 +169,7 @@ folder. That extra bookkeeping is worth it to preserve user-owned Codex skills s
 ### Second-brain sync uses a dedicated `second-brain` worktree
 
 **When:** 2026-03-21
-**Why:** Syncing `.claude/` through a separate worktree keeps second-brain commits off
+**Why:** Syncing `.second_brain/` through a separate worktree keeps second-brain commits off
 feature branches and makes the lifecycle explicit: copy, review, commit, push, remove,
 return. The documented workflow avoids `rsync --delete` so deletions stay manual and
 reviewable instead of being applied blindly.
@@ -200,31 +257,11 @@ Wrong config silently does nothing — worse than no config at all.
 
 ---
 
-### `_validate_llm_output()` returns a new dict (pure function)
-
-**When:** 2026-02-21
-**Why:** In-place mutation violates the pure functions rule and makes the function harder
-to test. Updated to `dict[str, Any]` return type and explicit key extraction.
-**Trade-off:** More verbose. Worth it for correctness and rule consistency.
-
----
-
-### JSON parse failures in classifiers propagate — no silent fallback
-
-**When:** 2026-02-21
-**Why:** Returning zero-valued defaults masks failures entirely. The outer loop handles
-skipping bad items. Failures must be visible.
-**Note:** Security-clamping (constraining injected enum values) is NOT a fallback — it is
-required validation and must be kept.
-
----
-
 ### Second brain: slim down to DECISIONS + CODE_POINTERS as core files
 
 **When:** 2026-02-25
-**Why:** After several weeks of running the full second brain ritual (NOTES.md,
-ARCHITECTURE.md, DECISIONS.md, CODE_POINTERS.md, CONVENTIONS.md, BACKLOG.md) on a
-real project (osint-alert-agent), assessed what actually provides value vs ceremony:
+**Why:** After using the full second-brain workflow across real projects, the repository
+assessed which knowledge files provided durable value and which became ceremony:
 
 - **DECISIONS.md** — most valuable file. Both human and agent forget *why* choices were
   made. This file prevents re-litigating settled decisions and catches "I was about to
@@ -243,7 +280,7 @@ real project (osint-alert-agent), assessed what actually provides value vs cerem
 - DECISIONS.md + CODE_POINTERS.md = core files, always maintained
 - NOTES.md: dropped — git log is the source of truth (`git-recap` skill for summaries)
 - ARCHITECTURE.md: kept but only updated on structural changes, not every session
-- BACKLOG.md + CONVENTIONS.md: kept, updated as needed
+- DEFERRED.md + CONVENTIONS.md: kept, updated as needed
 - update-second-brain still runs at end of session — but instead of Pass A/B full audit,
   it scopes verification to entries referencing files touched this session (`git diff --name-only`)
 - This catches the most likely drift (things break where you just worked) at a fraction
@@ -255,6 +292,9 @@ verified when someone eventually touches them, (3) full audits can be requested 
 Significant token savings while keeping the knowledge base trustworthy for all agents
 (Cursor, Codex, fresh Claude Code sessions) that rely on it without conversation history.
 
+> ⚠️ Superseded — the portable-v5 contract keeps all five durable knowledge files as the
+> standard presentation, while preserving scoped maintenance and the ban on session logs.
+
 ---
 
 ### Second brain records durable knowledge only
@@ -263,7 +303,7 @@ Significant token savings while keeping the knowledge base trustworthy for all a
 **Why:** Newer coding agents handle longer context and routine testing well, but broad
 "update the second brain" instructions still encourage noisy session notes, trivial
 decision records, and code-pointer entries for implementation details. The durable
-threshold keeps `.claude/` useful as agent memory instead of a transcript.
+threshold keeps `.second_brain/` useful as agent memory instead of a transcript.
 **Trade-off:** Some small decisions and helpers will not be recorded. That is acceptable
 because git history covers session progress, code search covers ordinary helpers, and
 `DECISIONS.md` should capture only choices that are hard to reverse, surprising without
@@ -276,8 +316,8 @@ context, and involved real trade-offs.
 **When:** 2026-07-02
 **Why:** Cursor 2.4 moved slash-command-style workflows into Agent Skills and supports
 manual skill invocation with `/skill-name`, including `disable-model-invocation` for
-explicit-only behavior. This repo no longer needs a separate `.claude/commands/` surface
-or Cursor command symlink setup because the same workflows live in `skills/`.
+explicit-only behavior. This repo no longer needs a separate repo-managed command surface
+because the same workflows live in `skills/`.
 **Trade-off:** Claude Code-specific slash commands are no longer maintained. That is
 acceptable because this workflow currently targets Cursor and Codex skills as the active
 agent surfaces.
@@ -299,9 +339,9 @@ to Cursor's skill discovery. Folder format works for both.
 ### Parent-directory AGENTS.md replaces per-repo templates
 
 **When:** 2026-02-26
-**Why:** Cursor reads `AGENTS.md` from parent directories. Symlinking one `AGENTS.md` to
-the development folder root (`~/Documents/Development/AGENTS.md`) applies coding standards
-to every project underneath — no per-repo setup needed.
+**Why:** Cursor reads `AGENTS.md` from parent directories. Symlinking one shared file to
+the development workspace root applies coding standards to every project underneath with
+no per-repository setup.
 **Trade-off:** Removed `docs/templates/AGENTS-project.md`. Projects that aren't under the
 development folder won't pick up the rules automatically (they can still reference
 CODING_STANDARDS.md directly).

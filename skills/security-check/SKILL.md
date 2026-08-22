@@ -100,9 +100,11 @@ Use this section only if you found confirmed issues.
 For each finding:
 
 #### 1. [SEVERITY] Short title
-**What:** clear description of the issue  
-**Why:** why it matters  
-**Fix:** most direct remediation  
+**What:** clear description of the issue
+
+**Why:** why it matters
+
+**Fix:** most direct remediation
 **File(s):** `path/to/file:L<start>-L<end>`
 
 Severity guide:

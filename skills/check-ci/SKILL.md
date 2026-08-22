@@ -127,9 +127,11 @@ Only include this section if something failed.
 For each failure, use:
 
 #### 1. `command`
-**What failed:** short explanation  
-**Why it matters:** why this blocks local CI / merge confidence  
-**Suggested fix:** the most direct next step  
+**What failed:** short explanation
+
+**Why it matters:** why this blocks local CI / merge confidence
+
+**Suggested fix:** the most direct next step
 
 Number failures in the order they were encountered.
 
@@ -232,9 +234,11 @@ Local CI-equivalent checks are green.
 
 ### Failures
 #### 1. `ruff format --check .`
-**What failed:** formatting drift in changed files  
-**Why it matters:** the branch does not match the repo's formatting gate  
-**Suggested fix:** run `ruff format` on the reported files and rerun the check  
+**What failed:** formatting drift in changed files
+
+**Why it matters:** the branch does not match the repo's formatting gate
+
+**Suggested fix:** run `ruff format` on the reported files and rerun the check
 
 ### Summary
 Exact local CI is failing because formatting is not clean.

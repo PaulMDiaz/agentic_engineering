@@ -18,7 +18,9 @@ This is a triage-only skill. Always stop after creating the initial checklist an
 - Keep reviewer-response drafts in the checklist, but do not post them.
 - Do not draft responses for bots unless the user explicitly asks.
 - Mark informational or no-action rows as `No response required`.
-- For future work, recommend durable tracking in an issue, backlog, or documented rationale, but do not create that tracking during this skill.
+- For deferred future work, recommend tracking in a GitHub issue, `DEFERRED.md`, or documented rationale as appropriate, but do not create that tracking during this skill.
+- Recommend a GitHub issue only when the work is specific and actionable, intentionally outside the current pull request or feature branch, materially impactful, and needs team visibility beyond agent context.
+- Before recommending an issue, inspect issue links already present in the pull request or branch context and run one focused repository issue search. Do not assume no issue exists or perform an exhaustive search.
 
 ## Inputs
 
@@ -164,7 +166,9 @@ When applying responses later:
 - Reply to human review threads/comments only.
 - Use the checklist's reviewer-response text as the source of truth.
 - Keep replies concise and tied to actual changes.
-- Include issue/backlog links for deferred work.
+- Include the GitHub issue link for issue-worthy deferred work. If the repository uses
+  `DEFERRED.md`, keep the entry in its established format and reference the same issue there.
+- Use the PR description's **Tracked follow-ups** section for relevant issue links.
 - Skip bots, informational rows, positive notes, duplicate no-response rows, and comments already answered.
 - Prefer replying in-thread over posting a new PR-level omnibus comment.
 
