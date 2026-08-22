@@ -60,6 +60,17 @@ To install skills without shared guidance:
 
 You can opt in later by running `./scripts/install --with-agents` once.
 
+Enrollment is recorded per clone, so a new clone or a re-made clone needs the flag again
+even on a workstation that was already enrolled. Check whether the current clone is
+enrolled:
+
+```bash
+git -C ~/Documents/Development/agentic_engineering config --local --get agenticEngineering.agentsSync
+```
+
+The command prints the enrolled checkout path, or nothing when this clone is not enrolled.
+Rerunning `--with-agents` on an already-enrolled clone is safe.
+
 The installer skips an agent when its home directory does not exist. For detected agents it
 uses these destinations:
 
@@ -82,6 +93,9 @@ and enrolled guidance files repair themselves after repository changes.
   to this repository's old or current guidance source, then writes a managed rendered file.
 - Managed files carry the source clone in their first-line ownership marker and are refreshed
   by that clone's hooks. User-authored files and links to another source remain untouched.
+- A managed guidance file is regenerated in full on every install, so local edits to it are
+  overwritten without warning. Edit `AGENTS.local.md` in the clone instead, and keep
+  machine-specific rules in a destination this repository does not manage.
 - The installer refuses to use a symlink as an agent's `skills` root and refuses to replace
   an unmanaged repository Git hook.
 

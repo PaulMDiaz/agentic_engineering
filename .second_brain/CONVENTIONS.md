@@ -56,6 +56,10 @@ Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `t
   path, and is skipped when it is the account home.
 - Guidance sync migrates only legacy links this repository owns, claims empty placeholder
   files, and preserves user-owned regular files and foreign links.
+- Managed guidance files are regenerated in full on every install, so edits made at a
+  destination are lost. Overwriting a destination with content that omits the ownership
+  marker returns it to the user and leaves other surfaces managed.
+- Guidance enrollment is recorded per clone, so a new clone repeats the opt-in.
 - Managed repository Git hooks rerun `scripts/install` after checkout, merge, and commit.
 - Do not document concurrent installation with another distribution that manages the same
   destination names.

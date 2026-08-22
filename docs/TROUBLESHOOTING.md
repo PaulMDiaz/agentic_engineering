@@ -44,6 +44,17 @@ read_when: "A setup step fails, a skill does not appear, or CI/docs checks are f
 - rerun `<clone>/scripts/install`
 - start a new agent session so the guidance is reloaded
 
+## Edits to global guidance keep disappearing
+
+- managed guidance files are regenerated on every install, including hook-driven runs, so
+  edits made directly to `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, or the
+  development-folder `AGENTS.md` are overwritten
+- confirm the file is managed by checking its first line for
+  `<!-- agentic-engineering-guidance-source: ... -->`
+- make the change in the clone's `AGENTS.local.md` so every surface receives it
+- to own one destination yourself, overwrite that file with content that does not carry the
+  marker line; the installer then preserves it and keeps managing the other surfaces
+
 ## CI link checks fail
 
 - prefer fixing broken local links/assets over adding ignores
