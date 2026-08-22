@@ -59,14 +59,14 @@ For most non-trivial work, first identify which core files are relevant, then re
 missing selected files in one parallel batch:
 
 | File | Purpose | Read when |
-|------|---------|----------|
+| ------ | ------- | --------- |
 | DECISIONS.md | Settled choices and their rationale | A proposal could revisit a settled choice or trade-off |
 | CODE_POINTERS.md | File/function locations by subsystem | The relevant file or symbol is unknown or insufficiently specified |
 
 Then read additional files only when they are relevant to the task:
 
 | File | Read when |
-|------|-----------|
+| ------ | --------- |
 | DEFERRED.md | Assessing intentionally deferred work, triaging refactors, or checking known gaps |
 | ARCHITECTURE.md | Broad changes, new modules/components, data flow, infrastructure, or unfamiliar system shape |
 | CONVENTIONS.md | Editing code, docs, commands, skills, CI, or repo workflow |
