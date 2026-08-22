@@ -1,53 +1,85 @@
 # Agentic Engineering
 
-A coding playbook for Cursor and Codex — coding standards and skills that work across all your repos.
+A reusable coding and agent-workflow playbook for Cursor, Codex, Claude-style entry
+points, and other `AGENTS.md`-aware tools.
 
-## What's Included
+## What's included
 
-- **CODING_STANDARDS.md** — Universal rules for AI-assisted coding
-- **Skills** — Reusable workflows (code review, git recap, second-brain management)
+- `CODING_STANDARDS.md` — portable engineering and workflow rules.
+- `AGENTS.md` — canonical shared guidance installed by this distribution.
+- `CLAUDE.md` — compatibility shim that redirects to `AGENTS.md`.
+- `SECOND_BRAIN.md` — directly copyable portable policy for repository-owned durable
+  context.
+- `AGENTS.second-brain.snippet.md` — merge-safe project guidance for second-brain adopters.
+- `skills/` — reusable implementation, review, documentation, security, CI, and context
+  workflows.
+- `scripts/` — independent Cursor and Codex skill synchronization with ownership checks.
 
-## Quick Start
+## Workstation setup
 
-See [Workstation Setup](docs/workstation-setup.md) for installation and uninstallation instructions.
+See [Workstation Setup](docs/workstation-setup.md) for installation, synchronization, and
+uninstallation instructions.
+
+Agentic Engineering is a complete independent distribution. Do not install it concurrently
+with another playbook that manages the same shared guidance paths or skill names.
+
+## Portable second-brain adoption
+
+`SECOND_BRAIN.md` begins at the versioned `portable-v5` marker and has no dependency on
+this repository after adoption. A repository adopting the framework owns and commits:
+
+- `SECOND_BRAIN.md`
+- the delimited primary-guidance section in `AGENTS.md`
+- `.second_brain/ARCHITECTURE.md`
+- `.second_brain/CODE_POINTERS.md`
+- `.second_brain/CONVENTIONS.md`
+- `.second_brain/DECISIONS.md`
+- `.second_brain/DEFERRED.md`
+
+Use `init-second-brain` to initialize or adopt existing committed knowledge. Use
+`audit-second-brain` for full source verification, portable-baseline migrations, legacy
+deferred-work migration, and confidence-gated conversion of code pointers to stable
+symbols.
 
 ## Skills
 
 | Skill | Description |
 | --- | --- |
-| agent-review | Review code for bugs, inconsistencies, and refactoring opportunities |
-| audit-second-brain | Fully verify or migrate second-brain conventions against repository sources |
-| check-ci | Verify local CI-equivalent checks for changed files or the full repo |
+| agent-review | Review a branch or PR with validated, deduplicated findings |
+| audit-second-brain | Fully verify conventions and migrate portable second-brain policy |
+| check-ci | Determine and run local CI-equivalent checks |
 | diff-summary | Explain what a diff is trying to accomplish |
 | git-recap | Summarize recent work from git history |
-| grill-with-docs | Stress-test a plan against code, project language, and docs |
-| implement | Methodical task approach — understand, plan, implement, verify |
-| init-second-brain | Bootstrap a `.claude/` knowledge base for a project |
-| load-second-brain | Load project context when needed |
-| pr-review-triage | Triage GitHub PR comments into a checklist before implementation (mainly useful in Paul's workstation flow) |
-| security-check | Security review — what to check for, how to report findings |
-| sync-second-brain | Sync `.claude/` through a dedicated `second-brain` branch/worktree |
-| update-second-brain | Maintain durable project knowledge organically during change-producing work |
-| work-items-analysis | Investigate Jira, GitHub, and local git work items over a date range (workstation-specific, with local Atlassian/GitHub tooling assumptions) |
+| grill-with-docs | Stress-test plans against code, project language, and docs |
+| implement | Plan, implement, and verify non-trivial changes |
+| init-second-brain | Initialize or adopt committed durable repository context |
+| load-second-brain | Load only the repository context needed for a task |
+| pr-review-triage | Convert GitHub review feedback into an implementation checklist |
+| security-check | Perform an evidence-based security review |
+| summarize-transcript | Summarize meeting transcripts, actions, and durable decisions |
+| sync-second-brain | Sync `.second_brain/` through a dedicated worktree |
+| unslop | Remove AI tells from agent-authored prose |
+| update-second-brain | Maintain source-verified durable repository knowledge |
 
-## Agent-Owned Second-Brain Maintenance
+`unslop` is the default for original agent prose. It does not rewrite quotations, code,
+commands, schemas, logs, or user-supplied copy unless the user asks.
 
-Second-brain upkeep is part of ordinary agent work rather than a user-invoked ceremony.
-Convention sections declare their authoritative `Sources:` so agents can update only the
-guidance affected by a change. `load-second-brain` performs a lightweight trust check and
-routes legacy or contradictory guidance—and audits older than 90 days—to
-`audit-second-brain`.
+## Second-brain maintenance
 
-Read-only tasks report stale guidance without editing it. Full audits advance
-`last_full_audit` only when every convention section is verified or explicitly marked as
-`normative repository policy`. See
-[`docs/second-brain-hooks.md`](docs/second-brain-hooks.md) for the complete workflow.
+Second-brain upkeep is part of ordinary change-producing work. Convention sections declare
+their repository-owned `Sources:` so agents update only guidance affected by a change.
+`load-second-brain` performs a lightweight trust check; full audits handle legacy,
+contradictory, or older-than-90-day guidance.
+
+Read-only tasks report stale guidance without modifying it. Full audits advance
+`last_full_audit` only when every convention section is verified or explicitly normative.
+See [Second-Brain Workflow](docs/second-brain-hooks.md) for the complete contract.
 
 ## Philosophy
 
-One shared playbook, symlinked everywhere. Update once, every repo benefits.
-
-No per-repo configuration sprawl. No copy-pasting standards between projects. Just clone once, symlink, and go.
+One versioned playbook, installed deliberately where it is the chosen distribution. Source
+files stay authoritative, generated mirrors remain replaceable, and installers preserve
+paths they cannot prove they own.
 
 ## License
 

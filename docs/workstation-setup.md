@@ -8,6 +8,9 @@ read_when: "Setting up a new machine or onboarding the playbook to a work laptop
 Install the agentic engineering playbook once. All projects in your development
 folder get coding standards and skills — no per-repo setup needed.
 
+Use Agentic Engineering as an independent distribution. Do not install it concurrently
+with another playbook that manages the same shared guidance paths or skill names.
+
 ## Prerequisites
 
 - Git installed
@@ -115,7 +118,7 @@ Notes:
 ## Verify
 
 1. Open Cursor Customize (Cmd+Shift+J)
-2. Go to **Skills** and confirm 14 skills are listed
+2. Go to **Skills** and confirm 15 skills are listed
 3. Go to **Rules** and confirm AGENTS.md appears in the Development tab
 4. Type `/` in Agent chat and confirm skills such as `implement` and `security-check` are available
 5. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist

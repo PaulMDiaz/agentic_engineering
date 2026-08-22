@@ -1,18 +1,18 @@
 ---
 name: update-second-brain
-description: Maintain the .claude/ knowledge base organically when durable project knowledge or declared convention sources change. Verifies affected entries without requiring the user to invoke it explicitly.
+description: Maintain the .second_brain/ knowledge base organically when durable project knowledge or declared convention sources change. Verifies affected entries without requiring the user to invoke it explicitly.
 argument-hint: "[optional: focus area or notes to include]"
 ---
 
 # Update Second Brain
 
-Record durable project knowledge into the `.claude/` knowledge base. This is an
+Record durable project knowledge into the `.second_brain/` knowledge base. This is an
 agent-owned completion responsibility for change-producing work; the user does not need
 to invoke the skill explicitly. Verification remains scoped to affected entries so
 ordinary sessions do not pay for a full repository audit.
 
 Do not add session notes. If no decisions, architecture, conventions, important code
-pointers, or backlog items changed, report that no second-brain update was needed.
+pointers, or deferred-work items changed, report that no second-brain update was needed.
 
 If `CONVENTIONS.md` lacks source annotations, its `last_full_audit` is more than 90 days
 old, or the user requested full verification, run or follow `audit-second-brain` instead
@@ -29,6 +29,10 @@ of treating this scoped workflow as a full audit.
 Agents without full conversation context (Cursor, Codex, fresh Claude Code sessions) rely
 on these files as their primary source of truth. A stale CODE_POINTERS.md entry or wrong
 ARCHITECTURE.md claim actively misleads. Every update pass must verify what it touches.
+
+Durable knowledge is repository-owned, source-verifiable context a future agent needs to
+avoid a wrong decision or repeated investigation. It is not a session log or a copy of
+existing repository documentation.
 
 ## Process
 
@@ -60,7 +64,7 @@ knowledge changes:
 2. **Important code pointers** — entry points, public APIs, cross-module contracts,
    workflows, commands, or files future agents need to find
 3. **Structural changes** — new modules, services, tables, data flow changes
-4. **Backlog changes** — items completed, discovered, or reprioritized
+4. **Deferred-work changes** — items completed, discovered, or reprioritized
 5. **Convention changes** — new patterns established or rules changed
 
 If none of those changed, stop after scoped verification and tell the user:
@@ -74,11 +78,16 @@ touched."
 
 **CODE_POINTERS.md** (most likely to drift)
 - For each changed file: find CODE_POINTERS entries referencing it
-- Verify: file still exists, function/class names are correct, line numbers are approximately right
+- Prefer `path/to/file.py::Symbol` for stable classes, functions, methods, public APIs,
+  and cross-module contracts. Use repository-relative `path/to/file.py:L<line>` only for
+  configuration, prose, module-level blocks, or locations without a stable symbol.
+- Verify: file still exists, symbol names are correct, and fallback line numbers are
+  approximately right
 - Fix stale entries, add new entries only for important entry points, public APIs,
   cross-module contracts, workflows, commands, or files future agents need to find
 - Remove entries for deleted code or tools
-- If line numbers shifted significantly, update them
+- If a fallback line number shifted significantly, update it. If a symbol was renamed,
+  update the symbol pointer.
 
 **ARCHITECTURE.md** (verify claims about touched areas)
 - For each changed module/component: find ARCHITECTURE.md sections describing it
@@ -93,6 +102,10 @@ touched."
   1. The decision is hard to reverse.
   2. The choice would be surprising without context.
   3. The decision involved a real trade-off.
+- During change-producing work, maintain qualifying decision records organically; do not
+  wait for a separate per-entry request. Preserve valid rationale by marking a replaced
+  entry superseded. Correct or remove an entry only when it is a source-verified error or
+  duplicate, and do not substitute deferred work for the decision record.
 - Format: `### Title` / `**When:** YYYY-MM-DD` / `**Why:** ...` / `**Trade-off:** ...`
 
 **CONVENTIONS.md** (source-driven maintenance)
@@ -103,13 +116,18 @@ touched."
   verification; leave full-file migration to `audit-second-brain`
 - Use `Sources: normative repository policy` only for intentional rules, not as a
   substitute for evidence about factual repository behavior
+- Use only repository-owned evidence. Do not copy or cite global, shared, or user-local
+  guidance, or absolute, home-directory, parent-directory, or tool-home paths.
 - Do not advance `last_full_audit` during a scoped update
 
-**BACKLOG.md** (update as items change)
+**DEFERRED.md** (update as items change)
 - Check off completed items: `- [x]`
 - Add newly discovered items
 - Remove items no longer relevant
-- No verification needed — backlog is forward-looking
+- Treat it as a repository-local context index, not a delivery-tracking system. Preserve
+  the repository's established entry format. Link an applicable GitHub issue in the entry;
+  do not create issues automatically.
+- No verification needed — deferred work is forward-looking
 
 **Project-root files** (`AGENTS.md`, `CLAUDE.md`)
 - Only update if dev commands, stack references, or entry points changed
@@ -118,12 +136,15 @@ touched."
 
 Apply all changes in one pass per file. Verify before writing — read the actual source
 file to confirm any claim you're about to add or correct. Preserve source annotations
-and keep them concise when authoritative paths change.
+and keep them concise when authoritative paths change. Before writing, ensure the intended
+knowledge-base edit contains no nonportable paths or external shared-instruction content.
+Follow such guidance during the task, but report that it must be made repository-owned
+before it can become durable knowledge.
 
-If the user asked you to commit the second-brain updates, stage the `.claude/` files and
+If the user asked you to commit the second-brain updates, stage the `.second_brain/` files and
 commit directly:
 ```bash
-git add .claude/
+git add .second_brain/
 git commit -m "docs(second-brain): 📝 update <brief summary>"
 ```
 
@@ -154,6 +175,6 @@ If nothing needed updating: "Verified entries for touched files — knowledge ba
   choices, and implementation details future agents do not need.
 - **Verify before writing** — read actual source files to confirm claims. Don't write from memory.
 - **Be concise** — entries should be scannable. Tables and bullets over prose.
-- **One commit** for all .claude/ changes, not one per file.
+- **One commit** for all `.second_brain/` changes, not one per file.
 - **Don't fabricate** — only record things that actually happened.
 - **When in doubt, check the code** — a Cursor agent will trust what you write here. Get it right.

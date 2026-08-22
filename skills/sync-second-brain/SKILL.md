@@ -1,30 +1,30 @@
 ---
 name: sync-second-brain
-description: Manage a dedicated second-brain git worktree for syncing `.claude/` changes across repos on a separate `second-brain` branch. Use when you want second-brain commits isolated from product-code branches.
+description: Manage a dedicated second-brain git worktree for syncing `.second_brain/` changes across repos on a separate `second-brain` branch. Use when you want second-brain commits isolated from product-code branches.
 ---
 
 # Sync Second Brain
 
-Use a dedicated `second-brain` branch plus a temporary extra worktree to copy `.claude/`
+Use a dedicated `second-brain` branch plus a temporary extra worktree to copy `.second_brain/`
 changes into a separate checkout, commit them there, push them, and then return to the
 original repo/branch workflow cleanly.
 
 ## When to Use
 
 Use this skill when:
-- the current repo root has a `.claude/` directory and `.gitignore` ignores `.claude/`, which indicates the second-brain files should stay off the main development branches and live on a dedicated `second-brain` branch instead
+- the current repo root has a `.second_brain/` directory and `.gitignore` ignores `.second_brain/`, which indicates the second-brain files should stay off the main development branches and live on a dedicated `second-brain` branch instead
 - you are syncing second-brain updates across repos and want a predictable branch name and path
-- you want to stage, review, and push `.claude/` changes without switching your main working tree away from its current branch
+- you want to stage, review, and push `.second_brain/` changes without switching your main working tree away from its current branch
 
 Do not use this skill when:
-- the repo intentionally tracks `.claude/` on its normal development branches, for example `.claude/` is not ignored in `.gitignore` and those files already belong in `main`, `develop`, or feature branches
-- the `.claude/` update belongs in the same branch as the code change and there is no reason to isolate it
+- the repo intentionally tracks `.second_brain/` on its normal development branches, for example `.second_brain/` is not ignored in `.gitignore` and those files already belong in `main`, `develop`, or feature branches
+- the `.second_brain/` update belongs in the same branch as the code change and there is no reason to isolate it
 
 ## When to Create, Keep, or Remove the Worktree
 
-- Create the extra worktree immediately before a `.claude/` sync when you need a clean checkout of the dedicated `second-brain` branch.
+- Create the extra worktree immediately before a `.second_brain/` sync when you need a clean checkout of the dedicated `second-brain` branch.
 - Treat the extra worktree as disposable, not persistent.
-- Remove it in the same sync session immediately after the `.claude/` commit is pushed and the worktree is clean.
+- Remove it in the same sync session immediately after the `.second_brain/` commit is pushed and the worktree is clean.
 - If you are tempted to leave it around, stop and remove it anyway unless the user explicitly asked for a persistent second-brain checkout.
 
 ## Full Lifecycle
@@ -94,18 +94,18 @@ git worktree add ~/Documents/Development/example-repo-second-brain second-brain
 
 This creates a separate checkout at `~/Documents/Development/example-repo-second-brain` on branch `second-brain` while leaving the original repo checkout on its current branch. The intent is to create it for this sync only, not to keep a long-lived second-brain checkout around.
 
-### 2. Copy or sync `.claude/` changes into the second-brain worktree
+### 2. Copy or sync `.second_brain/` changes into the second-brain worktree
 
 Create the destination directory in the second-brain worktree if needed:
 
 ```bash
-mkdir -p ~/Documents/Development/example-repo-second-brain/.claude
+mkdir -p ~/Documents/Development/example-repo-second-brain/.second_brain
 ```
 
-Copy new and changed `.claude/` files from the original repo into the dedicated worktree:
+Copy new and changed `.second_brain/` files from the original repo into the dedicated worktree:
 
 ```bash
-cp -R -i ~/Documents/Development/example-repo/.claude/. ~/Documents/Development/example-repo-second-brain/.claude/
+cp -R -i ~/Documents/Development/example-repo/.second_brain/. ~/Documents/Development/example-repo-second-brain/.second_brain/
 ```
 
 What this does:
@@ -116,43 +116,43 @@ What this does:
 Review the result in the second-brain worktree:
 
 ```bash
-diff -ru ~/Documents/Development/example-repo/.claude ~/Documents/Development/example-repo-second-brain/.claude || true
-git -C ~/Documents/Development/example-repo-second-brain status --short .claude
-git -C ~/Documents/Development/example-repo-second-brain diff -- .claude
+diff -ru ~/Documents/Development/example-repo/.second_brain ~/Documents/Development/example-repo-second-brain/.second_brain || true
+git -C ~/Documents/Development/example-repo-second-brain status --short .second_brain
+git -C ~/Documents/Development/example-repo-second-brain diff -- .second_brain
 ```
 
 What this does:
-- `diff -ru ... || true` compares the source `.claude/` tree to the second-brain worktree without stopping on differences.
-- Files shown as existing only in `~/Documents/Development/example-repo-second-brain/.claude` are candidates for manual deletion.
+- `diff -ru ... || true` compares the source `.second_brain/` tree to the second-brain worktree without stopping on differences.
+- Files shown as existing only in `~/Documents/Development/example-repo-second-brain/.second_brain` are candidates for manual deletion.
 - `git status` and `git diff` then show what the second-brain branch will actually commit.
 
-If a file was intentionally removed from the source `.claude/`, delete it manually in the second-brain worktree after review:
+If a file was intentionally removed from the source `.second_brain/`, delete it manually in the second-brain worktree after review:
 
 ```bash
-trash ~/Documents/Development/example-repo-second-brain/.claude/old-file.md
+trash ~/Documents/Development/example-repo-second-brain/.second_brain/old-file.md
 ```
 
 If `trash` is unavailable, fall back to:
 
 ```bash
-rm -i ~/Documents/Development/example-repo-second-brain/.claude/old-file.md
+rm -i ~/Documents/Development/example-repo-second-brain/.second_brain/old-file.md
 ```
 
 This is the safe-sync rule: copy additions and edits explicitly, then handle deletions one-by-one after review. Do not use `rsync --delete`.
 
 ### 3. Commit and push on `second-brain`
 
-Move into the extra worktree, stage only `.claude/`, commit, and push:
+Move into the extra worktree, stage only `.second_brain/`, commit, and push:
 
 ```bash
 cd ~/Documents/Development/example-repo-second-brain
-git add .claude
-git commit -m "docs(second-brain): 📝 sync .claude"
+git add .second_brain
+git commit -m "docs(second-brain): 📝 sync .second_brain"
 git push -u origin second-brain
 ```
 
 What this does:
-- `git add .claude` limits the commit to second-brain files.
+- `git add .second_brain` limits the commit to second-brain files.
 - `git commit` records the sync on the dedicated branch.
 - `git push -u origin second-brain` publishes the branch and sets upstream tracking if this is the first push.
 

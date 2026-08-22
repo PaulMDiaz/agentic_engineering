@@ -27,7 +27,8 @@ If no commits found, say so and exit.
 ### Step 3: Parse and group
 
 1. Parse each commit: `hash | datetime | author | subject`
-2. Extract conventional commit prefix from subject (`feat`, `fix`, `refactor`, `test`, `docs`, `perf`, `chore`, `style`, `ci`, `config`, `deploy`, `security`, `review`, `backlog`). Commits without a recognized prefix go under "Other".
+2. Extract any Conventional Commit prefix matching `<type>[optional scope][optional !]:`,
+   including custom types. Do not treat a valid but unlisted type as unrecognized.
 3. Strip the prefix and optional scope from the display text (e.g., `feat(nitter): UA rotation` → `UA rotation`)
 4. Group commits by date (newest first), then by type within each date
 
@@ -37,7 +38,8 @@ By default, exclude these commit types from the output:
 - `docs` — second brain updates, README tweaks (usually noise in a recap)
 - `style` — formatting-only changes
 - `review` — review artifacts
-- `backlog` — backlog file updates
+- `deferred` — deferred-work file updates
+- `backlog` — legacy deferred-work file updates
 
 If the user asks for `--all` or "include everything", show all types.
 
@@ -86,7 +88,7 @@ Use this format (Option C — date sections with type grouping):
 - `config` → Configuration
 - `deploy` → Deployment
 - `security` → Security
-- Other/unrecognized → Other
+- Other valid types → title-case the type; non-conforming subjects → Other
 
 Only show type sections that have commits for that date. Skip empty sections.
 

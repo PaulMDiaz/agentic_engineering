@@ -24,11 +24,13 @@ Do not use this skill for:
 
 ### 1. Load relevant repo context
 - Read `CODING_STANDARDS.md`
-- If the repo has a `.claude/` directory, check the most relevant context files before changing code:
+- If the repo has a `.second_brain/` directory and the relevant context is not already loaded
+  and current in this task, check only the most relevant files before changing code:
   - `DECISIONS.md` for prior trade-offs
   - `CONVENTIONS.md` for repo-specific rules
   - `CODE_POINTERS.md` when it helps locate files quickly
-- If the task is non-trivial and the repo uses a second brain, run `load-second-brain`
+- If the task is non-trivial and the repo uses a second brain, run or follow
+  `load-second-brain` only to load missing relevant context.
 
 ### 2. Define the task precisely
 Before editing, make the task concrete:

@@ -10,7 +10,7 @@ Use the first existing convention that applies:
 1. `docs/architecture/decision_records/`
 2. `docs/adr/`
 3. `docs/adrs/`
-4. `.claude/DECISIONS.md`
+4. `.second_brain/DECISIONS.md`
 
 If none exists, create `docs/adr/` lazily when the first decision record is needed.
 
@@ -53,5 +53,5 @@ Record a decision only when all three are true:
 - Constraints not visible in code.
 - Rejected alternatives that would otherwise be re-proposed.
 
-If a repo uses `.claude/DECISIONS.md`, record durable agent-facing decisions there too
+If a repo uses `.second_brain/DECISIONS.md`, record durable agent-facing decisions there too
 when future agents need the rationale to avoid re-litigating the same choice.
