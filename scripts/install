@@ -5,6 +5,8 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd -P)"
 HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
 AGENTS_SOURCE="$ROOT_DIR/AGENTS.local.md"
 LEGACY_AGENTS_SOURCE="$ROOT_DIR/AGENTS.md"
+GUIDANCE_ROOT_TOKEN='{{AGENTIC_ENGINEERING_ROOT}}'
+GUIDANCE_MARKER_PREFIX='<!-- agentic-engineering-guidance-source: '
 SKILLS_SOURCE="$ROOT_DIR/skills"
 CURSOR_AGENTS_ROOT="${AGENTIC_ENGINEERING_CURSOR_AGENTS_ROOT:-$(dirname "$ROOT_DIR")}"
 CODEX_SKILL_MARKER=".agentic-engineering-skill-source"
@@ -62,6 +64,11 @@ ensure_agents_source_ready() {
     printf 'A populated AGENTS.local.md is required for --with-agents: %s\n' "$AGENTS_SOURCE" >&2
     return 1
   fi
+
+  if ! grep -qF "$GUIDANCE_ROOT_TOKEN" "$AGENTS_SOURCE"; then
+    printf 'AGENTS.local.md must contain the portable root token: %s\n' "$GUIDANCE_ROOT_TOKEN" >&2
+    return 1
+  fi
 }
 
 agents_sync_enabled() {
@@ -75,11 +82,39 @@ persist_agents_sync() {
   git -C "$ROOT_DIR" config --local "$AGENTS_SYNC_CONFIG_KEY" "$ROOT_DIR"
 }
 
-install_guidance_link() {
+is_legacy_guidance_link() {
+  local target_path="$1"
+
+  [ -L "$target_path" ] &&
+    { link_targets_path "$target_path" "$AGENTS_SOURCE" || link_targets_path "$target_path" "$LEGACY_AGENTS_SOURCE"; }
+}
+
+is_managed_guidance_file() {
+  local target_path="$1"
+  local expected_marker="${GUIDANCE_MARKER_PREFIX}${ROOT_DIR} -->"
+  local first_line
+
+  [ -f "$target_path" ] || return 1
+  IFS= read -r first_line < "$target_path" || true
+  [ "$first_line" = "$expected_marker" ]
+}
+
+render_guidance() {
+  local line
+  local rendered_line
+
+  while IFS= read -r line || [ -n "$line" ]; do
+    rendered_line="${line//"$GUIDANCE_ROOT_TOKEN"/$ROOT_DIR}"
+    printf '%s\n' "$rendered_line"
+  done < "$AGENTS_SOURCE"
+}
+
+install_guidance_file() {
   local target_path="$1"
   local label="$2"
   local target_dir
   local existing_target
+  local temp_path
   target_dir="$(dirname "$target_path")"
 
   if [ ! -d "$target_dir" ]; then
@@ -88,26 +123,31 @@ install_guidance_link() {
   fi
 
   if [ -L "$target_path" ]; then
-    if link_targets_path "$target_path" "$AGENTS_SOURCE" || link_targets_path "$target_path" "$LEGACY_AGENTS_SOURCE"; then
-      ln -sfn "$AGENTS_SOURCE" "$target_path"
-      printf 'Linked %s guidance: %s -> %s\n' "$label" "$target_path" "$AGENTS_SOURCE"
+    if is_legacy_guidance_link "$target_path"; then
+      rm -f "$target_path"
+    else
+      existing_target="$(readlink "$target_path")"
+      printf 'Skipping %s guidance: %s links outside this repo (%s)\n' "$label" "$target_path" "$existing_target" >&2
       return 0
     fi
-    existing_target="$(readlink "$target_path")"
-    printf 'Skipping %s guidance: %s links outside this repo (%s)\n' "$label" "$target_path" "$existing_target" >&2
-    return 0
-  fi
-
-  if [ -e "$target_path" ]; then
+  elif [ -e "$target_path" ]; then
     if [ -s "$target_path" ]; then
-      printf 'Skipping %s guidance: %s is an existing non-empty file\n' "$label" "$target_path" >&2
-      return 0
+      if ! is_managed_guidance_file "$target_path"; then
+        printf 'Skipping %s guidance: %s is an existing non-empty file\n' "$label" "$target_path" >&2
+        return 0
+      fi
+    else
+      rm -f "$target_path"
     fi
-    rm -- "$target_path"
   fi
 
-  ln -s "$AGENTS_SOURCE" "$target_path"
-  printf 'Linked %s guidance: %s -> %s\n' "$label" "$target_path" "$AGENTS_SOURCE"
+  temp_path="$(mktemp "$target_dir/.agentic-engineering-guidance.XXXXXX")"
+  {
+    printf '%s%s -->\n' "$GUIDANCE_MARKER_PREFIX" "$ROOT_DIR"
+    render_guidance
+  } > "$temp_path"
+  mv -f "$temp_path" "$target_path"
+  printf 'Rendered %s guidance: %s\n' "$label" "$target_path"
 }
 
 ensure_real_directory() {
@@ -188,7 +228,7 @@ install_cursor() {
     if paths_match "$CURSOR_AGENTS_ROOT" "$HOME_DIR"; then
       printf 'Skipping Cursor workspace guidance because the clone is directly under the account home\n'
     else
-      install_guidance_link "$CURSOR_AGENTS_ROOT/AGENTS.md" "Cursor workspace"
+      install_guidance_file "$CURSOR_AGENTS_ROOT/AGENTS.md" "Cursor workspace"
     fi
   fi
 
@@ -203,7 +243,7 @@ install_claude() {
   fi
 
   if [ "$WITH_AGENTS" = "true" ]; then
-    install_guidance_link "$claude_home/CLAUDE.md" "Claude Code"
+    install_guidance_file "$claude_home/CLAUDE.md" "Claude Code"
   fi
 
   install_symlinked_skills "$claude_home" "Claude Code"
@@ -266,7 +306,7 @@ install_codex() {
   fi
 
   if [ "$WITH_AGENTS" = "true" ]; then
-    install_guidance_link "$codex_home/AGENTS.md" "Codex"
+    install_guidance_file "$codex_home/AGENTS.md" "Codex"
   fi
 
   ensure_real_directory "$codex_home/skills" "Codex skills directory"

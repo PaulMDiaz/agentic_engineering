@@ -34,9 +34,10 @@ directly under the account home.
 
 ## Review shared guidance
 
-Root `AGENTS.md` applies only to this repository. `AGENTS.local.md` is the source installed
-for other repositories and agent sessions. Review it before enabling guidance, especially
-the path to `CODING_STANDARDS.md` if this clone does not use the documented location.
+Root `AGENTS.md` applies only to this repository. `AGENTS.local.md` is a portable template
+for other repositories and agent sessions. The installer renders it with the actual checkout
+path before writing a managed local guidance file, so do not edit its root token for a
+different clone location.
 
 ## Install
 
@@ -49,7 +50,7 @@ source:
 
 `--with-agents` is a one-time opt-in. The installer records the choice in this clone's local
 Git configuration. Later plain installs, including managed hook runs, continue syncing the
-guidance links.
+rendered guidance files.
 
 To install skills without shared guidance:
 
@@ -64,23 +65,23 @@ uses these destinations:
 
 | Surface | Skills | Shared guidance |
 | --- | --- | --- |
-| Cursor | Symlinks in `~/.cursor/skills/` | `<clone parent>/AGENTS.md` |
-| Codex | Real mirrors in `~/.codex/skills/` | `~/.codex/AGENTS.md` |
-| Claude Code | Symlinks in `~/.claude/skills/` | `~/.claude/CLAUDE.md` |
+| Cursor | Symlinks in `~/.cursor/skills/` | Rendered file at `<clone parent>/AGENTS.md` |
+| Codex | Real mirrors in `~/.codex/skills/` | Rendered file at `~/.codex/AGENTS.md` |
+| Claude Code | Symlinks in `~/.claude/skills/` | Rendered file at `~/.claude/CLAUDE.md` |
 
 The same command installs managed `post-checkout`, `post-merge`, and `post-commit` hooks in
 this repository. Each hook reruns `scripts/install`, so new skills, Codex mirror updates,
-and enrolled guidance links repair themselves after repository changes.
+and enrolled guidance files repair themselves after repository changes.
 
 ## Ownership and collisions
 
 - Cursor and Claude Code keep existing skill paths with the same name.
 - Codex treats Agentic Engineering's same-name skill directories as authoritative and
   replaces their contents. Unrelated names and `.system` remain untouched.
-- Guidance sync claims a missing path or an empty placeholder. It repoints links to this
-  repository's old or current guidance source.
-- Guidance files with content and links to another source remain untouched. The installer
-  reports every skipped collision.
+- Guidance sync claims a missing path or an empty placeholder. It migrates only legacy links
+  to this repository's old or current guidance source, then writes a managed rendered file.
+- Managed files carry the source clone in their first-line ownership marker and are refreshed
+  by that clone's hooks. User-authored files and links to another source remain untouched.
 - The installer refuses to use a symlink as an agent's `skills` root and refuses to replace
   an unmanaged repository Git hook.
 
@@ -89,8 +90,8 @@ and enrolled guidance links repair themselves after repository changes.
 1. Confirm Cursor and Claude Code skill links point into this repository's `skills/`
    directory.
 2. Confirm Codex has real folders at `~/.codex/skills/<skill>/SKILL.md`.
-3. If guidance is enabled, confirm the three guidance destinations above point to
-   `agentic_engineering/AGENTS.local.md`.
+3. If guidance is enabled, confirm the three guidance destinations above are regular files
+   whose first line names this clone and whose standards path resolves into this checkout.
 4. Confirm `.git/hooks/post-checkout`, `post-merge`, and `post-commit` exist in this clone.
 5. Start a new agent session so it reloads skills and guidance.
 
@@ -113,12 +114,12 @@ run the installer directly so the error is visible:
 ./scripts/uninstall
 ```
 
-The uninstaller removes guidance links, skill links, Codex mirrors, hooks, and the saved
-guidance opt-in only when this clone owns them. It preserves user files, other playbooks'
-links, unrelated skills, agent home directories, and skill-root directories.
+The uninstaller removes this clone's rendered guidance files, legacy guidance links, skill
+links, Codex mirrors, hooks, and the saved guidance opt-in only when this clone owns them.
+It preserves user files, other playbooks' links, unrelated skills, agent home directories,
+and skill-root directories.
 
 ## Different clone path
 
 Run the same two scripts from the alternate clone. No destination arguments are needed.
-Update the `CODING_STANDARDS.md` path inside `AGENTS.local.md` so the installed guidance
-points to the real clone location.
+The installer renders the alternate checkout path automatically.

@@ -15,8 +15,9 @@ Sources: `README.md`, `.second_brain/ARCHITECTURE.md`, `CODING_STANDARDS.md`
 ## Documentation
 Sources: `AGENTS.md`, `AGENTS.local.md`, `CLAUDE.md`, `SECOND_BRAIN.md`, `README.md`, `docs/*.md`, normative repository policy
 
-- `AGENTS.md` is repository-local, `AGENTS.local.md` is the installed shared-guidance
-  source, and `CLAUDE.md` is a compatibility shim to repository-local guidance.
+- `AGENTS.md` is repository-local, `AGENTS.local.md` is the portable shared-guidance
+  template rendered by the installer, and `CLAUDE.md` is a compatibility shim to
+  repository-local guidance.
 - Files under `docs/` use `summary` and `read_when` YAML front matter.
 - The marked `SECOND_BRAIN.md` portable baseline remains self-contained and
   repository-relative.
@@ -44,7 +45,8 @@ Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `t
   unmarked directories. Codex uninstall and stale cleanup remove only mirrors marked as
   Agentic-managed.
 - Every sync surface no-ops when its agent home directory is absent.
-- Every agent-guidance destination links to `AGENTS.local.md`; root `AGENTS.md` remains
+- The installer renders `AGENTS.local.md` with its resolved checkout root into managed
+  guidance files for Cursor, Codex, and Claude Code; root `AGENTS.md` remains
   repository-local.
 - Shared guidance requires one explicit `scripts/install --with-agents` enrollment. The
   clone records that choice in local Git configuration, and later plain installs honor it.
@@ -52,8 +54,8 @@ Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `t
   and `~/.claude/CLAUDE.md`. Claude Code reads user-level `CLAUDE.md`, not `AGENTS.md`.
 - The development folder is derived from the clone's parent directory, never a hardcoded
   path, and is skipped when it is the account home.
-- Guidance sync repoints links this repository owns and claims empty placeholder files. It
-  preserves non-empty files and links to other sources, reporting each skip on stderr.
+- Guidance sync migrates only legacy links this repository owns, claims empty placeholder
+  files, and preserves user-owned regular files and foreign links.
 - Managed repository Git hooks rerun `scripts/install` after checkout, merge, and commit.
 - Do not document concurrent installation with another distribution that manages the same
   destination names.

@@ -83,6 +83,23 @@ test_uninstall_preserves_guidance_owned_elsewhere() {
   assert_symlink_target "$home_dir/.claude/CLAUDE.md" "$other_dir/AGENTS.md" "uninstall should preserve foreign Claude Code guidance"
 }
 
+test_uninstall_preserves_rendered_guidance_owned_by_another_clone() {
+  repo_dir="$(make_repo_copy)"
+  home_dir="$(make_agent_home)"
+  workspace_dir="$(make_temp_dir)"
+  other_dir="$(make_temp_dir)"
+
+  for guidance_path in "$workspace_dir/AGENTS.md" "$home_dir/.codex/AGENTS.md" "$home_dir/.claude/CLAUDE.md"; do
+    printf '%s%s -->\nforeign guidance\n' '<!-- agentic-engineering-guidance-source: ' "$other_dir" > "$guidance_path"
+  done
+
+  HOME="$home_dir" AGENTIC_ENGINEERING_CURSOR_AGENTS_ROOT="$workspace_dir" "$repo_dir/scripts/uninstall"
+
+  assert_file_contains "$workspace_dir/AGENTS.md" "$other_dir" "uninstall should preserve foreign rendered Cursor guidance"
+  assert_file_contains "$home_dir/.codex/AGENTS.md" "$other_dir" "uninstall should preserve foreign rendered Codex guidance"
+  assert_file_contains "$home_dir/.claude/CLAUDE.md" "$other_dir" "uninstall should preserve foreign rendered Claude Code guidance"
+}
+
 test_uninstall_removes_legacy_repo_guidance_links() {
   repo_dir="$(make_repo_copy)"
   home_dir="$(make_agent_home)"
@@ -129,6 +146,7 @@ test_uninstall_rejects_unknown_options() {
 
 test_uninstall_removes_owned_installation_and_saved_opt_in
 test_uninstall_preserves_guidance_owned_elsewhere
+test_uninstall_preserves_rendered_guidance_owned_by_another_clone
 test_uninstall_removes_legacy_repo_guidance_links
 test_uninstall_preserves_symlinked_skill_roots
 test_uninstall_rejects_unknown_options

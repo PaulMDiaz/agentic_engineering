@@ -1,6 +1,8 @@
 # AGENTS.md
 
-Read and follow `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md` before
+<!-- Rendered by scripts/install; do not link this template directly. -->
+
+Read and follow `{{AGENTIC_ENGINEERING_ROOT}}/CODING_STANDARDS.md` before
 doing any work. Treat it as mandatory startup context for all tasks.
 
 ## Rules
@@ -49,10 +51,10 @@ git commit -m "feat(scope): ✨ description"
 
 ## Shared source
 
-- `~/Documents/Development/agentic_engineering/CODING_STANDARDS.md` — engineering and workflow rules
-- `~/Documents/Development/agentic_engineering/skills/` — reusable agent skills
-- `~/Documents/Development/agentic_engineering/docs/` — setup and operational guidance
-- `~/Documents/Development/agentic_engineering/tools.md` — workstation tool reference
+- `{{AGENTIC_ENGINEERING_ROOT}}/CODING_STANDARDS.md` — engineering and workflow rules
+- `{{AGENTIC_ENGINEERING_ROOT}}/skills/` — reusable agent skills
+- `{{AGENTIC_ENGINEERING_ROOT}}/docs/` — setup and operational guidance
+- `{{AGENTIC_ENGINEERING_ROOT}}/tools.md` — workstation tool reference
 
 ## Session end
 

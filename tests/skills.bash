@@ -198,8 +198,11 @@ test_repository_and_installed_agents_guidance_are_separate() {
     'installed guidance should defer to repository-local guidance'
   assert_file_contains \
     "$installed_guidance" \
-    '~/Documents/Development/agentic_engineering/CODING_STANDARDS.md' \
-    'installed guidance should resolve the default standards source explicitly'
+    '{{AGENTIC_ENGINEERING_ROOT}}/CODING_STANDARDS.md' \
+    'installed guidance should carry a portable standards-root token'
+  if grep -qF '~/Documents/Development/agentic_engineering' "$installed_guidance"; then
+    fail 'installed guidance template should not hard-code a workstation path'
+  fi
   if grep -qF '<!-- second-brain-guidance: portable-v1 -->' "$installed_guidance"; then
     fail 'installed shared guidance should not embed repository-local second-brain policy'
   fi
@@ -214,6 +217,14 @@ test_repository_and_installed_agents_guidance_are_separate() {
     "$installer" \
     'AGENTS_SOURCE="$ROOT_DIR/AGENTS.local.md"' \
     'installer should use AGENTS.local.md as shared guidance'
+  assert_file_contains \
+    "$installer" \
+    "GUIDANCE_ROOT_TOKEN='{{AGENTIC_ENGINEERING_ROOT}}'" \
+    'installer should render the shared guidance for its actual clone path'
+  assert_file_contains \
+    "$installer" \
+    'install_guidance_file' \
+    'installer should render managed guidance files instead of linking the template'
   assert_file_contains \
     "$installer" \
     '$CURSOR_AGENTS_ROOT/AGENTS.md' \

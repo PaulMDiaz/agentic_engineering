@@ -1,5 +1,21 @@
 # Decisions
 
+### Shared guidance is rendered per clone, not linked as a static source file
+
+**When:** 2026-08-22
+**Why:** `AGENTS.local.md` previously contained a Mac-specific checkout path while the
+installer linked that same file into every supported agent. That made a second checkout,
+including the OpenClaw workspace checkout on the Pi, inherit invalid paths. The installer
+now renders a managed regular file with its resolved repository root at each destination.
+It identifies those files with a source-root marker, refreshes only files owned by the same
+clone, and migrates only legacy links that resolve to this repository.
+**Trade-off:** Guidance no longer updates through a live symlink. The installed Git hooks
+must rerun the installer after repository changes, and the ownership marker adds a small
+generated header. This is preferable to coupling every machine to one clone location or
+risking replacement of user-authored guidance.
+
+---
+
 ### Two scripts own the workstation lifecycle and guidance requires one-time enrollment
 
 **When:** 2026-08-22
@@ -77,6 +93,9 @@ unrelated projects.
 **Trade-off:** Public skill inventory and shared defaults appear in two guidance files.
 Regression tests must keep them aligned, and non-default clone locations require updating
 the coding-standards path in `AGENTS.local.md`.
+
+> ⚠️ Superseded — `AGENTS.local.md` now uses a portable root token, and `scripts/install`
+> renders the actual checkout path for each managed destination.
 
 ---
 

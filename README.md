@@ -7,7 +7,8 @@ points, and other `AGENTS.md`-aware tools.
 
 - `CODING_STANDARDS.md` — portable engineering and workflow rules.
 - `AGENTS.md` — repository-local guidance for Agentic Engineering itself.
-- `AGENTS.local.md` — shared guidance installed for Cursor, Codex, and Claude Code use.
+- `AGENTS.local.md` — portable template rendered as shared guidance for Cursor, Codex, and
+  Claude Code use.
 - `CLAUDE.md` — compatibility shim that redirects to `AGENTS.md`.
 - `SECOND_BRAIN.md` — directly copyable portable policy for repository-owned durable
   context.

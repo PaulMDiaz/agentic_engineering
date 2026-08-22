@@ -8,7 +8,7 @@ and verification surfaces.
 | Area | Responsibility |
 | --- | --- |
 | `AGENTS.md` | Repository-local guidance for Agentic Engineering |
-| `AGENTS.local.md` | Shared guidance installed for Cursor, Codex, and Claude Code |
+| `AGENTS.local.md` | Portable template rendered into machine-local shared guidance |
 | `CLAUDE.md` | Compatibility shim that directs Claude-style entry points to `AGENTS.md` |
 | `CODING_STANDARDS.md` | Portable engineering rules distributed to other repositories |
 | `SECOND_BRAIN.md` | Directly copyable portable second-brain baseline used by this repository and adopters |
@@ -24,11 +24,11 @@ and verification surfaces.
 
 Cursor and Claude Code receive live symlinks to `skills/<name>/`. Codex receives real
 directory mirrors tagged with `.agentic-engineering-skill-source`. An explicit first
-`scripts/install --with-agents` run links `AGENTS.local.md` at the Cursor workspace,
-Codex, and Claude Code destinations and saves the enrollment in local Git configuration.
-Repository Git hooks rerun the plain installer after checkout, merge, and commit, so skills
-always reconcile and guidance reconciles only for an enrolled clone. Root `AGENTS.md`
-remains repository-local.
+`scripts/install --with-agents` run renders `AGENTS.local.md` with the resolved checkout
+root at the Cursor workspace, Codex, and Claude Code destinations and saves the enrollment
+in local Git configuration. Repository Git hooks rerun the plain installer after checkout,
+merge, and commit, so skills always reconcile and guidance reconciles only for an enrolled
+clone. Root `AGENTS.md` remains repository-local.
 
 Agentic Engineering is an independent distribution. Its installer is not designed to run
 concurrently with another playbook that manages the same destination skill names or shared

@@ -29,9 +29,10 @@
 | --- | --- |
 | Install and reconcile every detected agent | `scripts/install` |
 | Enroll and detect shared-guidance sync | `scripts/install::agents_sync_enabled` |
-| Install shared guidance safely | `scripts/install::install_guidance_link` |
+| Render shared guidance safely | `scripts/install::install_guidance_file` |
+| Substitute the installed clone path | `scripts/install::render_guidance` |
 | Install managed Git hooks | `scripts/install::install_hook` |
-| Remove this clone's workstation files | `scripts/uninstall` |
+| Remove this clone's workstation files | `scripts/uninstall::remove_guidance` |
 | Remove managed Git hooks | `scripts/uninstall::remove_hook` |
 | Workstation procedure | `docs/workstation-setup.md` |
 | Setup and synchronization diagnosis | `docs/TROUBLESHOOTING.md` |

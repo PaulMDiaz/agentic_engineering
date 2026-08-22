@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd -P)"
 HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
 AGENTS_SOURCE="$ROOT_DIR/AGENTS.local.md"
 LEGACY_AGENTS_SOURCE="$ROOT_DIR/AGENTS.md"
+GUIDANCE_MARKER_PREFIX='<!-- agentic-engineering-guidance-source: '
 CURSOR_AGENTS_ROOT="${AGENTIC_ENGINEERING_CURSOR_AGENTS_ROOT:-$(dirname "$ROOT_DIR")}"
 CODEX_SKILL_MARKER=".agentic-engineering-skill-source"
 HOOK_MARKER="# agentic-engineering-skill-sync"
@@ -52,7 +53,17 @@ link_targets_path() {
   paths_match "$resolved_target" "$expected_path"
 }
 
-remove_guidance_link() {
+is_managed_guidance_file() {
+  local target_path="$1"
+  local expected_marker="${GUIDANCE_MARKER_PREFIX}${ROOT_DIR} -->"
+  local first_line
+
+  [ -f "$target_path" ] || return 1
+  IFS= read -r first_line < "$target_path" || true
+  [ "$first_line" = "$expected_marker" ]
+}
+
+remove_guidance() {
   local target_path="$1"
   local label="$2"
   local existing_target
@@ -61,14 +72,14 @@ remove_guidance_link() {
     return 0
   fi
 
-  if [ ! -L "$target_path" ]; then
-    printf 'Leaving non-symlink %s guidance in place: %s\n' "$label" "$target_path" >&2
-    return 0
-  fi
-
-  if ! link_targets_path "$target_path" "$AGENTS_SOURCE" && ! link_targets_path "$target_path" "$LEGACY_AGENTS_SOURCE"; then
-    existing_target="$(readlink "$target_path")"
-    printf 'Leaving %s guidance managed by another source: %s -> %s\n' "$label" "$target_path" "$existing_target" >&2
+  if [ -L "$target_path" ]; then
+    if ! link_targets_path "$target_path" "$AGENTS_SOURCE" && ! link_targets_path "$target_path" "$LEGACY_AGENTS_SOURCE"; then
+      existing_target="$(readlink "$target_path")"
+      printf 'Leaving %s guidance managed by another source: %s -> %s\n' "$label" "$target_path" "$existing_target" >&2
+      return 0
+    fi
+  elif ! is_managed_guidance_file "$target_path"; then
+    printf 'Leaving non-managed %s guidance in place: %s\n' "$label" "$target_path" >&2
     return 0
   fi
 
@@ -107,12 +118,12 @@ uninstall_symlinked_skills() {
 }
 
 uninstall_cursor() {
-  remove_guidance_link "$CURSOR_AGENTS_ROOT/AGENTS.md" "Cursor workspace"
+  remove_guidance "$CURSOR_AGENTS_ROOT/AGENTS.md" "Cursor workspace"
   uninstall_symlinked_skills "$HOME_DIR/.cursor" "Cursor"
 }
 
 uninstall_claude() {
-  remove_guidance_link "$HOME_DIR/.claude/CLAUDE.md" "Claude Code"
+  remove_guidance "$HOME_DIR/.claude/CLAUDE.md" "Claude Code"
   uninstall_symlinked_skills "$HOME_DIR/.claude" "Claude Code"
 }
 
@@ -122,7 +133,7 @@ uninstall_codex() {
   local target_path
   local skill_name
   local existing_source
-  remove_guidance_link "$codex_home/AGENTS.md" "Codex"
+  remove_guidance "$codex_home/AGENTS.md" "Codex"
 
   if [ ! -d "$codex_home" ]; then
     printf 'Codex not detected; skipping Codex uninstall\n'
