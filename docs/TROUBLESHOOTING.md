@@ -41,6 +41,8 @@ read_when: "A setup step fails, a skill does not appear, or CI/docs checks are f
 - Claude Code reads `~/.claude/CLAUDE.md`, not `~/.claude/AGENTS.md`
 - run `<clone>/scripts/install --with-agents` once if this clone has not been enrolled for
   guidance sync
+- if the first-line ownership marker names an obsolete checkout, rerun
+  `<clone>/scripts/install --with-agents` from the checkout that should own the installation
 - rerun `<clone>/scripts/install`
 - start a new agent session so the guidance is reloaded
 

@@ -31,7 +31,8 @@
 | Enroll and detect shared-guidance sync | `scripts/install::agents_sync_enabled` |
 | Render shared guidance safely | `scripts/install::install_guidance_file` |
 | Substitute the installed clone path | `scripts/install::render_guidance` |
-| Recognize a managed guidance file | `scripts/install::is_managed_guidance_file` |
+| Recognize guidance from any Agentic Engineering checkout | `scripts/install::is_agentic_engineering_guidance_file` |
+| Recognize skill links from an older checkout | `scripts/install::is_agentic_engineering_skill_link` |
 | Install managed Git hooks | `scripts/install::install_hook` |
 | Remove this clone's workstation files | `scripts/uninstall::remove_guidance` |
 | Remove managed Git hooks | `scripts/uninstall::remove_hook` |

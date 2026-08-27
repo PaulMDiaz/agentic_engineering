@@ -222,6 +222,23 @@ test_with_agents_migrates_legacy_guidance_links_to_rendered_files() {
   assert_rendered_guidance "$home_dir/.claude/CLAUDE.md" "$repo_dir" "install should migrate legacy Claude Code guidance links"
 }
 
+test_with_agents_rehomes_guidance_from_an_obsolete_checkout() {
+  repo_dir="$(make_git_repo_copy)"
+  home_dir="$(make_agent_home)"
+  workspace_dir="$(make_temp_dir)"
+  obsolete_root="$(make_temp_dir)/agentic_engineering"
+
+  for guidance_path in "$workspace_dir/AGENTS.md" "$home_dir/.codex/AGENTS.md" "$home_dir/.claude/CLAUDE.md"; do
+    printf '<!-- agentic-engineering-guidance-source: %s -->\nstale guidance\n' "$obsolete_root" > "$guidance_path"
+  done
+
+  HOME="$home_dir" AGENTIC_ENGINEERING_CURSOR_AGENTS_ROOT="$workspace_dir" "$repo_dir/scripts/install" --with-agents
+
+  assert_rendered_guidance "$workspace_dir/AGENTS.md" "$repo_dir" "install should rehome obsolete Cursor guidance"
+  assert_rendered_guidance "$home_dir/.codex/AGENTS.md" "$repo_dir" "install should rehome obsolete Codex guidance"
+  assert_rendered_guidance "$home_dir/.claude/CLAUDE.md" "$repo_dir" "install should rehome obsolete Claude Code guidance"
+}
+
 test_with_agents_skips_account_home_workspace_guidance() {
   home_dir="$(make_agent_home)"
   repo_dir="$home_dir/agentic_engineering"
@@ -241,11 +258,13 @@ test_codex_same_name_skills_are_authoritative_and_stale_managed_skills_are_remov
   repo_dir="$(make_repo_copy)"
   home_dir="$(make_agent_home)"
   codex_skills="$home_dir/.codex/skills"
-  mkdir -p "$codex_skills/implement" "$codex_skills/custom" "$codex_skills/removed-skill" "$codex_skills/.system/system-skill"
+  mkdir -p "$codex_skills/implement" "$codex_skills/custom" "$codex_skills/removed-skill" "$codex_skills/obsolete-checkout-skill" "$codex_skills/.system/system-skill"
   printf 'stale\n' > "$codex_skills/implement/EXTRA.txt"
   printf 'custom\n' > "$codex_skills/custom/SKILL.md"
   printf '%s\n' "$repo_dir" > "$codex_skills/removed-skill/.agentic-engineering-skill-source"
   printf 'removed\n' > "$codex_skills/removed-skill/SKILL.md"
+  printf '%s\n' "$home_dir/old/agentic_engineering" > "$codex_skills/obsolete-checkout-skill/.agentic-engineering-skill-source"
+  printf 'obsolete\n' > "$codex_skills/obsolete-checkout-skill/SKILL.md"
   printf 'system\n' > "$codex_skills/.system/system-skill/SKILL.md"
 
   HOME="$home_dir" "$repo_dir/scripts/install"
@@ -253,8 +272,23 @@ test_codex_same_name_skills_are_authoritative_and_stale_managed_skills_are_remov
   assert_not_exists "$codex_skills/implement/EXTRA.txt" "install should replace a same-name Codex skill directory"
   assert_file_contains "$codex_skills/implement/SKILL.md" "name: implement" "install should refresh the authoritative Codex skill"
   assert_not_exists "$codex_skills/removed-skill" "install should remove stale mirrors owned by this clone"
+  assert_not_exists "$codex_skills/obsolete-checkout-skill" "install should remove stale mirrors owned by an obsolete checkout"
   assert_exists "$codex_skills/custom/SKILL.md" "install should preserve unrelated Codex skills"
   assert_exists "$codex_skills/.system/system-skill/SKILL.md" "install should preserve Codex system skills"
+}
+
+test_cursor_and_claude_links_from_an_obsolete_checkout_are_rehomed() {
+  repo_dir="$(make_repo_copy)"
+  home_dir="$(make_agent_home)"
+  obsolete_root="$(make_temp_dir)/agentic_engineering"
+  mkdir -p "$home_dir/.cursor/skills" "$home_dir/.claude/skills" "$obsolete_root/skills/implement"
+  ln -s "$obsolete_root/skills/implement" "$home_dir/.cursor/skills/implement"
+  ln -s "$obsolete_root/skills/implement" "$home_dir/.claude/skills/implement"
+
+  HOME="$home_dir" "$repo_dir/scripts/install"
+
+  assert_symlink_target "$home_dir/.cursor/skills/implement" "$repo_dir/skills/implement" "install should rehome an obsolete Cursor skill link"
+  assert_symlink_target "$home_dir/.claude/skills/implement" "$repo_dir/skills/implement" "install should rehome an obsolete Claude Code skill link"
 }
 
 test_cursor_and_claude_collisions_are_preserved() {
@@ -297,7 +331,9 @@ test_hooks_run_the_installer_without_recursion
 test_different_clone_opt_in_does_not_enable_guidance
 test_guidance_claims_empty_placeholders_and_preserves_user_content
 test_with_agents_migrates_legacy_guidance_links_to_rendered_files
+test_with_agents_rehomes_guidance_from_an_obsolete_checkout
 test_with_agents_skips_account_home_workspace_guidance
 test_codex_same_name_skills_are_authoritative_and_stale_managed_skills_are_removed
+test_cursor_and_claude_links_from_an_obsolete_checkout_are_rehomed
 test_cursor_and_claude_collisions_are_preserved
 test_refuses_unmanaged_hook

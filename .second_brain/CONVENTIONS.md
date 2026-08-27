@@ -40,7 +40,8 @@ Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `t
 - Cursor and Claude Code use symlinks into this repository's `skills/` directory.
 - Codex uses real directory mirrors marked with `.agentic-engineering-skill-source`.
 - `scripts/install` and `scripts/uninstall` are the only public workstation scripts.
-- Cursor and Claude Code synchronization leaves existing destinations untouched.
+- Cursor and Claude Code synchronization rehomes links owned by an older
+  `agentic_engineering` checkout and preserves unrelated destinations.
 - Codex synchronization treats same-name skill directories as replaceable, including
   unmarked directories. Codex uninstall and stale cleanup remove only mirrors marked as
   Agentic-managed.
@@ -54,8 +55,9 @@ Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `t
   and `~/.claude/CLAUDE.md`. Claude Code reads user-level `CLAUDE.md`, not `AGENTS.md`.
 - The development folder is derived from the clone's parent directory, never a hardcoded
   path, and is skipped when it is the account home.
-- Guidance sync migrates only legacy links this repository owns, claims empty placeholder
-  files, and preserves user-owned regular files and foreign links.
+- Guidance sync migrates legacy links this repository owns, claims empty placeholder files,
+  and transfers files with an Agentic Engineering ownership marker from an older checkout.
+  It preserves user-owned regular files and foreign links.
 - Managed guidance files are regenerated in full on every install, so edits made at a
   destination are lost. Overwriting a destination with content that omits the ownership
   marker returns it to the user and leaves other surfaces managed.

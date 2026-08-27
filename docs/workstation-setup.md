@@ -70,6 +70,7 @@ git -C ~/Documents/Development/agentic_engineering config --local --get agenticE
 
 The command prints the enrolled checkout path, or nothing when this clone is not enrolled.
 Rerunning `--with-agents` on an already-enrolled clone is safe.
+It also transfers guidance managed by an older Agentic Engineering checkout to this clone.
 
 The installer skips an agent when its home directory does not exist. For detected agents it
 uses these destinations:
@@ -86,13 +87,16 @@ and enrolled guidance files repair themselves after repository changes.
 
 ## Ownership and collisions
 
-- Cursor and Claude Code keep existing skill paths with the same name.
+- Cursor and Claude Code replace same-name skill links from an older
+  `agentic_engineering` checkout. They preserve links and paths owned by anything else.
 - Codex treats Agentic Engineering's same-name skill directories as authoritative and
-  replaces their contents. Unrelated names and `.system` remain untouched.
+  replaces their contents. It also removes stale marked mirrors from older checkouts.
+  Unrelated names and `.system` remain untouched.
 - Guidance sync claims a missing path or an empty placeholder. It migrates only legacy links
   to this repository's old or current guidance source, then writes a managed rendered file.
-- Managed files carry the source clone in their first-line ownership marker and are refreshed
-  by that clone's hooks. User-authored files and links to another source remain untouched.
+- Managed files carry the source clone in their first-line ownership marker. An enrolled
+  clone refreshes them and takes ownership from an older Agentic Engineering checkout.
+  User-authored files and links to unrelated sources remain untouched.
 - A managed guidance file is regenerated in full on every install, so local edits to it are
   overwritten without warning. Edit `AGENTS.local.md` in the clone instead, and keep
   machine-specific rules in a destination this repository does not manage.

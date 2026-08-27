@@ -1,5 +1,21 @@
 # Decisions
 
+### An enrolled clone takes over an older Agentic Engineering installation
+
+**When:** 2026-08-26
+**Why:** A checkout placed in Trash remained the source for Claude Code guidance and skill
+links after the repository moved to its intended development folder. The installer treated
+those files as foreign collisions even though their ownership markers and link targets
+identified Agentic Engineering. Running the installer from the intended clone now rehomes
+managed guidance, Cursor and Claude Code skill links, and stale Codex mirrors. It still
+preserves unmarked files and unrelated links.
+**Trade-off:** Two Agentic Engineering clones cannot independently own the same workstation
+destinations. Concurrent installations were already unsupported. An installer run now makes
+its clone authoritative for Agentic-managed skills, while `--with-agents` also transfers
+guidance ownership.
+
+---
+
 ### Shared guidance is rendered per clone, not linked as a static source file
 
 **When:** 2026-08-22
@@ -239,6 +255,9 @@ The sync job only needs to create links for newly added skill folders. Keeping t
 narrow avoids unnecessary rewrites and matches the actual problem we need to solve.
 **Trade-off:** If an existing Cursor symlink becomes stale or mispointed, it is not
 auto-repaired by routine sync passes. Manual rerun or recreation is still straightforward.
+
+> ⚠️ Superseded — the unified installer now repairs Cursor and Claude Code links that
+> identify an older `agentic_engineering` checkout. It still preserves unrelated links.
 
 ---
 
