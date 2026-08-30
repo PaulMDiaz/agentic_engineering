@@ -66,6 +66,17 @@ Prefer the smallest correct plan. Do not create ceremony for trivial work.
 - Write tests in the same work context when the task warrants them
 - Handle edge cases and error paths that are clearly in scope
 
+Stop and re-plan smaller if you catch yourself:
+- adding an abstraction, config layer, or framework the task did not ask for
+- designing for a use case that does not exist yet
+- writing a second implementation to keep the old logic alive
+- editing files unrelated to the task
+- using "add tests" as the reason to keep building
+
+Before adding a test, answer: which acceptance criterion does it verify, and would
+existing tests miss this regression without it? If the test is longer or more complex
+than the code it covers, the implementation is probably overbuilt.
+
 ### 5. Verify
 - Run the repo-defined checks that match the change
 - Prefer exact workflow-derived verification when the repo defines it clearly
