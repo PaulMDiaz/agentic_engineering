@@ -1,0 +1,427 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd -P)"
+HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
+AGENTS_SOURCE="$ROOT_DIR/AGENTS.local.md"
+LEGACY_AGENTS_SOURCE="$ROOT_DIR/AGENTS.md"
+GUIDANCE_ROOT_TOKEN='{{AGENTIC_ENGINEERING_ROOT}}'
+GUIDANCE_MARKER_PREFIX='<!-- agentic-engineering-guidance-source: '
+SKILLS_SOURCE="$ROOT_DIR/skills"
+CURSOR_AGENTS_ROOT="${AGENTIC_ENGINEERING_CURSOR_AGENTS_ROOT:-$(dirname "$ROOT_DIR")}"
+CODEX_SKILL_MARKER=".agentic-engineering-skill-source"
+HOOK_MARKER="# agentic-engineering-skill-sync"
+AGENTS_SYNC_CONFIG_KEY="agenticEngineering.agentsSync"
+
+usage() {
+  printf 'Usage: %s [--with-agents]\n' "$(basename "$0")"
+}
+
+canonical_path() {
+  local path="$1"
+  local path_dir
+  local path_name
+
+  if [ -d "$path" ]; then
+    (cd "$path" && pwd -P)
+    return 0
+  fi
+
+  path_dir="$(dirname "$path")"
+  path_name="$(basename "$path")"
+  printf '%s/%s\n' "$(cd "$path_dir" && pwd -P)" "$path_name"
+}
+
+paths_match() {
+  local first_path
+  local second_path
+  first_path="$(canonical_path "$1")" || return 1
+  second_path="$(canonical_path "$2")" || return 1
+  [ "$first_path" = "$second_path" ]
+}
+
+link_targets_path() {
+  local link_path="$1"
+  local expected_path="$2"
+  local link_target
+  local resolved_target
+  link_target="$(readlink "$link_path")"
+
+  case "$link_target" in
+    /*) resolved_target="$link_target" ;;
+    *) resolved_target="$(dirname "$link_path")/$link_target" ;;
+  esac
+
+  paths_match "$resolved_target" "$expected_path"
+}
+
+ensure_agents_source_ready() {
+  if [ "$WITH_AGENTS" != "true" ]; then
+    return 0
+  fi
+
+  if [ ! -s "$AGENTS_SOURCE" ]; then
+    printf 'A populated AGENTS.local.md is required for --with-agents: %s\n' "$AGENTS_SOURCE" >&2
+    return 1
+  fi
+
+  if ! grep -qF "$GUIDANCE_ROOT_TOKEN" "$AGENTS_SOURCE"; then
+    printf 'AGENTS.local.md must contain the portable root token: %s\n' "$GUIDANCE_ROOT_TOKEN" >&2
+    return 1
+  fi
+}
+
+agents_sync_enabled() {
+  local configured_source
+  configured_source="$(git -C "$ROOT_DIR" config --local --get "$AGENTS_SYNC_CONFIG_KEY" 2>/dev/null || true)"
+  [ "$configured_source" = "$ROOT_DIR" ]
+}
+
+persist_agents_sync() {
+  git -C "$ROOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 0
+  git -C "$ROOT_DIR" config --local "$AGENTS_SYNC_CONFIG_KEY" "$ROOT_DIR"
+}
+
+is_legacy_guidance_link() {
+  local target_path="$1"
+
+  [ -L "$target_path" ] &&
+    { link_targets_path "$target_path" "$AGENTS_SOURCE" || link_targets_path "$target_path" "$LEGACY_AGENTS_SOURCE"; }
+}
+
+is_agentic_engineering_guidance_file() {
+  local target_path="$1"
+  local first_line
+
+  [ -f "$target_path" ] || return 1
+  IFS= read -r first_line < "$target_path" || true
+  case "$first_line" in
+    "$GUIDANCE_MARKER_PREFIX"*' -->') return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+render_guidance() {
+  local line
+  local rendered_line
+
+  while IFS= read -r line || [ -n "$line" ]; do
+    rendered_line="${line//"$GUIDANCE_ROOT_TOKEN"/$ROOT_DIR}"
+    printf '%s\n' "$rendered_line"
+  done < "$AGENTS_SOURCE"
+}
+
+install_guidance_file() {
+  local target_path="$1"
+  local label="$2"
+  local target_dir
+  local existing_target
+  local temp_path
+  target_dir="$(dirname "$target_path")"
+
+  if [ ! -d "$target_dir" ]; then
+    printf 'Skipping %s guidance because its parent directory does not exist: %s\n' "$label" "$target_dir"
+    return 0
+  fi
+
+  if [ -L "$target_path" ]; then
+    if is_legacy_guidance_link "$target_path"; then
+      rm -f "$target_path"
+    else
+      existing_target="$(readlink "$target_path")"
+      printf 'Skipping %s guidance: %s links outside this repo (%s)\n' "$label" "$target_path" "$existing_target" >&2
+      return 0
+    fi
+  elif [ -e "$target_path" ]; then
+    if [ -s "$target_path" ]; then
+      if ! is_agentic_engineering_guidance_file "$target_path"; then
+        printf 'Skipping %s guidance: %s is an existing non-empty file\n' "$label" "$target_path" >&2
+        return 0
+      fi
+    else
+      rm -f "$target_path"
+    fi
+  fi
+
+  temp_path="$(mktemp "$target_dir/.agentic-engineering-guidance.XXXXXX")"
+  {
+    printf '%s%s -->\n' "$GUIDANCE_MARKER_PREFIX" "$ROOT_DIR"
+    render_guidance
+  } > "$temp_path"
+  mv -f "$temp_path" "$target_path"
+  printf 'Rendered %s guidance: %s\n' "$label" "$target_path"
+}
+
+is_agentic_engineering_skill_link() {
+  local link_path="$1"
+  local skill_name="$2"
+  local link_target
+  link_target="$(readlink "$link_path")"
+
+  case "$link_target" in
+    */agentic_engineering/skills/"$skill_name") return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+ensure_real_directory() {
+  local target_path="$1"
+  local label="$2"
+  local existing_target
+
+  if [ -L "$target_path" ]; then
+    existing_target="$(readlink "$target_path")"
+    printf 'Refusing to use %s because it is a symlink: %s -> %s\n' "$label" "$target_path" "$existing_target" >&2
+    return 1
+  fi
+
+  if [ -e "$target_path" ] && [ ! -d "$target_path" ]; then
+    printf 'Refusing to use %s because it is not a directory: %s\n' "$label" "$target_path" >&2
+    return 1
+  fi
+
+  mkdir -p "$target_path"
+}
+
+install_symlinked_skill() {
+  local skill_dir="$1"
+  local target_root="$2"
+  local label="$3"
+  local skill_name
+  local target_path
+  skill_name="$(basename "$skill_dir")"
+  target_path="$target_root/$skill_name"
+
+  if [ -L "$target_path" ]; then
+    if link_targets_path "$target_path" "$skill_dir"; then
+      printf '%s skill already linked: %s\n' "$label" "$skill_name"
+    elif is_agentic_engineering_skill_link "$target_path" "$skill_name"; then
+      rm -f "$target_path"
+      ln -s "$skill_dir" "$target_path"
+      printf 'Relinked %s skill from an older checkout: %s\n' "$label" "$skill_name"
+    else
+      printf 'Skipping existing %s skill symlink: %s\n' "$label" "$target_path" >&2
+    fi
+    return 0
+  fi
+
+  if [ -e "$target_path" ]; then
+    printf 'Skipping existing %s skill path: %s\n' "$label" "$target_path" >&2
+    return 0
+  fi
+
+  ln -s "$skill_dir" "$target_path"
+  printf 'Linked %s skill: %s\n' "$label" "$skill_name"
+}
+
+install_symlinked_skills() {
+  local agent_home="$1"
+  local label="$2"
+  local target_root
+  local skill_dir
+
+  if [ ! -d "$agent_home" ]; then
+    printf '%s not detected; skipping %s install\n' "$label" "$label"
+    return 0
+  fi
+
+  target_root="$agent_home/skills"
+  ensure_real_directory "$target_root" "$label skills directory"
+
+  for skill_dir in "$SKILLS_SOURCE"/*; do
+    [ -d "$skill_dir" ] || continue
+    [ -f "$skill_dir/SKILL.md" ] || continue
+    install_symlinked_skill "$skill_dir" "$target_root" "$label"
+  done
+}
+
+install_cursor() {
+  local cursor_home="$HOME_DIR/.cursor"
+  if [ ! -d "$cursor_home" ]; then
+    printf 'Cursor not detected; skipping Cursor install\n'
+    return 0
+  fi
+
+  if [ "$WITH_AGENTS" = "true" ]; then
+    if paths_match "$CURSOR_AGENTS_ROOT" "$HOME_DIR"; then
+      printf 'Skipping Cursor workspace guidance because the clone is directly under the account home\n'
+    else
+      install_guidance_file "$CURSOR_AGENTS_ROOT/AGENTS.md" "Cursor workspace"
+    fi
+  fi
+
+  install_symlinked_skills "$cursor_home" "Cursor"
+}
+
+install_claude() {
+  local claude_home="$HOME_DIR/.claude"
+  if [ ! -d "$claude_home" ]; then
+    printf 'Claude Code not detected; skipping Claude Code install\n'
+    return 0
+  fi
+
+  if [ "$WITH_AGENTS" = "true" ]; then
+    install_guidance_file "$claude_home/CLAUDE.md" "Claude Code"
+  fi
+
+  install_symlinked_skills "$claude_home" "Claude Code"
+}
+
+install_codex_skill() {
+  local skill_dir="$1"
+  local skill_name
+  local target_root="$HOME_DIR/.codex/skills"
+  local target_path
+  skill_name="$(basename "$skill_dir")"
+  target_path="$target_root/$skill_name"
+
+  if [ -L "$target_path" ]; then
+    printf 'Refusing to replace existing Codex skill symlink: %s -> %s\n' "$target_path" "$(readlink "$target_path")" >&2
+    return 1
+  fi
+
+  if [ -e "$target_path" ] && [ ! -d "$target_path" ]; then
+    printf 'Refusing to replace existing Codex skill path: %s\n' "$target_path" >&2
+    return 1
+  fi
+
+  if [ -d "$target_path" ]; then
+    rm -rf "$target_path"
+  fi
+
+  mkdir -p "$target_path"
+  cp -R "$skill_dir/." "$target_path/"
+  printf '%s\n' "$ROOT_DIR" > "$target_path/$CODEX_SKILL_MARKER"
+  printf 'Mirrored Codex skill: %s\n' "$skill_name"
+}
+
+remove_stale_codex_skills() {
+  local target_root="$HOME_DIR/.codex/skills"
+  local target_path
+  local skill_name
+  [ -d "$target_root" ] || return 0
+
+  for target_path in "$target_root"/*; do
+    [ -d "$target_path" ] || continue
+    skill_name="$(basename "$target_path")"
+    [ "$skill_name" = ".system" ] && continue
+    [ -f "$target_path/$CODEX_SKILL_MARKER" ] || continue
+    [ -f "$SKILLS_SOURCE/$skill_name/SKILL.md" ] && continue
+    rm -rf "$target_path"
+    printf 'Removed stale Codex skill mirror: %s\n' "$skill_name"
+  done
+}
+
+install_codex() {
+  local codex_home="$HOME_DIR/.codex"
+  local skill_dir
+  if [ ! -d "$codex_home" ]; then
+    printf 'Codex not detected; skipping Codex install\n'
+    return 0
+  fi
+
+  if [ "$WITH_AGENTS" = "true" ]; then
+    install_guidance_file "$codex_home/AGENTS.md" "Codex"
+  fi
+
+  ensure_real_directory "$codex_home/skills" "Codex skills directory"
+
+  for skill_dir in "$SKILLS_SOURCE"/*; do
+    [ -d "$skill_dir" ] || continue
+    [ -f "$skill_dir/SKILL.md" ] || continue
+    install_codex_skill "$skill_dir"
+  done
+
+  remove_stale_codex_skills
+}
+
+git_hooks_dir() {
+  local hooks_dir
+  hooks_dir="$(git -C "$ROOT_DIR" rev-parse --git-path hooks 2>/dev/null || true)"
+  [ -n "$hooks_dir" ] || return 0
+
+  case "$hooks_dir" in
+    /*) printf '%s\n' "$hooks_dir" ;;
+    *) printf '%s/%s\n' "$ROOT_DIR" "$hooks_dir" ;;
+  esac
+}
+
+install_hook() {
+  local hooks_dir="$1"
+  local hook_name="$2"
+  local hook_path="$hooks_dir/$hook_name"
+
+  if [ -e "$hook_path" ] && ! grep -qF "$HOOK_MARKER" "$hook_path"; then
+    printf 'Refusing to overwrite existing unmanaged hook: %s\n' "$hook_path" >&2
+    return 1
+  fi
+
+  cat > "$hook_path" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+$HOOK_MARKER
+
+REPO_ROOT="\$(git rev-parse --show-toplevel 2>/dev/null || true)"
+[ -n "\$REPO_ROOT" ] || exit 0
+if ! AGENTIC_ENGINEERING_SKIP_HOOKS=1 "\$REPO_ROOT/scripts/install"; then
+  printf 'Warning: Agentic Engineering sync failed; rerun %s/scripts/install\n' "\$REPO_ROOT" >&2
+fi
+EOF
+
+  chmod +x "$hook_path"
+}
+
+install_hooks() {
+  local hooks_dir
+
+  if [ "${AGENTIC_ENGINEERING_SKIP_HOOKS:-0}" = "1" ]; then
+    return 0
+  fi
+
+  hooks_dir="$(git_hooks_dir)"
+  if [ -z "$hooks_dir" ]; then
+    printf 'Git repository not detected; skipping sync hook install\n'
+    return 0
+  fi
+
+  mkdir -p "$hooks_dir"
+  install_hook "$hooks_dir" post-checkout
+  install_hook "$hooks_dir" post-commit
+  install_hook "$hooks_dir" post-merge
+}
+
+WITH_AGENTS="false"
+PERSIST_AGENTS_SYNC="false"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --with-agents)
+      WITH_AGENTS="true"
+      PERSIST_AGENTS_SYNC="true"
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      printf 'Unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+if [ "$WITH_AGENTS" = "false" ] && agents_sync_enabled; then
+  WITH_AGENTS="true"
+fi
+
+ensure_agents_source_ready
+install_cursor
+install_codex
+install_claude
+install_hooks
+
+if [ "$PERSIST_AGENTS_SYNC" = "true" ]; then
+  persist_agents_sync
+fi

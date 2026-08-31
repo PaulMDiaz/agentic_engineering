@@ -1,0 +1,227 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd -P)"
+HOME_DIR="${HOME:-$(eval echo "~$(id -un)")}"
+AGENTS_SOURCE="$ROOT_DIR/AGENTS.local.md"
+LEGACY_AGENTS_SOURCE="$ROOT_DIR/AGENTS.md"
+GUIDANCE_MARKER_PREFIX='<!-- agentic-engineering-guidance-source: '
+CURSOR_AGENTS_ROOT="${AGENTIC_ENGINEERING_CURSOR_AGENTS_ROOT:-$(dirname "$ROOT_DIR")}"
+CODEX_SKILL_MARKER=".agentic-engineering-skill-source"
+HOOK_MARKER="# agentic-engineering-skill-sync"
+AGENTS_SYNC_CONFIG_KEY="agenticEngineering.agentsSync"
+
+usage() {
+  printf 'Usage: %s\n' "$(basename "$0")"
+}
+
+canonical_path() {
+  local path="$1"
+  local path_dir
+  local path_name
+
+  if [ -d "$path" ]; then
+    (cd "$path" && pwd -P)
+    return 0
+  fi
+
+  path_dir="$(dirname "$path")"
+  path_name="$(basename "$path")"
+  printf '%s/%s\n' "$(cd "$path_dir" && pwd -P)" "$path_name"
+}
+
+paths_match() {
+  local first_path
+  local second_path
+  first_path="$(canonical_path "$1")" || return 1
+  second_path="$(canonical_path "$2")" || return 1
+  [ "$first_path" = "$second_path" ]
+}
+
+link_targets_path() {
+  local link_path="$1"
+  local expected_path="$2"
+  local link_target
+  local resolved_target
+  link_target="$(readlink "$link_path")"
+
+  case "$link_target" in
+    /*) resolved_target="$link_target" ;;
+    *) resolved_target="$(dirname "$link_path")/$link_target" ;;
+  esac
+
+  paths_match "$resolved_target" "$expected_path"
+}
+
+is_managed_guidance_file() {
+  local target_path="$1"
+  local expected_marker="${GUIDANCE_MARKER_PREFIX}${ROOT_DIR} -->"
+  local first_line
+
+  [ -f "$target_path" ] || return 1
+  IFS= read -r first_line < "$target_path" || true
+  [ "$first_line" = "$expected_marker" ]
+}
+
+remove_guidance() {
+  local target_path="$1"
+  local label="$2"
+  local existing_target
+
+  if [ ! -e "$target_path" ] && [ ! -L "$target_path" ]; then
+    return 0
+  fi
+
+  if [ -L "$target_path" ]; then
+    if ! link_targets_path "$target_path" "$AGENTS_SOURCE" && ! link_targets_path "$target_path" "$LEGACY_AGENTS_SOURCE"; then
+      existing_target="$(readlink "$target_path")"
+      printf 'Leaving %s guidance managed by another source: %s -> %s\n' "$label" "$target_path" "$existing_target" >&2
+      return 0
+    fi
+  elif ! is_managed_guidance_file "$target_path"; then
+    printf 'Leaving non-managed %s guidance in place: %s\n' "$label" "$target_path" >&2
+    return 0
+  fi
+
+  rm -f "$target_path"
+  printf 'Removed %s guidance: %s\n' "$label" "$target_path"
+}
+
+uninstall_symlinked_skills() {
+  local agent_home="$1"
+  local label="$2"
+  local skills_root="$agent_home/skills"
+  local target_path
+  local existing_target
+
+  if [ ! -d "$agent_home" ]; then
+    printf '%s not detected; skipping %s uninstall\n' "$label" "$label"
+    return 0
+  fi
+
+  [ -d "$skills_root" ] || return 0
+  if [ -L "$skills_root" ]; then
+    printf 'Skipping %s skills uninstall because the skills directory is a symlink: %s -> %s\n' "$label" "$skills_root" "$(readlink "$skills_root")" >&2
+    return 0
+  fi
+
+  for target_path in "$skills_root"/*; do
+    [ -L "$target_path" ] || continue
+    existing_target="$(readlink "$target_path")"
+    case "$existing_target" in
+      "$ROOT_DIR/skills/"*)
+        rm -f "$target_path"
+        printf 'Removed %s skill symlink: %s\n' "$label" "$(basename "$target_path")"
+        ;;
+    esac
+  done
+}
+
+uninstall_cursor() {
+  remove_guidance "$CURSOR_AGENTS_ROOT/AGENTS.md" "Cursor workspace"
+  uninstall_symlinked_skills "$HOME_DIR/.cursor" "Cursor"
+}
+
+uninstall_claude() {
+  remove_guidance "$HOME_DIR/.claude/CLAUDE.md" "Claude Code"
+  uninstall_symlinked_skills "$HOME_DIR/.claude" "Claude Code"
+}
+
+uninstall_codex() {
+  local codex_home="$HOME_DIR/.codex"
+  local skills_root
+  local target_path
+  local skill_name
+  local existing_source
+  remove_guidance "$codex_home/AGENTS.md" "Codex"
+
+  if [ ! -d "$codex_home" ]; then
+    printf 'Codex not detected; skipping Codex uninstall\n'
+    return 0
+  fi
+
+  skills_root="$codex_home/skills"
+  [ -d "$skills_root" ] || return 0
+  if [ -L "$skills_root" ]; then
+    printf 'Skipping Codex skills uninstall because the skills directory is a symlink: %s -> %s\n' "$skills_root" "$(readlink "$skills_root")" >&2
+    return 0
+  fi
+
+  for target_path in "$skills_root"/*; do
+    [ -d "$target_path" ] || continue
+    skill_name="$(basename "$target_path")"
+    [ "$skill_name" = ".system" ] && continue
+    [ -f "$target_path/$CODEX_SKILL_MARKER" ] || continue
+    existing_source="$(cat "$target_path/$CODEX_SKILL_MARKER")"
+    paths_match "$existing_source" "$ROOT_DIR" || continue
+    rm -rf "$target_path"
+    printf 'Removed Codex skill mirror: %s\n' "$skill_name"
+  done
+}
+
+git_hooks_dir() {
+  local hooks_dir
+  hooks_dir="$(git -C "$ROOT_DIR" rev-parse --git-path hooks 2>/dev/null || true)"
+  [ -n "$hooks_dir" ] || return 0
+
+  case "$hooks_dir" in
+    /*) printf '%s\n' "$hooks_dir" ;;
+    *) printf '%s/%s\n' "$ROOT_DIR" "$hooks_dir" ;;
+  esac
+}
+
+remove_hook() {
+  local hooks_dir="$1"
+  local hook_name="$2"
+  local hook_path="$hooks_dir/$hook_name"
+
+  [ -e "$hook_path" ] || return 0
+  grep -qF "$HOOK_MARKER" "$hook_path" || return 0
+  rm -f "$hook_path"
+  printf 'Removed sync hook: %s\n' "$hook_name"
+}
+
+uninstall_hooks() {
+  local hooks_dir
+  hooks_dir="$(git_hooks_dir)"
+  if [ -z "$hooks_dir" ]; then
+    printf 'Git repository not detected; skipping sync hook uninstall\n'
+    return 0
+  fi
+
+  remove_hook "$hooks_dir" post-checkout
+  remove_hook "$hooks_dir" post-commit
+  remove_hook "$hooks_dir" post-merge
+}
+
+clear_agents_sync_preference() {
+  local configured_source
+
+  git -C "$ROOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 0
+
+  configured_source="$(git -C "$ROOT_DIR" config --local --get "$AGENTS_SYNC_CONFIG_KEY" 2>/dev/null || true)"
+  if [ "$configured_source" = "$ROOT_DIR" ]; then
+    git -C "$ROOT_DIR" config --local --unset-all "$AGENTS_SYNC_CONFIG_KEY"
+  fi
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      printf 'Unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+uninstall_cursor
+uninstall_codex
+uninstall_claude
+uninstall_hooks
+clear_agents_sync_preference

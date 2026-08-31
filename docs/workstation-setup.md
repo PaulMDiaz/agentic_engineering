@@ -1,170 +1,143 @@
 ---
-summary: "How to install the agentic engineering playbook on a workstation so all repos get coding standards and skills"
-read_when: "Setting up a new machine or onboarding the playbook to a work laptop"
+summary: "How to install the Agentic Engineering playbook for Cursor, Codex, and Claude Code"
+read_when: "Setting up a workstation, updating the playbook, or removing its managed files"
 ---
 
-# Workstation Setup
+# Workstation setup
 
-Install the agentic engineering playbook once. All projects in your development
-folder get coding standards and skills — no per-repo setup needed.
+Install Agentic Engineering once. Its two public scripts manage skills, shared guidance,
+and the repository Git hooks that keep both current.
+
+Use Agentic Engineering as an independent distribution. Do not install it concurrently
+with another playbook that manages the same shared-guidance paths or skill names.
 
 ## Prerequisites
 
-- Git installed
-- Cursor IDE
-- Codex CLI (optional, if you use Codex agents)
-- A development folder where your repos live (e.g., `~/Documents/Development/`)
+- Git
+- At least one supported agent with its home directory already present:
+  `~/.cursor`, `~/.codex`, or `~/.claude`
+- A development folder containing this clone and the repositories that should inherit its
+  Cursor guidance
 
-## Step 1: Clone the repo
-
-Clone into your development folder:
+## Clone the repository
 
 ```bash
 cd ~/Documents/Development
 git clone https://github.com/PaulMDiaz/agentic_engineering.git
+cd agentic_engineering
 ```
 
-Your folder structure:
+The installer derives the Cursor workspace from the clone's parent directory. A clone at
+`~/Documents/Development/agentic_engineering` therefore manages
+`~/Documents/Development/AGENTS.md`. It will not create `~/AGENTS.md` when the clone sits
+directly under the account home.
 
-```
-~/Documents/Development/
-├── agentic_engineering/      # ← the playbook
-├── project-a/                # ← your repos
-├── project-b/
-└── ...
-```
+## Review shared guidance
 
-## Step 2: Install skills
+Root `AGENTS.md` applies only to this repository. `AGENTS.local.md` is a portable template
+for other repositories and agent sessions. The installer renders it with the actual checkout
+path before writing a managed local guidance file, so do not edit its root token for a
+different clone location.
 
-Create the initial Cursor skill symlinks:
+## Install
+
+For the normal personal setup, install skills and enroll this clone as the shared-guidance
+source:
 
 ```bash
-mkdir -p ~/.cursor/skills
-~/Documents/Development/agentic_engineering/scripts/sync-cursor-skills
+./scripts/install --with-agents
 ```
 
-Notes:
-- Cursor reads skill folders through symlinks in `~/.cursor/skills`.
-- Existing linked skills update immediately because the targets are live.
-- New skill folders need another sync pass to create the new symlink.
+`--with-agents` is a one-time opt-in. The installer records the choice in this clone's local
+Git configuration. Later plain installs, including managed hook runs, continue syncing the
+rendered guidance files.
 
-Skills appear in Cursor Customize → Skills.
-
-## Step 3: Install skill sync hooks in the playbook repo
-
-Install repo-local git hooks so sync runs automatically whenever this source-of-truth repo
-changes branch, merges, or records a new commit:
+To install skills without shared guidance:
 
 ```bash
-cd ~/Documents/Development/agentic_engineering
-./scripts/install-skill-hooks
-./scripts/sync-workstation-skills
+./scripts/install
 ```
 
-Notes:
-- Hooks are installed only in `agentic_engineering/.git/hooks`, which is sufficient because this repo is the source of truth for the `skills/` directory.
-- `post-checkout`, `post-merge`, and `post-commit` all call `scripts/sync-workstation-skills`.
-- Hook-triggered sync warns on failure but does not block the git operation. Running the sync scripts yourself still fails loudly.
-- Cursor uses symlinks. Codex uses mirrored real folders.
+You can opt in later by running `./scripts/install --with-agents` once.
 
-## Step 4: Install development-wide rules
-
-Symlink `AGENTS.md` to your development folder root. Cursor picks it up and applies
-it to all projects underneath:
+Enrollment is recorded per clone, so a new clone or a re-made clone needs the flag again
+even on a workstation that was already enrolled. Check whether the current clone is
+enrolled:
 
 ```bash
-ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/Documents/Development/AGENTS.md
+git -C ~/Documents/Development/agentic_engineering config --local --get agenticEngineering.agentsSync
 ```
 
-Shows in Cursor Settings → Rules → Development.
+The command prints the enrolled checkout path, or nothing when this clone is not enrolled.
+Rerunning `--with-agents` on an already-enrolled clone is safe.
+It also transfers guidance managed by an older Agentic Engineering checkout to this clone.
 
-## Step 5: Install Codex development-wide rules (optional)
+The installer skips an agent when its home directory does not exist. For detected agents it
+uses these destinations:
 
-If you use Codex agents, symlink the same `AGENTS.md` into `~/.codex/`:
+| Surface | Skills | Shared guidance |
+| --- | --- | --- |
+| Cursor | Symlinks in `~/.cursor/skills/` | Rendered file at `<clone parent>/AGENTS.md` |
+| Codex | Real mirrors in `~/.codex/skills/` | Rendered file at `~/.codex/AGENTS.md` |
+| Claude Code | Symlinks in `~/.claude/skills/` | Rendered file at `~/.claude/CLAUDE.md` |
 
-```bash
-mkdir -p ~/.codex
-ln -sf ~/Documents/Development/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
-```
+The same command installs managed `post-checkout`, `post-merge`, and `post-commit` hooks in
+this repository. Each hook reruns `scripts/install`, so new skills, Codex mirror updates,
+and enrolled guidance files repair themselves after repository changes.
 
-This makes Codex pick up the same coding standards and workflow guidance.
+## Ownership and collisions
 
-## Step 6: Install Codex skills (optional, macOS)
-
-Codex skill indexing may ignore pure symlinked skill folders. The reliable setup is:
-
-- keep source-of-truth skills in `~/Documents/Development/agentic_engineering/skills`
-- mirror them into **real folders** under `~/.codex/skills/<skill>/SKILL.md`
-- run sync from this repo's git hooks or manually when needed
-
-Create the initial mirrored folders:
-
-```bash
-mkdir -p ~/.codex/scripts
-~/Documents/Development/agentic_engineering/scripts/sync-codex-skills
-```
-
-Notes:
-- `~/.codex/skills/.system/*` can remain symlinks.
-- Codex should read mirrored **real folders** at `~/.codex/skills/<skill>/SKILL.md`.
-- The playbook repo hooks keep the mirror fresh whenever `agentic_engineering` changes locally.
-- Codex cleanup only removes mirrored skills previously created by this repo. It preserves `~/.codex/skills/.system` and unrelated custom skills.
-- If a custom Codex skill uses the same folder name as one of this repo's skills, sync treats the repo skill as authoritative and refreshes that folder.
-- Restart Codex to refresh the session skill index.
+- Cursor and Claude Code replace same-name skill links from an older
+  `agentic_engineering` checkout. They preserve links and paths owned by anything else.
+- Codex treats Agentic Engineering's same-name skill directories as authoritative and
+  replaces their contents. It also removes stale marked mirrors from older checkouts.
+  Unrelated names and `.system` remain untouched.
+- Guidance sync claims a missing path or an empty placeholder. It migrates only legacy links
+  to this repository's old or current guidance source, then writes a managed rendered file.
+- Managed files carry the source clone in their first-line ownership marker. An enrolled
+  clone refreshes them and takes ownership from an older Agentic Engineering checkout.
+  User-authored files and links to unrelated sources remain untouched.
+- A managed guidance file is regenerated in full on every install, so local edits to it are
+  overwritten without warning. Edit `AGENTS.local.md` in the clone instead, and keep
+  machine-specific rules in a destination this repository does not manage.
+- The installer refuses to use a symlink as an agent's `skills` root and refuses to replace
+  an unmanaged repository Git hook.
 
 ## Verify
 
-1. Open Cursor Customize (Cmd+Shift+J)
-2. Go to **Skills** and confirm 14 skills are listed
-3. Go to **Rules** and confirm AGENTS.md appears in the Development tab
-4. Type `/` in Agent chat and confirm skills such as `implement` and `security-check` are available
-5. Run `find .git/hooks -maxdepth 1 \\( -name post-checkout -o -name post-commit -o -name post-merge \\) -type f` from `agentic_engineering/` and confirm the three hook files exist
-6. (Codex) run `ls -l ~/.codex/AGENTS.md` and confirm it points to `agentic_engineering/AGENTS.md`
-7. (Codex skills) run `find ~/.codex/skills -maxdepth 2 -name SKILL.md` and confirm paths look like `~/.codex/skills/<skill>/SKILL.md`
+1. Confirm Cursor and Claude Code skill links point into this repository's `skills/`
+   directory.
+2. Confirm Codex has real folders at `~/.codex/skills/<skill>/SKILL.md`.
+3. If guidance is enabled, confirm the three guidance destinations above are regular files
+   whose first line names this clone and whose standards path resolves into this checkout.
+4. Confirm `.git/hooks/post-checkout`, `post-merge`, and `post-commit` exist in this clone.
+5. Start a new agent session so it reloads skills and guidance.
 
-## Updating
+## Update
 
 ```bash
-cd ~/Documents/Development/agentic_engineering
 git pull
 ```
 
-The repo hooks should run automatically after `git pull`, branch switches, and new local commits in `agentic_engineering`. Manual fallback:
+The managed hook normally runs the installer after the pull. If a hook reports a warning,
+run the installer directly so the error is visible:
 
 ```bash
-cd ~/Documents/Development/agentic_engineering
-./scripts/sync-workstation-skills
+./scripts/install
 ```
 
 ## Uninstall
 
 ```bash
-# Skills
-~/Documents/Development/agentic_engineering/scripts/sync-cursor-skills uninstall
-
-# Rules
-rm -f ~/Documents/Development/AGENTS.md
-
-# Codex
-rm -f ~/.codex/AGENTS.md
-~/Documents/Development/agentic_engineering/scripts/sync-codex-skills uninstall
-
-# Hook automation
-cd ~/Documents/Development/agentic_engineering
-./scripts/install-skill-hooks uninstall
-
-# Clean up empty directories
-rmdir ~/.cursor/skills ~/.codex/skills ~/.codex 2>/dev/null
+./scripts/uninstall
 ```
 
-## Different folder path?
+The uninstaller removes this clone's rendered guidance files, legacy guidance links, skill
+links, Codex mirrors, hooks, and the saved guidance opt-in only when this clone owns them.
+It preserves user files, other playbooks' links, unrelated skills, agent home directories,
+and skill-root directories.
 
-If your development folder isn't `~/Documents/Development/`, adjust all paths above.
-For example, if you use `~/code/`:
+## Different clone path
 
-```bash
-ln -sf ~/code/agentic_engineering/AGENTS.md ~/code/AGENTS.md
-ln -sf ~/code/agentic_engineering/AGENTS.md ~/.codex/AGENTS.md
-~/code/agentic_engineering/scripts/install-skill-hooks
-~/code/agentic_engineering/scripts/sync-workstation-skills
-```
+Run the same two scripts from the alternate clone. No destination arguments are needed.
+The installer renders the alternate checkout path automatically.

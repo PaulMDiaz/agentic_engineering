@@ -7,14 +7,15 @@ Thanks for contributing to `agentic_engineering`.
 1. Create a focused branch from `dev`
 2. Make small, reviewable commits
 3. Follow `CODING_STANDARDS.md`
-4. Open a PR to `main`
+4. Open a PR to `dev`; promote tested `dev` changes to `main` separately
 5. Wait for CI to pass before merge
 6. Prefer fixing docs/CI drift in the repo instead of hiding it in workflow ignores
 
 ## Docs changes
 
 When behavior or workflow guidance changes:
+
 - update the relevant docs
 - keep examples accurate
-- perform source-aware `.claude/` maintenance when durable knowledge or a declared
+- perform source-aware `.second_brain/` maintenance when durable knowledge or a declared
   convention source changed

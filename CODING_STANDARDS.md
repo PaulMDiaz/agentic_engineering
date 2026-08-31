@@ -1,7 +1,6 @@
 # CODING_STANDARDS.md
 
-Universal coding standards for all PaulMDiaz projects.
-Platform-agnostic — applies equally in Claude Code, Cursor, OpenClaw, or any other environment.
+Universal agentic coding standards for all projects.
 
 ---
 
@@ -19,9 +18,9 @@ Platform-agnostic — applies equally in Claude Code, Cursor, OpenClaw, or any o
 
 ## Commits (Conventional Commits)
 
-Format: `type(scope): [emoji] description`
+Format: `type[optional scope][optional !]: [emoji] description`
 
-Types:
+Common types (not a closed list):
 - ✨ `feat` — new feature
 - 🐛 `fix` — bug fix
 - 📝 `docs` — documentation
@@ -35,7 +34,13 @@ Types:
 - 🔒 `security` — security improvements
 
 Rules:
-- Create well-formatted commits with conventional commit messages and emojis
+- Use a type (a noun) followed by a colon and space; scopes are optional.
+- Use `feat` when adding a feature and `fix` when correcting a bug.
+- Other types are allowed. Choose a clear type that conveys the change; custom types have
+  no implicit release effect.
+- Mark breaking changes with `!` immediately before the colon or a `BREAKING CHANGE:`
+  footer.
+- Create well-formatted commits with conventional commit messages and emojis.
 - Imperative mood ("Add feature" not "Added feature")
 - Explain why, not just what (body for complex changes)
 - Reference issues/PRs when relevant
@@ -45,40 +50,34 @@ Rules:
 ## Planning
 
 - Before non-trivial changes: identify the desired outcome, constraints, success criteria, files to change, and validation.
-- Create a `/tmp/<feature>.md` plan only for larger or multi-step work.
-- Keep plans minimal — only essential changes.
+- Treat acceptance criteria as exhaustive: inspect broadly, edit narrowly, report unrelated problems, and stop after focused validation passes.
 
 ## Code Quality
 
 - Read related files and understand the codebase before suggesting changes.
-- Check if logic already exists before writing new code.
-- Before adding a new helper, wrapper, abstraction, or pattern, check whether the repo already has something that solves the same class of problem. Prefer extending the existing approach over creating a parallel one unless there is a clear reason not to.
+- Check whether the codebase already solves the problem before writing new logic; reuse or extend it instead of creating a parallel implementation.
 - Do not import underscored/private helpers across module boundaries. Promote them to named internal APIs or keep usage within the defining module.
 - Avoid behavior-bearing magic strings. Use named constants, enums, literal types, or structured config for repeated values, external identifiers, states, modes, and cross-module contracts; leave one-off display text inline when naming it adds no clarity.
 - Respect existing code style and patterns.
-- Keep proposed changes focused on the current task. Include obvious local refactors when they reduce real complexity, duplication, or bug risk without expanding behavior.
-- Change as few lines as possible while solving the problem.
-- Files: keep under ~500 LOC; split/refactor as needed.
-- Tests: write in the same context as implementation — don't waste context switching.
+- Keep proposed changes focused on the current task. Report optional local refactors instead of including them.
 - In tests, do not define `async def` helpers that contain no asynchronous operation. Use `AsyncMock`, a real awaited operation, or a synchronous helper wrapped by the code under test.
+- In tests, do not compare floating-point values with exact equality. Use an appropriate tolerance or the test framework's approximate-comparison helper (for example, `pytest.approx`).
 - Prefer tests that validate observable behavior, public interfaces, and outcomes over tests tightly coupled to implementation details.
-- Good tests should still pass after internal refactors that preserve behavior.
-- Be suspicious of AI-generated tests that mirror code structure, mock too much, or only prove the current implementation path.
-- Add or update tests when behavior, public APIs, bug fixes, edge cases, or shared logic change.
+- Use `pytest.mark.parametrize` when cases share setup and assertions and differ only by inputs or expected outcomes. Keep behaviorally distinct scenarios as separate tests.
+- Add the smallest existing-framework test that proves the requested behavior or regression; do not test speculative adjacent cases.
 - Do not add tests for docs-only, formatting-only, or mechanically safe changes unless there is real regression risk.
 - Fix root cause, not band-aid.
 - Do not bundle unrelated cleanup into feature or bugfix work.
-- Follow DRY, KISS, and YAGNI — no gold-plating, no speculative abstractions.
-- Track large, risky, or cross-cutting refactors as tech debt in the project backlog (`.claude/BACKLOG.md` when present) or a GitHub issue. Do not hide them inside unrelated changes.
+- Follow KISS and YAGNI. Prefer small duplication over a speculative abstraction.
 - For research or source-backed answers, gather the smallest credible evidence set needed to answer correctly. If results are empty or suspiciously narrow, retry once with a different query/source before proceeding.
 - Comments in English only.
 - Comments and docstrings should capture verified behavior, constraints, or intent. Do not add explanatory text that merely paraphrases the code or describes what you assume it does. Misleading documentation is worse than sparse documentation.
-- CI: `gh run list/view` for PR/CI-bound changes; fix until green when CI is in scope.
+- CI: `gh run list/view` for PR/CI-bound changes; fix failures caused by the current change and report the rest.
+- Before committing source, test, or build-configuration changes, run the repository's formatter **check** across the complete CI lint scope. Format only files changed by the task; report unrelated failures.
 - Before committing or handing off: run the most relevant validation for the change (lint/typecheck/tests/build). Run the full gate for broad, risky, or pre-merge work. If validation cannot run, say exactly why.
 
 ## Security
 
-- New deps: quick health check (recent commits, adoption, known CVEs) before adding.
 - `trash` > `rm`. Recoverable beats gone forever.
 - Never install plugins, tools, or packages from external sources without explicit approval. Security-sounding names (scanner, guard, shield) are a red flag, not a green one. Always audit source before installation.
 - LLM classifiers reading from the internet: use safety-tuned models (e.g. LLaMA 3.3 70B Instruct), not agentic/MoE models. Agentic models follow instructions they find in context — including injected ones.
@@ -96,7 +95,6 @@ Rules:
 ## Dependencies
 
 - Quick health check before adding: recent releases, active commits, adoption, known CVEs.
-- Prefer packages with CLIs — agents can use them directly.
 - Minimize deps; inline small helpers when reasonable.
 - Do not add a dependency just because it is the fastest way to make the current task disappear. Prefer built-in libraries, existing project dependencies, or a small local helper when the added package would be trivial, oversized, or weakly maintained.
 - Add to project configs (`pyproject.toml`, `package.json`), not one-off installs.
@@ -105,18 +103,20 @@ Rules:
 
 ## Docs
 
-- `CLAUDE.md` at project root — entry point for Claude Code and Cursor.
+- `AGENTS.md` at project root — canonical entry point for shared agent guidance.
+- `CLAUDE.md` may remain as a compatibility shim when a repository supports Claude-style
+  entry points.
 - `docs/` files with front-matter: `summary`, `read_when`.
-- Update docs when behavior or API changes. No ship without docs.
+- Update existing docs only when the requested change alters documented public behavior, APIs, or workflows.
 - Add `read_when` hints on cross-cutting docs.
 
-## Knowledge Base (.claude/)
+## Knowledge Base (.second_brain/)
 
-- Update `.claude/` only for durable project knowledge: decisions, architecture, conventions, important code pointers, or backlog items that future agents should know.
-- Add a `.claude/DECISIONS.md` entry only when the decision is hard to reverse, would be surprising without context, and involved a real trade-off.
-- Update `.claude/CODE_POINTERS.md` for important entry points, public APIs, cross-module contracts, workflows, commands, or files future agents need to find. Do not record every helper.
-- Update `.claude/ARCHITECTURE.md` when the system shape changes (new module, table, data flow).
-- Update `.claude/CONVENTIONS.md` or `.claude/BACKLOG.md` when patterns or tech debt change.
+- Update `.second_brain/` only for durable project knowledge: decisions, architecture, conventions, important code pointers, or deferred-work items that future agents should know.
+- Add a `.second_brain/DECISIONS.md` entry only when the decision is hard to reverse, would be surprising without context, and involved a real trade-off.
+- Update `.second_brain/CODE_POINTERS.md` for important entry points, public APIs, cross-module contracts, workflows, commands, or files future agents need to find. Prefer repository-relative `path::symbol` references for stable code entry points and use `path:line` only when no stable symbol exists. Do not record every helper.
+- Update `.second_brain/ARCHITECTURE.md` when the system shape changes (new module, table, data flow).
+- Update `.second_brain/CONVENTIONS.md` when patterns change; record intentionally deferred work in `.second_brain/DEFERRED.md`, and follow `SECOND_BRAIN.md` when suggesting a GitHub issue.
 - These files are the source of truth for agents without conversation context. Keep them accurate.
 - Treat second-brain maintenance as agent-owned during change-producing work. Users
   should not need to invoke a maintenance skill explicitly.
@@ -124,12 +124,11 @@ Rules:
   sources changed. Reserve full audits for legacy, overdue, contradictory, or explicitly
   requested guidance.
 - If no durable project knowledge changed, say that no second-brain update was needed.
-- If `.claude/` doesn't exist, skip — not all projects use a second brain.
+- If `.second_brain/` doesn't exist, skip — not all projects use a second brain.
 
 ## CI/CD
 
 - Use GitHub Actions.
-- `gh run list/view` to monitor. Rerun, fix, push, repeat until green.
 - Keep observable: logs, clear output.
 - Release: read `docs/RELEASING.md` if present.
 
@@ -143,7 +142,6 @@ Rules:
 - Prefer functional programming over OOP for new code — pure functions by default.
 - Use OOP classes only for connectors and interfaces to external systems (APIs, DBs, queues).
 - Write pure functions: only modify return values, never input parameters or global state.
-- Never use default parameter values — make all parameters explicit.
 - Prefer explicit keyword/named arguments when calling functions with multiple same-type, boolean, optional, or non-obvious parameters. Positional arguments are fine for small, conventional calls where the meaning is clear.
 
 ## Error Handling
@@ -168,6 +166,7 @@ Rules:
 - Prefer structured data models over loose dicts — Pydantic, dataclasses, or interfaces.
 - Leverage language-specific type features: discriminated unions, enums, literal types.
 - Create proper type definitions for complex data structures rather than annotating inline.
+- Define a named type alias when a complex type recurs and the alias conveys domain meaning or centralizes a shared type contract; avoid aliases that merely abbreviate a one-off type.
 - Use provided environment/system dates when available. Run `date` only when current clock precision, local timezone, or missing date context matters. Never hardcode or guess.
 
 ## Language / Stack

@@ -3,7 +3,7 @@
 .env.*
 
 # Second brain runtime marker (see docs/second-brain-hooks.md)
-.claude/.pending-update
+.second_brain/.pending-update
 
 # Python
 *.pyc

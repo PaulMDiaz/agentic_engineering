@@ -20,17 +20,16 @@ instead of asking the user.
 
 1. Load repo guidance:
    - Read the repo's agent instructions and coding standards if they are available.
-   - If the repo has a `.claude/` second brain, run or follow `load-second-brain`
-     before grilling the plan.
-   - Check `CONVENTIONS.md`, `CODE_POINTERS.md`, `DECISIONS.md`, and `ARCHITECTURE.md`
-     when they exist and are relevant.
+   - If the repo has a `.second_brain/` second brain and relevant context is not already loaded
+     and current in this task, run or follow `load-second-brain` before grilling the plan.
+   - Check only missing relevant `CONVENTIONS.md`, `CODE_POINTERS.md`, `DECISIONS.md`,
+     and `ARCHITECTURE.md` files when they exist.
 2. Discover local documentation structure before creating anything:
-   - Terminology docs: use an existing glossary, context document, architecture doc, or
-     decision record when one already captures the relevant language. Do not create a
-     `CONTEXT.md` merely because the repo has no existing terminology document.
+   - Identify the established project docs that fit the plan: project or domain docs,
+     an existing glossary or context doc, architecture docs, or decision records.
    - Decision docs: prefer the repo's existing decision-record location. Common paths
      include `docs/architecture/decision_records/`, `docs/adr/`, `docs/adrs/`, and
-     `.claude/DECISIONS.md`.
+     `.second_brain/DECISIONS.md`.
    - If docs under `docs/` require frontmatter, proprietary headers, templates, or
      specific naming, preserve that convention.
 3. Identify the plan under review:
@@ -69,12 +68,11 @@ resolved and the repo convention supports immediate edits.
 
 For glossary or domain language:
 
-- Update an existing glossary or context document only when the repository already uses
-  one for that purpose.
-- Otherwise, capture terminology in the repository's established documentation or a
-  decision record only when it is durable and necessary to understand the decision.
-- Do not create a standalone glossary or `CONTEXT.md` unless the user explicitly asks
-  for one.
+- Update the established repository documentation that best fits the term, such as a
+  project or domain document, existing glossary or context doc, architecture document,
+  or decision record.
+- Preserve the target document's scope: glossary or context docs capture vocabulary,
+  architecture docs capture system shape, and decision records capture trade-offs.
 
 For architectural or product decisions:
 
@@ -84,21 +82,22 @@ For architectural or product decisions:
   3. The decision involved a real trade-off.
 - Use the repo's existing decision-record location and format before falling back to
   `ADR-FORMAT.md`.
-- If the repo uses `.claude/DECISIONS.md`, update it for durable agent context when the
+- If the repo uses `.second_brain/DECISIONS.md`, update it for durable agent context when the
   decision changes how future agents should reason about the project.
 
 For second-brain repos:
 
 - Before handoff, run or follow `update-second-brain` if the session changed decisions,
-  code pointers, architecture, conventions, backlog, or a declared convention source.
+  code pointers, architecture, conventions, or deferred work.
 - Verify every second-brain claim you add against the actual files.
 
 ## Guardrails
 
 - Preserve existing docs and local templates. Do not replace a repo's decision-record
   system with `docs/adr/` just because the fallback format exists.
-- Do not introduce a glossary or context-document convention where the repository does
-  not already use one.
+- Do not invent a `CONTEXT.md`, standalone glossary, or new documentation system when
+  the repository does not already use one. Create one only when the user explicitly
+  asks.
 - Keep edits narrow. Capture decisions and vocabulary, not full implementation plans
   unless the target document is already a planning artifact.
 - Do not create an ADR for an obvious, reversible, or purely mechanical choice.

@@ -24,11 +24,13 @@ Do not use this skill for:
 
 ### 1. Load relevant repo context
 - Read `CODING_STANDARDS.md`
-- If the repo has a `.claude/` directory, check the most relevant context files before changing code:
+- If the repo has a `.second_brain/` directory and the relevant context is not already loaded
+  and current in this task, check only the most relevant files before changing code:
   - `DECISIONS.md` for prior trade-offs
   - `CONVENTIONS.md` for repo-specific rules
   - `CODE_POINTERS.md` when it helps locate files quickly
-- If the task is non-trivial and the repo uses a second brain, run `load-second-brain`
+- If the task is non-trivial and the repo uses a second brain, run or follow
+  `load-second-brain` only to load missing relevant context.
 
 ### 2. Define the task precisely
 Before editing, make the task concrete:
@@ -38,21 +40,13 @@ Before editing, make the task concrete:
 - acceptance criteria
 - assumptions or unknowns that could affect implementation
 
-Ask clarifying questions if the task is ambiguous enough that implementation would be guesswork.
+Treat acceptance criteria as exhaustive; ask clarifying questions only when implementation would otherwise be guesswork.
 
 ### 3. Plan proportionally
 Use the smallest planning process that is honest for the task size.
 
 For small-to-medium tasks:
 - make a short inline plan with the intended files/steps
-
-For larger or multi-step tasks:
-- create a lightweight plan in `/tmp/<feature>.md`
-- include:
-  - current state
-  - desired final state
-  - files to change
-  - task checklist
 
 Prefer the smallest correct plan. Do not create ceremony for trivial work.
 
@@ -62,7 +56,18 @@ Prefer the smallest correct plan. Do not create ceremony for trivial work.
 - Avoid speculative refactors or “while I’m here” cleanup
 - If you notice refactoring opportunities, flag them instead of silently expanding scope
 - Write tests in the same work context when the task warrants them
-- Handle edge cases and error paths that are clearly in scope
+- Handle only edge cases and error paths required by an acceptance criterion or affected contract
+
+Stop and re-plan smaller if you catch yourself:
+- adding an abstraction, config layer, or framework the task did not ask for
+- designing for a use case that does not exist yet
+- writing a second implementation to keep the old logic alive
+- editing files unrelated to the task
+- using "add tests" as the reason to keep building
+
+Before adding a test, answer: which acceptance criterion does it verify, and would
+existing tests miss this regression without it? If the test is longer or more complex
+than the code it covers, the implementation is probably overbuilt.
 
 ### 5. Verify
 - Run the repo-defined checks that match the change
@@ -72,10 +77,10 @@ Prefer the smallest correct plan. Do not create ceremony for trivial work.
 
 ### 6. Close out
 Before handoff:
-- update docs if behavior or workflow changed
+- update existing docs only when the change affects documented public behavior, APIs, or workflows
 - perform source-aware second-brain maintenance if project knowledge or a declared
   convention source changed; the user does not need to invoke that maintenance explicitly
-- note any follow-up risks, open questions, or refactor opportunities
+- once the requested behavior works and focused validation passes, stop
 
 ## Handoff Format
 

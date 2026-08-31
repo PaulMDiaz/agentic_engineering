@@ -2,9 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [dev]
+    branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,9 +15,13 @@ jobs:
     name: Shell Script Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
+
+      - name: Check shell syntax
+        run: bash -n scripts/install scripts/uninstall tests/run tests/*.bash tests/helpers/*.sh skills/audit-second-brain/scripts/validate_portable_template.sh
 
       - name: Run shell script tests
         run: bash tests/run
@@ -25,8 +30,9 @@ jobs:
     name: Markdown Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Run markdownlint
@@ -39,8 +45,9 @@ jobs:
     name: Link Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Install lychee
@@ -57,9 +64,7 @@ jobs:
 
       - name: Check for broken links
         run: |
-          git ls-files '*.md' \
-            | grep -v '^\.claude/NOTES_ARCHIVE\.md$' \
-            | xargs lychee --no-progress --root-dir .
+          git ls-files '*.md' | xargs lychee --no-progress --root-dir .
 
   duplicates:
     name: Duplicate Code Detection
@@ -69,8 +74,9 @@ jobs:
       CPD_TARBALL: cpd-linux-x64-gnu.tar.gz
       CPD_SHA256: a2c42f87527478a6c0a93c12e452d0226565e7e209a7affa5f5d0c4364dc9e4a
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Install cpd
@@ -83,4 +89,4 @@ jobs:
 
       - name: Run cpd
         run: |
-          cpd --min-lines 10 --min-tokens 50 --reporters console --ignore "**/*.json,**/NOTES_ARCHIVE.md" .
+          cpd --min-lines 10 --min-tokens 50 --reporters console --ignore "**/*.json" .

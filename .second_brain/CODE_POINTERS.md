@@ -1,0 +1,50 @@
+# Code Pointers
+
+## Guidance and templates
+
+| What | Where |
+| --- | --- |
+| Canonical repository guidance | `AGENTS.md` |
+| Installable shared guidance | `AGENTS.local.md` |
+| Claude compatibility entry point | `CLAUDE.md` |
+| Universal engineering rules | `CODING_STANDARDS.md` |
+| Portable second-brain baseline | `SECOND_BRAIN.md` |
+| Portable project-guidance integration | `AGENTS.second-brain.snippet.md` |
+| Repository conventions | `.second_brain/CONVENTIONS.md` |
+
+## Second-brain workflows
+
+| What | Where |
+| --- | --- |
+| Initialize or adopt committed knowledge | `skills/init-second-brain/SKILL.md` |
+| Full audit, migration, and stable-pointer conversion | `skills/audit-second-brain/SKILL.md` |
+| Portable-template validator | `skills/audit-second-brain/scripts/validate_portable_template.sh` |
+| Selective context loading | `skills/load-second-brain/SKILL.md` |
+| Source-aware scoped maintenance | `skills/update-second-brain/SKILL.md` |
+| Dedicated-branch synchronization | `skills/sync-second-brain/SKILL.md` |
+
+## Workstation integration
+
+| What | Where |
+| --- | --- |
+| Install and reconcile every detected agent | `scripts/install` |
+| Enroll and detect shared-guidance sync | `scripts/install::agents_sync_enabled` |
+| Render shared guidance safely | `scripts/install::install_guidance_file` |
+| Substitute the installed clone path | `scripts/install::render_guidance` |
+| Recognize guidance from any Agentic Engineering checkout | `scripts/install::is_agentic_engineering_guidance_file` |
+| Recognize skill links from an older checkout | `scripts/install::is_agentic_engineering_skill_link` |
+| Install managed Git hooks | `scripts/install::install_hook` |
+| Remove this clone's workstation files | `scripts/uninstall::remove_guidance` |
+| Remove managed Git hooks | `scripts/uninstall::remove_hook` |
+| Workstation procedure | `docs/workstation-setup.md` |
+| Setup and synchronization diagnosis | `docs/TROUBLESHOOTING.md` |
+
+## Verification
+
+| What | Where |
+| --- | --- |
+| Test entry point | `tests/run` |
+| Skill and durable-context contracts | `tests/skills.bash` |
+| Portable-template migration and validation | `tests/second_brain_template.bash` |
+| Shell assertion helpers | `tests/helpers/assert.sh` |
+| GitHub Actions gate | `.github/workflows/ci.yml` |
