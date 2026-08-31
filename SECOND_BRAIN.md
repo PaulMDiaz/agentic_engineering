@@ -100,7 +100,7 @@ for preserving the decision record.
 the repository's established entry format. When a deferred item has an applicable GitHub
 issue, reference that issue in the entry; do not create issues automatically.
 
-A GitHub issue is warranted only when all of the following are true:
+Suggest a GitHub issue only when all of the following are true:
 
 1. The work is a specific, actionable change rather than an observation or preference.
 2. It is intentionally outside the scope of the current pull request or feature branch.
