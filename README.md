@@ -86,9 +86,9 @@ See [Second-Brain Workflow](docs/second-brain-hooks.md) for the complete contrac
 
 One versioned playbook, installed deliberately where it is the chosen distribution. The
 public workstation interface is two scripts: install and uninstall. Cursor and Claude Code
-skill sync leave existing destinations untouched. Codex treats a directory with the same
-name as an Agentic skill as replaceable; uninstall and stale cleanup remove only mirrors
-marked as Agentic-managed.
+skill sync rehomes links from older `agentic_engineering` checkouts and preserves unrelated
+destinations. Codex treats a directory with the same name as an Agentic skill as
+replaceable; uninstall and stale cleanup remove only mirrors marked as Agentic-managed.
 
 ## License
 
