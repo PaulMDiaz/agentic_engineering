@@ -30,6 +30,17 @@ that choice. Run `scripts/install` without the flag when you want skills only.
 Agentic Engineering is a complete independent distribution. Do not install it concurrently
 with another playbook that manages the same shared guidance paths or skill names.
 
+## Implementation and review
+
+`AGENTS.local.md` defines delegation and model defaults, including visible subagent model and
+reasoning-effort labels. `implement` owns bounded assignments and independent review gates;
+`agent-review` checks each increment for unnecessary scope before completeness and correctness.
+Checkpoint reviews use a compact handoff without the full PR-review procedure. These are agent
+instructions, not installer-enforced controls.
+
+`CODING_STANDARDS.md` applies concise, durable writing to comments, repository docs, and
+second-brain entries. Passing verification can be reused while its relevant inputs remain current.
+
 ## Portable second-brain adoption
 
 `SECOND_BRAIN.md` begins at the versioned `portable-v5` marker and has no dependency on

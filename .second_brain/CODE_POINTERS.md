@@ -12,6 +12,15 @@
 | Portable project-guidance integration | `AGENTS.second-brain.snippet.md` |
 | Repository conventions | `.second_brain/CONVENTIONS.md` |
 
+## Implementation workflows
+
+| What | Where |
+| --- | --- |
+| Delegation, model defaults, and visible launch settings | `AGENTS.local.md` |
+| Increment planning and acceptance gates | `skills/implement/SKILL.md` |
+| Independent checkpoint and full PR review | `skills/agent-review/SKILL.md` |
+| Reusable review-feedback checklists | `skills/pr-review-triage/SKILL.md` |
+
 ## Second-brain workflows
 
 | What | Where |

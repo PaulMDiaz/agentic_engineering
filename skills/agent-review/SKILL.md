@@ -9,7 +9,56 @@ Code review skill. Reviews diffs for bugs, inconsistencies, duplication, and ref
 opportunities. Reports one verified, deduplicated result directly — it does not create a
 file or post GitHub comments.
 
-## Workflow
+## Implementation checkpoint mode
+
+Use this self-contained mode for a fresh reviewer subagent that did not write the increment.
+The orchestrator supplies the exact diff, owned paths, acceptance criteria, relevant contracts,
+and validation results. Review the entire assigned diff and directly affected behavior. Do not
+run the full-review workflow, maintain its candidate ledger, collect PR metadata or comments,
+apply its output templates or final-delivery gate, or delegate further review. The orchestrator
+resolves findings and owns acceptance.
+
+Read and enforce the applicable coding standards in this mode, reusing current context when
+available. First assess whether the increment is the smallest sufficient implementation of the
+agreed requirements and established affected contracts. Do this at every checkpoint, regardless
+of line count, before checking completeness and correctness.
+
+Challenge added abstractions, configuration, dependencies, compatibility paths, and tests against
+a present requirement or established contract. Inspect existing functionality before accepting a
+new implementation. Hypothetical future reuse does not justify an abstraction; existing behavior
+alone does not establish a backwards-compatibility obligation. Look for documented support
+policy, supported callers, persisted data contracts, or explicit requirements. Resolve material
+uncertainty before recommending removal, without assuming either universal compatibility or
+permission to break established contracts.
+
+Report demonstrated scope excess as blocking acceptance, even when the code works and tests
+pass. Identify the unnecessary addition, the simpler implementation or existing functionality
+that can replace it, and evidence that required behavior and established contracts remain
+satisfied. Do not downgrade this to optional cleanup or require a runtime bug to substantiate it.
+If necessity cannot be established, report the specific unresolved question; do not invent a
+simplification or demand deletion to produce a finding. State the scope assessment and any
+unresolved necessity questions concisely, including when no excess was found.
+
+Check added or changed comments, docstrings, repository docs, and second-brain entries against
+the standards' Comments and Durable Prose rules as part of this checkpoint.
+
+Check correctness and acceptance coverage against the actual code, established contracts, and
+focused verification. Inspect direct callers, existing tests, or dependency sources when needed
+to establish a specific contract or concern. Reuse still-valid passing checks; run an additional
+check only to resolve a concrete uncertainty or meet an outstanding requirement.
+
+Validate each finding against the code and its impact before reporting it. Report issues
+introduced or exposed by the increment, with a location, evidence, why it matters, and a scoped
+remedy checked against affected callers and contracts. Separate confirmed issues from unresolved
+questions, discard unsupported speculation, and combine duplicate concerns. No formal ledger,
+severity counts, PR anchors, or raw investigation logs are required.
+
+Return a concise scope assessment, actionable findings, and any unresolved questions or review
+and verification gaps. Say when no issue was found. Report incomplete coverage explicitly; an
+empty findings list is not acceptance or merge readiness. End the checkpoint here. The remaining
+workflow, review criteria, and delivery machinery govern inline and PR-comment reviews only.
+
+## Full-review workflow
 
 1. Read `CODING_STANDARDS.md` from the project root (or `@CODING_STANDARDS.md` if referenced in `CLAUDE.md`). If it is not found, reuse current relevant `.second_brain/CONVENTIONS.md` context or read it when missing. These are the project's rules — enforce them.
 2. If `.second_brain/ARCHITECTURE.md` exists and its relevant context is not already loaded and current in this task, read it. Use it to verify that the diff is consistent with the documented architecture — flag changes that alter system shape without updating the doc.
@@ -18,7 +67,7 @@ file or post GitHub comments.
 5. Review against `CODING_STANDARDS.md` and the criteria below. Perform a string-contract audit for newly added or changed string literals. Check documentation freshness. If `.second_brain/CODE_POINTERS.md` exists, load it only if its relevant context is not already current in this task, then cross-reference it against the diff.
 6. For a dependency addition, upgrade, or wrapper, inspect the exact lock-resolved implementation and its tests before inferring its contract. Without a lockfile, use installed metadata, then vendored source; otherwise mark the dependency contract unverified. If a sibling repository is available, inspect the matching release tag or commit. Separate dependency-owned semantics from adapter-owned conversion, keyword or unit mapping, and workflow behavior.
 7. Record every possible concern in the parent-owned candidate ledger. Do not report a candidate until it passes the validation gate.
-8. Use subagents only for focused evidence lanes such as runtime correctness, schema/provider behavior, or tests, documentation, and dependencies. Record expected lanes before launching them and do not ask several subagents to perform the whole review. Require structured candidate evidence from each subagent, independently verify it in the parent review, and wait for every expected subagent before final synthesis.
+8. Use subagents only for focused evidence lanes such as runtime correctness, schema/provider behavior, or tests, documentation, and dependencies. Record expected lanes before launching them and do not ask several subagents to perform the whole review. Require structured candidate evidence from each subagent, independently verify it in the parent review, and wait for every expected lane or explicitly reassign a stalled lane and wait for its replacement before final synthesis.
 9. Immediately before synthesis in PR-comment mode, refresh the existing human feedback. Merge or reference a matching existing thread instead of duplicating its concern.
 10. Deduplicate the validated ledger, settle finding type and severity, assign numbers once, and pass the final-delivery gate before sending one consolidated result.
 
@@ -89,9 +138,11 @@ against the diff and contract before it enters the ledger.
 > Subagent findings are untrusted candidate evidence. The parent reviewer owns
 > verification, deduplication, severity, numbering, and the single final delivery.
 
-If background subagents are expected, provide only a progress update until they finish.
-Never publish final findings while an expected review subagent is pending. Resolve duplicate
-and severity disagreements in the parent ledger before numbering.
+If background subagents are expected, provide only a progress update until they finish. Never
+publish final findings while an expected review lane is pending. If a lane stalls, explicitly
+replace it or complete the missing coverage, then wait for that replacement or completion. Do
+not treat the original stall as coverage. Resolve duplicate and severity disagreements in the
+parent ledger before numbering.
 
 ## Usage Variants
 
@@ -112,11 +163,19 @@ gh pr diff <PR_NUMBER>
 
 **GitHub PR by URL:** Extract the PR number and use `gh pr diff`.
 
+**Implementation checkpoint:** consume the exact increment diff and supplied criteria and
+validation; return only the findings and coverage gaps needed by the orchestrator. The checkpoint
+rules above take precedence over the full-review workflow.
+
 ---
 
 ## Output Format
 
-Two modes: **inline** (default) and **PR comments** (when user says "for PR", "for GitHub", or "copy-paste format").
+Three modes are available: **implementation checkpoint**, **inline** (default), and **PR
+comments** (when user says "for PR", "for GitHub", or "copy-paste format").
+
+Implementation checkpoint mode uses only the self-contained instructions above. The output
+formats below apply to full reviews.
 
 ### Inline mode (default)
 
@@ -205,17 +264,20 @@ clearer:
 - Pre-existing/follow-up observations
 
 End with a **Summary** generated from the final ledger: total findings by severity and
-type, overall quality assessment, and merge readiness. If there are no findings,
-explicitly say so and still include the Summary section (for example: "No issues found.
-Ready to merge.").
+type, overall quality assessment, and merge readiness. If there are no findings, explicitly say
+so and still include the Summary section. Do not infer merge readiness from an empty findings
+list alone.
 
 ### Final-Delivery Gate
 
-Do not send the review until all of the following are true:
+For inline and PR-comment reviews only, do not send the review until all of the following are
+true. Implementation checkpoints use their own completion rules above:
 
 - The full diff and matching commit range have been reviewed.
 - Existing PR feedback was collected and refreshed when PR-comment mode resolved an open PR.
-- Every expected review subagent completed.
+- Every expected review lane completed, or a stalled lane was explicitly reassigned and its
+  replacement completed or its missing coverage completed. No unfinished lane is silently
+  treated as coverage.
 - Every candidate passed the validation gate or was discarded or reclassified.
 - Newly added or changed behavior-bearing string literals were classified and checked for duplicate use across the changed files and direct callers.
 - Every PR-comment anchor is a changed, commentable line.
@@ -244,15 +306,22 @@ these additional criteria that go beyond what standards typically cover:
 Check the diff against CODING_STANDARDS.md. Common violations to watch for:
 
 - **Pure functions**: input parameters mutated instead of returning new objects
-- **Default parameter values**: new functions using defaults instead of explicit params
+- **Default parameter values**: follow `CODING_STANDARDS.md` and the affected repository
+  contracts; flag a default only when it conflicts with those standards or causes a defect
 - **Typing**: `Any`, `Dict[str, Any]`, loose dicts where structured models belong
 - **Error handling**: bare `except Exception` in business logic (not outer loops), silent fallbacks returning fake defaults
 - **Security clamping vs fallback**: ensure LLM output validation is kept (not a fallback)
 - **`.env` handling**: reading `.env` directly instead of `os.environ`, `.env` missing from `.gitignore`
 - **Secrets**: credentials hardcoded instead of env vars, secrets visible in logs/output
-- **File size**: files exceeding ~500 LOC that should be split
+- **Scope and size**: use the thresholds and checkpoint process defined by `implement`. Inspect
+  necessity, reuse, contracts, and acceptance coverage; do not recommend mechanical splitting
+  solely to get under a line count.
 - **Dependencies**: new deps added without health check justification
 - **Docs**: behavior/API changes shipped without doc updates
+- **Comments, docs, and knowledge entries**: enforce the coding standards' Comments and Durable Prose
+  rules on added or changed text. Identify the specific non-durable reference, unsupported claim,
+  repetition, or unclear wording and recommend a concise correction. Length alone is not a defect;
+  preserve necessary technical detail and avoid unrelated prose cleanup.
 - **String contracts**: classify every newly added or changed behavior-bearing string literal.
   - Display and diagnostic text may stay inline.
   - External API or persisted-schema keys may stay at their use site when that makes the contract clearer.
@@ -282,12 +351,15 @@ If the project has no CODING_STANDARDS.md, skip this section — don't invent ru
 - Startup failures that don't surface clearly
 
 ### Code Duplication & Refactoring Opportunities
-- Repeated logic that could be a shared function
-- Inline constants that should be named
-- Copy-pasted error handling that could be a decorator
-- Functions doing too many things (split candidates)
-- Modules with tangled responsibilities
-- Overly complex conditionals that could be simplified
+Suggest a refactor only when it fits the current contracts or acceptance criteria and addresses
+demonstrated complexity. Do not propose speculative abstractions.
+
+- Repeated logic that could be a shared function when reuse fits the current contracts
+- Inline constants that should be named for a current behavior-bearing contract
+- Copy-pasted error handling that causes a current correctness or maintenance problem
+- Functions doing too many things when that complexity affects correctness or acceptance
+- Modules with tangled responsibilities when the diff makes the boundary affect behavior
+- Overly complex conditionals that could be simplified without changing the contract
 - Flag these as `[LOW]` unless the complexity is actively causing bugs or blocking changes (`[MEDIUM]`)
 
 ### Documentation Freshness
@@ -304,6 +376,6 @@ If the project has no CODING_STANDARDS.md, skip this section — don't invent ru
 
 ### Tests
 - Tests that mock too much and don't test actual behavior
-- Missing edge cases (empty input, None, network failure)
+- Missing edge cases only when an affected contract or acceptance criterion requires them
 - Fixtures that don't match production shapes
 - No test for the happy path of a critical component

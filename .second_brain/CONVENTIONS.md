@@ -13,12 +13,14 @@ Sources: `README.md`, `.second_brain/ARCHITECTURE.md`, `CODING_STANDARDS.md`
 - Do not add a runtime dependency on another playbook repository.
 
 ## Documentation
-Sources: `AGENTS.md`, `AGENTS.local.md`, `CLAUDE.md`, `SECOND_BRAIN.md`, `README.md`, `docs/*.md`, normative repository policy
+Sources: `CODING_STANDARDS.md`, `AGENTS.md`, `AGENTS.local.md`, `CLAUDE.md`, `SECOND_BRAIN.md`, `README.md`, `docs/*.md`, normative repository policy
 
 - `AGENTS.md` is repository-local, `AGENTS.local.md` is the portable shared-guidance
   template rendered by the installer, and `CLAUDE.md` is a compatibility shim to
   repository-local guidance.
 - Files under `docs/` use `summary` and `read_when` YAML front matter.
+- `CODING_STANDARDS.md` owns the plain-English, durable-prose rules for changed comments,
+  documentation, and knowledge entries; preserve necessary evidence and technical detail.
 - The marked `SECOND_BRAIN.md` portable baseline remains self-contained and
   repository-relative.
 - Keep repository-specific durable knowledge in `.second_brain/`, not inside the marked
@@ -33,6 +35,23 @@ Sources: `skills/*/SKILL.md`, `README.md`, `AGENTS.md`, `AGENTS.local.md`, `scri
 - `README.md`, `AGENTS.md`, and `AGENTS.local.md` list every public skill.
 - `unslop` applies to every agent-authored response and document while preserving exact
   quotations, code, commands, schemas, logs, and user-supplied copy.
+
+## Implementation and review
+Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implement/SKILL.md`, `skills/agent-review/SKILL.md`, `skills/pr-review-triage/SKILL.md`
+
+- Shared guidance defines delegation and model preferences and exposes selected model and effort
+  in subagent names where supported. Inherited or unknown settings remain explicit.
+- `implement` owns bounded assignments, early independent review, size checkpoints, finding
+  resolution, and acceptance. Bounded workers do not recursively orchestrate.
+- Checkpoint review is self-contained: assess the smallest sufficient implementation, established
+  contracts, correctness, and verification. Demonstrated scope excess blocks acceptance;
+  hypothetical reuse and existing behavior alone do not justify abstractions or compatibility code.
+- Reviewers return concise evidence and gaps without a full PR ledger or raw logs. A missing
+  independent review remains pending; a self-review cannot satisfy it.
+- Existing authorization carries forward and still-valid verification can be reused under
+  `CODING_STANDARDS.md`. Handoffs scale to the task.
+- PR triage uses the specified checklist directory or repository-local `tmp/`, retains progress
+  and valid response drafts, and permits already-authorized follow-up after its triage phase.
 
 ## Workstation synchronization
 Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `tests/install.bash`, `tests/uninstall.bash`, `tests/skills.bash`
@@ -97,6 +116,8 @@ Sources: `AGENTS.md`, `CODING_STANDARDS.md`, `SECOND_BRAIN.md`, `docs/second-bra
   portable guidance, and legacy `BACKLOG.md` content without discarding repository-owned
   knowledge.
 - Read-only work reports audit debt without modifying repository files.
+- Scoped maintenance uses known task-owned changes and verifies current-state claims in deferred
+  work. Source-verified factual corrections take priority while valid decision rationale remains.
 
 ## Excluded content
 Sources: `README.md`, `AGENTS.md`, `skills/*/SKILL.md`, normative repository policy

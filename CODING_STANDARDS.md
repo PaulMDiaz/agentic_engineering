@@ -50,7 +50,7 @@ Rules:
 ## Planning
 
 - Before non-trivial changes: identify the desired outcome, constraints, success criteria, files to change, and validation.
-- Treat acceptance criteria as exhaustive: inspect broadly, edit narrowly, report unrelated problems, and stop after focused validation passes.
+- Treat acceptance criteria as exhaustive: inspect broadly, edit narrowly, report unrelated problems, and stop once the criteria, required validation, and required review are satisfied.
 
 ## Code Quality
 
@@ -63,6 +63,7 @@ Rules:
 - In tests, do not define `async def` helpers that contain no asynchronous operation. Use `AsyncMock`, a real awaited operation, or a synchronous helper wrapped by the code under test.
 - In tests, do not compare floating-point values with exact equality. Use an appropriate tolerance or the test framework's approximate-comparison helper (for example, `pytest.approx`).
 - Prefer tests that validate observable behavior, public interfaces, and outcomes over tests tightly coupled to implementation details.
+- Be suspicious of AI-generated tests that mirror code structure, mock too much, or only prove the current implementation path.
 - Use `pytest.mark.parametrize` when cases share setup and assertions and differ only by inputs or expected outcomes. Keep behaviorally distinct scenarios as separate tests.
 - Add the smallest existing-framework test that proves the requested behavior or regression; do not test speculative adjacent cases.
 - Do not add tests for docs-only, formatting-only, or mechanically safe changes unless there is real regression risk.
@@ -70,11 +71,11 @@ Rules:
 - Do not bundle unrelated cleanup into feature or bugfix work.
 - Follow KISS and YAGNI. Prefer small duplication over a speculative abstraction.
 - For research or source-backed answers, gather the smallest credible evidence set needed to answer correctly. If results are empty or suspiciously narrow, retry once with a different query/source before proceeding.
-- Comments in English only.
-- Comments and docstrings should capture verified behavior, constraints, or intent. Do not add explanatory text that merely paraphrases the code or describes what you assume it does. Misleading documentation is worse than sparse documentation.
+- Apply the Comments and Durable Prose rules below to comments, docstrings, repository documentation, and second-brain entries.
 - CI: `gh run list/view` for PR/CI-bound changes; fix failures caused by the current change and report the rest.
 - Before committing source, test, or build-configuration changes, run the repository's formatter **check** across the complete CI lint scope. Format only files changed by the task; report unrelated failures.
 - Before committing or handing off: run the most relevant validation for the change (lint/typecheck/tests/build). Run the full gate for broad, risky, or pre-merge work. If validation cannot run, say exactly why.
+- Reuse passing validation evidence only while the relevant code, configuration, and environment remain unchanged. Rerun checks affected by new changes, failures, unresolved concerns, or an explicit fresh-check request; always preserve required checks.
 
 ## Security
 
@@ -91,6 +92,8 @@ Rules:
 - Try a workaround before asking for more access.
 - Only escalate if the workaround is cumbersome, slow, or expensive — explain why clearly.
 - Never ask for broad permissions when narrow ones suffice.
+- Carry authorization for routine execution steps within the user's stated scope. Ask about unresolved decisions only when they materially affect the result; preserve explicit permission requirements, destructive-action safeguards, and Git boundaries.
+- Continue already-authorized preparation that does not depend on a pending decision or approval; ask necessary clarifying questions promptly and do not perform work dependent on the unresolved choice.
 
 ## Dependencies
 
@@ -109,6 +112,33 @@ Rules:
 - `docs/` files with front-matter: `summary`, `read_when`.
 - Update existing docs only when the requested change alters documented public behavior, APIs, or workflows.
 - Add `read_when` hints on cross-cutting docs.
+
+## Comments and Durable Prose
+
+These rules apply to comments, docstrings, repository documentation, and second-brain entries.
+
+- Write concise, plain English for a reader without the conversation. Use established project
+  terms and exact identifiers where useful; avoid invented jargon, unexplained shorthand, and
+  abstract labels when a concrete description works.
+- Base factual claims on verified sources. Comments explain non-obvious reasons, constraints, or
+  behavior. Docstrings describe the interface and contract. Do not narrate the code, speculate
+  about its behavior, or add an essay where a sentence conveys the needed information.
+- Second-brain entries state the durable fact or rule, its source, and only the rationale needed
+  to prevent a future mistake. Update the existing entry instead of appending a session recap;
+  link to detailed documentation instead of copying it.
+- Omit session-specific labels such as `WP1`, temporary design or implementation plans, scratch
+  notes, review checklists, agent/model attribution for who performed work, review-round narratives,
+  temporary paths, and claims such as "now fixed" or "all tests pass." Do not use ephemeral artifacts
+  as lasting references. State the resulting behavior or constraint directly and cite a durable
+  repository source when needed. Keep session history in commits and PRs. Preserve dates,
+  issue links, and concise rationale when they are part of a durable decision or active limitation.
+- Match documentation detail to its purpose. Keep worked examples in tutorials, alternatives and
+  trade-offs in design docs, and relevant dates and context in historical records. Make each
+  understandable without the originating session; ephemeral artifacts are not enduring authority.
+- Retain detail needed for a public API, subtle algorithm, scientific assumption, or consequential
+  trade-off. Brevity must not erase evidence or established terminology; there is no arbitrary
+  word or line limit. Apply this standard to added or changed prose without expanding the task
+  into unrelated cleanup.
 
 ## Knowledge Base (.second_brain/)
 
