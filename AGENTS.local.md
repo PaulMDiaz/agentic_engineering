@@ -22,31 +22,23 @@ doing any work. Treat it as mandatory startup context for all tasks.
 
 ## Personal workflow
 
-- Route substantive implementation through `implement` automatically. Delegate substantive
-  implementation by default, including sequential increments. Make trivial mechanical edits
-  directly.
-- Delegate bounded, noisy investigation when its result can be verified without importing the
-  exploration. Keep small lookups local.
+- Route substantive implementation through `implement` automatically. Choose direct execution
+  or delegation according to the task. Delegate when a bounded assignment provides useful
+  independent progress or saves enough parent context to justify the handoff. Keep tightly
+  coupled operational work with one executor; sequential work alone is not a reason to delegate.
 - Keep delegated reports concise: conclusions, evidence pointers, uncertainties, and validation
-  results. Delegation reduces parent context, not necessarily total token use.
-- Prefer GPT-5.6 Luna with Max reasoning for implementation and investigation. This is a
-  preference, not a dependency. Respect session model choices. If the preferred model is
-  unavailable, inspect supported models and recommend a suitable, cost-effective smaller model
-  only with evidence for capability and cost. Ask once for a session fallback unless the session
-  already authorizes a choice. Choose reviewer models separately; do not infer one from this
-  preference.
-- Include the task, selected model, and reasoning effort in user-visible subagent names when
-  supported, for example `review_astra_high`. If names cannot carry these details, disclose them
-  briefly before launch. Identify inherited settings and resolve them from runtime metadata when
-  available; never infer a subagent's settings from the global default. Mark unavailable values
-  `unknown` and distinguish requested settings from runtime-confirmed settings. Report model or
-  effort changes when continuing an agent. These labels disclose configuration, not measured
-  token usage or cost; do not change model selection merely to produce a label.
+  results. Reuse verified findings instead of repeating the worker's investigation. Delegation
+  reduces parent context, not necessarily total token use.
+- Prefer GPT-5.6 Luna with Medium reasoning for bounded implementation and investigation.
+  Increase effort when uncertainty or failed attempts justify it. Respect session model choices;
+  if the preferred model is unavailable, disclose a suitable fallback within existing
+  authorization. Ask only when a user constraint prevents it. Select reviewers for the task.
+- Include the task, model, and effort in subagent names where supported, or disclose them before
+  launch. Distinguish requested settings from runtime-confirmed settings; mark unavailable
+  metadata `unknown`. Report changes when continuing an agent. These labels do not measure cost.
 - Keep reusable skills model- and harness-neutral.
-- The orchestrator must obtain independent review by a fresh agent before accepting substantive
-  implementation as complete. If the harness cannot run subagents, follow `implement`'s
-  direct-work fallback. Bounded implementation, investigation, and review workers return their
-  assigned results without arranging another review or obtaining final acceptance.
+- Follow `implement`'s risk-based review gate and honor stricter user or repository requirements.
+  Bounded workers return their assigned results without arranging review or final acceptance.
 
 ## Project-local second brain
 

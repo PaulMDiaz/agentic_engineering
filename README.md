@@ -32,11 +32,10 @@ with another playbook that manages the same shared guidance paths or skill names
 
 ## Implementation and review
 
-`AGENTS.local.md` defines delegation and model defaults, including visible subagent model and
-reasoning-effort labels. `implement` owns bounded assignments and independent review gates;
-`agent-review` checks each increment for unnecessary scope before completeness and correctness.
-Checkpoint reviews use a compact handoff without the full PR-review procedure. These are agent
-instructions, not installer-enforced controls.
+`AGENTS.local.md` defines model preferences and delegation based on useful progress or context
+savings. `implement` scales planning and verification to the task, requiring independent review
+for consequential changes. `agent-review` checks scope, correctness, and acceptance through a
+compact checkpoint. These are agent instructions, not installer-enforced controls.
 
 `CODING_STANDARDS.md` applies concise, durable writing to comments, repository docs, and
 second-brain entries. Passing verification can be reused while its relevant inputs remain current.

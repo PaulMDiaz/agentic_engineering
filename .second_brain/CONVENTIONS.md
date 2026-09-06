@@ -41,13 +41,16 @@ Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implemen
 
 - Shared guidance defines delegation and model preferences and exposes selected model and effort
   in subagent names where supported. Inherited or unknown settings remain explicit.
-- `implement` owns bounded assignments, early independent review, size checkpoints, finding
-  resolution, and acceptance. Bounded workers do not recursively orchestrate.
+- Delegation depends on independent progress or context savings that justify handoff costs;
+  tightly coupled operational work can stay with one executor. Bounded workers do not recurse.
+- `implement` requires independent review for consequential changes, permits focused validation
+  for small reversible edits unless stricter rules apply, and normally uses one review per
+  coherent change. It owns risk-appropriate preparation, finding resolution, and acceptance.
 - Checkpoint review is self-contained: assess the smallest sufficient implementation, established
   contracts, correctness, and verification. Demonstrated scope excess blocks acceptance;
   hypothetical reuse and existing behavior alone do not justify abstractions or compatibility code.
 - Reviewers return concise evidence and gaps without a full PR ledger or raw logs. A missing
-  independent review remains pending; a self-review cannot satisfy it.
+  required independent review remains pending; self-review cannot satisfy it.
 - Existing authorization carries forward and still-valid verification can be reused under
   `CODING_STANDARDS.md`. Handoffs scale to the task.
 - PR triage uses the specified checklist directory or repository-local `tmp/`, retains progress
