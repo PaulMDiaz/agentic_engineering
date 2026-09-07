@@ -138,7 +138,9 @@ With the knowledge base loaded:
 - **Trust before use**: Treat missing source annotations or an overdue audit date as
   visible audit debt, not as permission to assume the claims are current.
 - **Don't parrot back**: The user wrote these files. Don't summarize them back unprompted.
-- **Trust the knowledge base**: If a decision is recorded, respect it unless the user explicitly wants to revisit.
+- **Trust the knowledge base**: Give source-verified factual corrections and explicit user
+  instructions priority. Preserve a decision's normative intent and rationale, and surface
+  code/decision conflicts rather than silently erasing a real decision.
 - **Pointer syntax**: Treat `path/to/file.py::Symbol` as the preferred reference for a
   stable class, function, method, public API, or cross-module contract. Treat
   repository-relative `path/to/file.py:L<line>` as the fallback for configuration, prose,

@@ -30,6 +30,21 @@ that choice. Run `scripts/install` without the flag when you want skills only.
 Agentic Engineering is a complete independent distribution. Do not install it concurrently
 with another playbook that manages the same shared guidance paths or skill names.
 
+## Implementation and review
+
+`AGENTS.local.md` defines model preferences and delegation based on useful progress or context
+savings. Use `implement` for agreed plans, material design decisions, coordinated behavior changes,
+or identified risks requiring staged execution. Clear, routine changes use direct execution.
+`CODING_STANDARDS.md` defines review requirements for both paths. `auto-review` supports self-review or a check
+by an existing agent who did not author the change; it does not itself launch a subagent.
+It checks scope, correctness, and acceptance for the orchestrator; `agent-review` provides full PR and branch reviews for human readers. Scope limits
+apply to every change: consider deletion and existing functionality before adding code, and leave optional
+improvements out. Routine process stays internal; report results and material exceptions. These
+are agent instructions, not installer-enforced controls.
+
+`CODING_STANDARDS.md` applies concise, durable writing to comments, repository docs, and
+second-brain entries. Passing verification can be reused while its relevant inputs remain current.
+
 ## Portable second-brain adoption
 
 `SECOND_BRAIN.md` begins at the versioned `portable-v5` marker and has no dependency on
@@ -53,6 +68,7 @@ symbols.
 | Skill | Description |
 | --- | --- |
 | agent-review | Review a branch or PR with validated, deduplicated findings |
+| auto-review | Bounded implementation review for an orchestrator |
 | audit-second-brain | Fully verify conventions and migrate portable second-brain policy |
 | check-ci | Determine and run local CI-equivalent checks |
 | diff-summary | Explain what a diff is trying to accomplish |

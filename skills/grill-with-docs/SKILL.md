@@ -34,7 +34,8 @@ instead of asking the user.
      specific naming, preserve that convention.
 3. Identify the plan under review:
    - If the user points to a file, read it.
-   - If the plan is only in chat, summarize the plan briefly and confirm the scope.
+   - If the plan is only in chat, summarize it briefly. Ask a scope question only when scope
+     remains unresolved; otherwise continue to the first unresolved decision.
    - If the plan spans multiple contexts, identify the contexts and their boundaries.
 
 ## Grilling Loop

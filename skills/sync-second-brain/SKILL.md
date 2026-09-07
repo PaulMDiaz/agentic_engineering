@@ -142,17 +142,24 @@ This is the safe-sync rule: copy additions and edits explicitly, then handle del
 
 ### 3. Commit and push on `second-brain`
 
-Move into the extra worktree, stage only `.second_brain/`, commit, and push:
+Move into the extra worktree, review the intended knowledge paths, stage only those reviewed
+paths, then commit and push. When `.second_brain/` is ignored, the dedicated branch inherits
+that rule, so force-add only the exact reviewed paths:
 
 ```bash
 cd ~/Documents/Development/example-repo-second-brain
-git add .second_brain
+git add -f -- .second_brain/<reviewed-path-1> .second_brain/<reviewed-path-2>
 git commit -m "docs(second-brain): 📝 sync .second_brain"
 git push -u origin second-brain
 ```
 
+Replace the placeholders with every reviewed intended path. Do not remove ignore rules on
+product branches or use a directory-wide force-add that could stage unrelated secrets or
+artifacts.
+
 What this does:
-- `git add .second_brain` limits the commit to second-brain files.
+- `git add -f --` stages only the reviewed paths listed for this dedicated branch, even when
+  the product repository ignores `.second_brain/`.
 - `git commit` records the sync on the dedicated branch.
 - `git push -u origin second-brain` publishes the branch and sets upstream tracking if this is the first push.
 

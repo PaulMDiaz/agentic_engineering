@@ -1,18 +1,22 @@
 ---
 name: pr-review-triage
-description: "Triage GitHub PR comments into a /tmp working checklist and stop before implementation. Use when asked to inspect, categorize, or prepare a tracker for PR review feedback."
-argument-hint: "[PR number or URL, optional docs/category standard]"
+description: "Triage GitHub PR comments into a Markdown working checklist before any authorized follow-up. Use when asked to inspect, categorize, or prepare a tracker for PR review feedback."
+argument-hint: "[PR number or URL, optional checklist directory, optional docs/category standard]"
 ---
 
 # pr-review-triage
 
 Use this skill to turn PR review feedback into a tracked checklist.
 
-This is a triage-only skill. Always stop after creating the initial checklist and delivering the triage summary. Do not implement fixes, update code, mark checklist items complete, open follow-up issues, or post GitHub replies as part of this skill.
+This skill owns the triage phase. Create the initial checklist and deliver its summary before
+any follow-up implementation or replies. A triage-only request ends here. For a broader request,
+return control to the orchestrator to continue the already-authorized work through the
+appropriate workflow, such as `implement`; completing triage does not require another approval.
 
 ## Core Rules
 
-- Create or update a Markdown checklist in `/tmp` or `/private/tmp`.
+- Create or update a Markdown checklist in the user-specified directory, defaulting to `tmp/`
+  under the reviewed repository root. Carry forward a directory already specified for this checklist.
 - Do not make code changes while using this skill.
 - Do not mark rows addressed unless the current branch already addresses them before triage begins.
 - Keep reviewer-response drafts in the checklist, but do not post them.
@@ -28,9 +32,13 @@ Parse the user request for:
 
 - PR number or URL.
 - Repository, if not implied by the current working directory.
+- Checklist directory, if specified. Resolve relative directories from the reviewed repository root.
 - Any architecture docs, product context, or category definitions the user wants used as the standard for judging comments.
 
-If the user asks for end-to-end handling, fixes, or posting reviewer responses, still complete only the triage/checklist phase under this skill and then stop. Follow-on implementation or response application should be a separate user-confirmed task.
+Carry forward authorization for follow-up work from the current request or earlier session
+instructions. Ask only about unresolved decisions or actions that still require permission.
+A request to fix comments does not by itself authorize posting replies; posting requires
+explicit authorization, which need not be repeated if already given.
 
 ## Step 1: Collect PR Feedback
 
@@ -86,11 +94,18 @@ Judge comments against the repo's stated contracts and docs. When a comment conf
 
 ## Step 3: Create The Checklist
 
-Create a Markdown checklist in `/tmp` or `/private/tmp` with a descriptive name, for example:
+Create the chosen directory if needed and use a stable, descriptive checklist name, for example:
 
 ```text
-/private/tmp/<repo>-pr<PR>-review-comment-checklist.md
+<repository-root>/tmp/<repo>-pr<PR>-review-comment-checklist.md
 ```
+
+Reuse an existing checklist for the same repository and PR, preserving recorded progress while
+reconciling new feedback. Leave existing response drafts unchanged unless new feedback, verified
+code changes, or an explicit user request requires a correction. Do not rewrite them just to
+improve phrasing. Leave the checklist in place after triage and follow-up work so it can be
+revisited across sessions. Keep the checklist uncommitted; do not change tracked
+ignore rules just to store it. Report its resolved path in the handoff.
 
 Use this table shape:
 
@@ -112,9 +127,9 @@ Include an executive tracking section with counts by category and whether any bl
 
 After creating the initial checklist:
 
-- Stop.
 - Present the summary and checklist path.
-- Do not implement fixes or post responses.
+- End the triage phase. Continue through the appropriate workflow only for already-authorized
+  follow-up work; otherwise the checklist is the final deliverable.
 
 ## Checklist Completion Criteria
 
@@ -126,11 +141,13 @@ This skill is complete when:
 - The executive summary includes total comments reviewed, counts by category, and whether any blocking/deal-breaker items exist.
 - The final response gives the checklist path and calls out the most important open decisions or blockers.
 
-Do not continue into remediation. The initial checklist is the deliverable.
+The initial checklist completes this skill. It does not complete a broader request that also
+authorizes remediation or replies.
 
 ## Reference: Later Checklist Work
 
-Use this guidance only in a later follow-on task after the user explicitly asks to work items from the checklist.
+Use this guidance during follow-up implementation when working the checklist is authorized
+in the current request or a later one.
 
 Recommended processing order:
 
@@ -151,14 +168,16 @@ When working items later:
 
 ## Reference: Later Reviewer Responses
 
-Use this guidance only in a later follow-on task after the checklist items have been worked and the user explicitly asks to apply responses.
+Use this guidance after the checklist items have been worked and posting responses has been
+explicitly authorized in the current request or a later one.
 
 Before applying reviewer responses later:
 
 - Confirm the checklist has no `[ ]` or `[~]` rows.
 - Confirm all bot rows have blank response cells unless the user requested bot replies.
 - Confirm all `No response required` rows will be skipped.
-- Run the relevant lint, type, test, docs, or CI-equivalent checks.
+- Confirm relevant validation is current, following the verification reuse rule in
+  `CODING_STANDARDS.md`; rerun checks only when justified or explicitly required.
 - Check the worktree and avoid committing unrelated changes.
 
 When applying responses later:

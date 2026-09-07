@@ -31,6 +31,11 @@ mandatory startup context for all tasks.
 ## Rules
 
 - Use skills when appropriate.
+- For delegation, review gates, model choices, and subagent naming, follow the Personal workflow
+  section of `AGENTS.local.md`. Its installer placeholders do not replace this file's local paths.
+- Follow explicit user instructions over skill guidance within higher-priority constraints.
+  Preserve existing authorization and explain exact skill clauses only when they block or
+  materially divert the requested work.
 - Apply `unslop` to every agent-authored response and document. Preserve quotations, code
   blocks, commands, schemas, logs, and user-supplied copy unless the user asks to edit them.
 - Keep repo guidance and second-brain files up to date when workflow or conventions change.
@@ -41,6 +46,7 @@ mandatory startup context for all tasks.
 | Skill | When to use |
 | --- | --- |
 | agent-review | Reviewing a PR or branch |
+| auto-review | Bounded implementation review for an orchestrator |
 | audit-second-brain | Fully verifying or migrating second-brain conventions |
 | check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
 | diff-summary | Understanding what a diff does |

@@ -51,15 +51,15 @@ important context.>
 
 ### <Decision title>
 
-- **Decision:** <What was decided>
-- **Context:** <Why this came up>
-- **Alternatives:** <Real alternatives discussed or implied>
-- **Rationale:** <Why this option was chosen>
-- **Trade-off:** <What was gained and what was accepted>
-- **Reversal cost:** <Why changing this later would be meaningful>
+- **Decision:** <What participants explicitly decided, or Not stated>
+- **Context:** <Why this came up, if the transcript states it; otherwise Not stated>
+- **Alternatives:** <Alternatives explicitly discussed, or Not stated>
+- **Rationale:** <Reasons participants explicitly gave, or Not stated>
+- **Trade-off:** <Trade-offs participants explicitly accepted, or Not stated>
+- **Reversal cost:** <Reversal cost explicitly discussed, or Not stated>
 ```
 
-If a section has no transcript-backed content, keep the heading and write `None identified`.
+If a section has no transcript-backed content, keep the heading and write `None identified`. If an interpretation is useful but was not stated by participants, put it under a separately labelled `Inference` note and never present it as a decision, alternative, rationale, trade-off, or reversal cost.
 
 ## ADR Filter
 
@@ -68,17 +68,18 @@ Record an architectural design decision only when all three are true:
 - **Hard to reverse:** changing the decision later would have meaningful cost.
 - **Surprising without context:** a future reader would plausibly wonder why the team did
   it this way.
-- **Result of a real trade-off:** there were genuine alternatives and the team chose one
-  for specific reasons.
+- **Result of a real trade-off:** the transcript records genuine alternatives and the team
+  chose one for specific reasons.
 
-Skip decisions that are easy to reverse, obvious from the code or context, or not the
-result of a real alternative. Those may belong in the executive summary, not the ADR
+Skip decisions that are easy to reverse, obvious from the transcript, or not the result of
+an explicitly discussed alternative. Those may belong in the executive summary, not the ADR
 section.
 
 ## Quality Bar
 
 - Prefer crisp synthesis over chronological minutes.
 - Do not invent owners, deadlines, agreements, or decision rationale.
+- Keep participant statements and clearly labelled inferences separate; do not fill missing ADR fields with implied alternatives or rationale.
 - Keep action items concrete and executable.
 - Keep unresolved questions distinct from action items.
 - Quote sparingly only when exact wording matters.

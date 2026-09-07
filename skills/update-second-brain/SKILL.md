@@ -38,21 +38,16 @@ existing repository documentation.
 
 ### Step 1: Identify what changed
 
-Get the list of files modified this session:
+Use the caller-supplied task-owned paths or exact increment/commit range first. Otherwise
+combine known committed history with staged, unstaged, and new/untracked paths, excluding
+unrelated pre-existing work. `git diff --name-only main` and a guessed `HEAD~N` range are
+branch/history views, not proof of session scope. If the boundary remains uncertain, report
+that uncertainty and verify only known task paths; do not require a clean-start snapshot.
 
-```bash
-git diff --name-only main
-```
-
-Or if working on the same branch across sessions:
-```bash
-git diff --name-only HEAD~N  # where N = approximate commits this session
-```
-
-This scopes the verification — you only need to verify entries related to files you
-touched. Also read each relevant `CONVENTIONS.md` section's `Sources:` line. A changed
-path that matches a declared source makes that section part of the maintenance scope,
-even when the session did not set out to change documentation.
+This scopes the verification — you only need to verify entries related to files you touched.
+Also read each relevant `CONVENTIONS.md` section's `Sources:` line. A changed path that
+matches a declared source makes that section part of the maintenance scope, even when the
+session did not set out to change documentation.
 
 ### Step 2: Reflect on the session
 
@@ -127,7 +122,9 @@ touched."
 - Treat it as a repository-local context index, not a delivery-tracking system. Preserve
   the repository's established entry format. Link an applicable GitHub issue in the entry;
   do not create issues automatically.
-- No verification needed — deferred work is forward-looking
+- Verify factual claims about current code, status, ownership, or completion before writing.
+  Purely speculative future ideas need no source verification; keep observed facts separate
+  from proposed work.
 
 **Project-root files** (`AGENTS.md`, `CLAUDE.md`)
 - Only update if dev commands, stack references, or entry points changed
@@ -140,6 +137,13 @@ and keep them concise when authoritative paths change. Before writing, ensure th
 knowledge-base edit contains no nonportable paths or external shared-instruction content.
 Follow such guidance during the task, but report that it must be made repository-owned
 before it can become durable knowledge.
+
+Apply the applicable coding standards' Comments and Durable Prose rules to every added or changed
+entry. Write the fact or rule, source, and necessary rationale in plain English for a reader
+without session context. Remove labels such as `WP1`, references to temporary design/development
+artifacts, agent attribution, progress or review narratives, and repeated explanation. Update an existing entry or link to detailed docs instead
+of appending an essay. Preserve evidence and consequential trade-offs; length alone is not a
+reason to delete useful knowledge.
 
 If the user asked you to commit the second-brain updates, stage the `.second_brain/` files and
 commit directly:
