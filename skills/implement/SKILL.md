@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Methodical task implementation — understand, plan, implement, verify. Use when given a non-trivial coding task so the work is scoped clearly, implemented deliberately, and verified before handoff.
+description: Execute a user-supplied or approved implementation plan, or coordinate changes requiring a material design decision, multiple behavior boundaries, or risk-driven staging. Use when explicitly requested; routine edits with a clear approach use direct execution and focused verification.
 ---
 
 # Implement Skill
@@ -9,23 +9,23 @@ Approach non-trivial coding tasks methodically. Think before coding, keep scope 
 
 ## When to Use
 
-Use this skill when the user asks for:
-- a non-trivial coding change
-- a multi-file implementation
-- a task that needs planning before edits
-- a change that should be verified before handoff
+Use this skill when:
+- executing an established implementation plan supplied or approved by the user
+- a material design decision or coordination across behavior boundaries is needed
+- execution must be staged to manage an identified risk
+- the user explicitly requests it
 
-Do not use this skill for:
-- tiny one-line fixes
-- pure documentation edits
-- simple code reading / inspection tasks
+Work directly when the change has a clear approach and can be completed with focused verification.
+File count, task duration, and the need for tests do not by themselves justify this skill.
+An agent-created routine to-do list is not an established implementation plan. Direct work still
+follows the coding standards' scope, verification, and independent-review requirements.
 
 ## Process
 
 When this skill is assigned to a bounded worker, plan within the supplied assignment as needed
 and follow its paths, criteria, constraints, and validation. Do not expand the scope or delegate
-further work. Return the assigned result without arranging another review or obtaining final
-acceptance. The orchestrator retains resolution and acceptance.
+further work. Perform self-review when assigned and return the result without launching a reviewer or obtaining
+final acceptance. The orchestrator retains resolution and acceptance.
 
 ### 1. Load relevant repo context
 - Read `CODING_STANDARDS.md`
@@ -38,12 +38,11 @@ acceptance. The orchestrator retains resolution and acceptance.
   `load-second-brain` only to load missing relevant context.
 
 ### 2. Define the task precisely
-Before editing, make the task concrete:
-- what is changing
-- what is not changing
-- constraints
-- acceptance criteria
-- assumptions or unknowns that could affect implementation
+Derive acceptance criteria from the user's request and established affected contracts. Do not
+add speculative robustness, flexibility, or future use cases as requirements. Establish the
+necessary verification before editing.
+Apply the coding standards' scope and deletion-first rules whether working directly or delegating.
+Keep routine reasoning internal; explain material uncertainty or a proposed scope change.
 
 Treat acceptance criteria as exhaustive for the requested behavior while preserving established
 affected contracts unless the task explicitly changes them. Establish compatibility obligations
@@ -54,7 +53,11 @@ user about scope, material unknowns, or required model choices when those block 
 preserve separate permission or approval requirements.
 
 ### 3. Plan proportionally
-Scale planning to the task; a short inline plan is usually enough.
+When executing a supplied or approved plan, follow its agreed scope and sequence. Do not create
+a replacement plan or repeat settled decisions. Surface contradictions or new blockers instead.
+
+Plan only enough to guide the work. Share a short plan when coordination or a material choice
+benefits the user; do not produce a plan artifact merely to demonstrate compliance.
 
 The orchestrator owns the plan, acceptance criteria, resolution of findings, and final
 acceptance. Before assigning work, check for existing reusable functionality and identify the
@@ -73,6 +76,8 @@ obtain its exact state before taking over or reassigning; prevent overlapping mu
 repeated status requests and unchanged checks. Use milestone reports or event-based waits.
 
 For consequential changes, verify prerequisites and a recovery approach appropriate to the risk.
+Use existing recovery mechanisms where sufficient; this assessment does not authorize building
+additional infrastructure.
 
 ### 4. Implement incrementally
 - Follow existing repo patterns before introducing new ones
@@ -94,9 +99,10 @@ what existing tests would miss. Test size is a prompt to inspect scope and setup
 that the implementation is overbuilt.
 
 When a changed file crosses about 500 lines, or an increment reaches about 1,000 added lines
-across files, pause for a scope checkpoint, consider if you are overbuilding and if the diff could be smaller, more elegant, and more easily reviewed by a human. Report production and test additions separately and
-inspect necessity, reuse, contracts, and acceptance coverage. These thresholds are scope alarms,
-not automatic rejection or splitting requirements. Do not game them with file splits.
+across files, pause to reassess scope. Ask what can be removed while preserving required behavior
+and established contracts. Report production and test additions separately at this checkpoint.
+These are backstops, not targets or permission to overbuild below them. Keep one coherent change
+reviewable; do not hide growth with file splits or offsetting unrelated deletions.
 
 ### 5. Verify
 - Run the repo-defined checks that match the change, following the verification reuse rule in
@@ -105,24 +111,24 @@ not automatic rejection or splitting requirements. Do not game them with file sp
 - If full verification is not practical, run the closest honest subset and say what was and was not verified
 - Confirm the implementation matches the stated acceptance criteria
 
-Require independent review for consequential changes: production services, security boundaries,
-persisted-data migrations, broad behavior changes, and workflow rules governing these safeguards.
-Honor stricter user or repository requirements. Small, reversible edits may finish with focused
-validation; substantive work does not automatically require a separate reviewer for every step.
+Follow the review requirements in `CODING_STANDARDS.md`, including reviewer eligibility and
+when focused validation or self-review is sufficient.
 
-When review is required, use one fresh reviewer who did not implement the change. Review early
-when findings could prevent costly or irreversible mistakes. Invoke `agent-review`'s checkpoint
-mode with the changes, acceptance criteria, relevant contracts, and validation results. Keep the
-handoff compact and reuse passing checks. Review later fixes only where they affect behavior or
-evidence. Select the reviewer for the task, respecting session model choices.
+`auto-review` is a skill, not a request to spawn an agent. Give the chosen reviewer the diff,
+acceptance criteria, relevant contracts, and validation results. Keep handoffs compact and reuse
+passing checks. Review early when findings could prevent costly or irreversible mistakes;
+review later fixes only where they affect behavior or evidence. Follow session model and effort
+authorization before any new reviewer launch.
 
 The reviewer checks scope, correctness, and acceptance coverage. Resolve material findings before
 accepting the change; passing tests alone does not establish that added scope is necessary.
+Apply the same scope limits to review fixes. A reviewer suggestion does not authorize expanding
+the task: verify that it addresses a demonstrated defect, unnecessary scope, or required contract.
 If two attempts fail to resolve the same finding, reconsider the approach instead of repeating it.
 
 If required review is unavailable or incomplete, report the exact changes, validation results,
-and outstanding review. Label the result awaiting review, not accepted; self-review cannot
-satisfy this gate.
+and outstanding review. Label the result awaiting review, not accepted. Self-review cannot replace a required
+independent check.
 
 ### 6. Close out
 Before handoff:
@@ -135,15 +141,8 @@ Before handoff:
 - accept the result only after the requested behavior, focused validation, and any required
   independent review are complete; otherwise state what remains
 
-## Handoff Format
+## Handoff
 
-Report the outcome, supporting evidence, and material limits or follow-ups in concise prose. Use
-a structured format when it is useful or required by the task, caller, or repository.
-
-## Checklist
-- [ ] Relevant repo context loaded
-- [ ] Scope defined clearly
-- [ ] Plan matched task size
-- [ ] Change implemented with minimal scope
-- [ ] Verification run honestly
-- [ ] Docs / source-aware second-brain maintenance completed if needed
+Report the result and relevant verification briefly. Explain failed checks, unresolved choices,
+material risks, or pending review when present. Do not narrate routine planning, delegation,
+scope checks, or acceptance steps. Honor explicit requests for more detail.

@@ -46,6 +46,7 @@ mandatory startup context for all tasks.
 | Skill | When to use |
 | --- | --- |
 | agent-review | Reviewing a PR or branch |
+| auto-review | Bounded implementation review for an orchestrator |
 | audit-second-brain | Fully verifying or migrating second-brain conventions |
 | check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
 | diff-summary | Understanding what a diff does |

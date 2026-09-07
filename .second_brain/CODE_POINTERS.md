@@ -18,7 +18,8 @@
 | --- | --- |
 | Delegation, model defaults, and visible launch settings | `AGENTS.local.md` |
 | Increment planning and acceptance gates | `skills/implement/SKILL.md` |
-| Independent checkpoint and full PR review | `skills/agent-review/SKILL.md` |
+| Human-facing PR review and evidence gates | `skills/agent-review/SKILL.md` |
+| Bounded implementation review for orchestrators | `skills/auto-review/SKILL.md` |
 | Reusable review-feedback checklists | `skills/pr-review-triage/SKILL.md` |
 
 ## Second-brain workflows

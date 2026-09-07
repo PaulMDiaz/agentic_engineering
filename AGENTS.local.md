@@ -8,7 +8,6 @@ doing any work. Treat it as mandatory startup context for all tasks.
 ## Rules
 
 - Follow repository-local `AGENTS.md` files in addition to these shared rules.
-- Use skills when appropriate.
 - Follow explicit user instructions over skill guidance within higher-priority system and tool
   constraints. If a skill blocks authorized work, requires extra approval, or causes a material
   departure from requested work, name and link its exact `SKILL.md` and quote the relevant
@@ -22,35 +21,35 @@ doing any work. Treat it as mandatory startup context for all tasks.
 
 ## Personal workflow
 
-- Route substantive implementation through `implement` automatically. Choose direct execution
-  or delegation according to the task. Delegate when a bounded assignment provides useful
-  independent progress or saves enough parent context to justify the handoff. Keep tightly
+- Use `implement` for user-supplied or approved plans, material design decisions, coordination
+  across behavior boundaries, identified risks needing staged execution, or explicit requests.
+  Work directly for clear, routine changes.
+- Delegate when a bounded assignment provides useful independent progress or saves enough parent
+  context to justify the handoff. Keep tightly
   coupled operational work with one executor; sequential work alone is not a reason to delegate.
 - Keep delegated reports concise: conclusions, evidence pointers, uncertainties, and validation
   results. Reuse verified findings instead of repeating the worker's investigation. Delegation
   reduces parent context, not necessarily total token use.
-- Prefer GPT-5.6 Luna with Medium reasoning for bounded implementation and investigation.
-  Increase effort when uncertainty or failed attempts justify it. Respect session model choices;
-  if the preferred model is unavailable, disclose a suitable fallback within existing
-  authorization. Ask only when a user constraint prevents it. Select reviewers for the task.
+- Prefer GPT-5.6 Luna with Max reasoning for delegated implementation and investigation.
+  Respect session model choices. If unavailable, pause delegation and ask the user to choose
+  a supported alternative: a suitable smaller model, lower effort, or direct execution without
+  subagents. Recommend based on available evidence; do not silently substitute. Reuse an
+  already-authorized fallback and continue independent authorized work while awaiting a choice.
+- For a new reviewer launch, use an already-authorized model and effort or ask before launching.
+  Reuse an eligible existing agent under `CODING_STANDARDS.md` rather than launching by default.
 - Include the task, model, and effort in subagent names where supported, or disclose them before
   launch. Distinguish requested settings from runtime-confirmed settings; mark unavailable
   metadata `unknown`. Report changes when continuing an agent. These labels do not measure cost.
 - Keep reusable skills model- and harness-neutral.
-- Follow `implement`'s risk-based review gate and honor stricter user or repository requirements.
-  Bounded workers return their assigned results without arranging review or final acceptance.
-
-## Project-local second brain
-
-Repository-local second-brain guidance is self-contained so agents continue to maintain
-durable knowledge when Agentic Engineering is unavailable. Keep this shared guidance as a
-pointer rather than duplicating its loading and maintenance rules.
+- Follow the coding standards' review requirements for both direct and planned work.
+  Bounded workers may self-review when assigned, but do not launch reviewers or own final acceptance.
 
 ## Skills
 
 | Skill | When to use |
 | --- | --- |
 | agent-review | Reviewing a PR or branch |
+| auto-review | Bounded implementation review for an orchestrator |
 | audit-second-brain | Fully verifying or migrating second-brain conventions when trust is due |
 | check-ci | Verifying local CI-equivalent checks for changed files or the full repo |
 | diff-summary | Understanding what a diff does |
@@ -66,24 +65,9 @@ pointer rather than duplicating its loading and maintenance rules.
 | unslop | Removing AI tells from every agent-authored response and document |
 | update-second-brain | Recording important repository changes and decisions after work |
 
-## Quick reference
-
-```bash
-# Commit explicit files
-git add file1 file2
-git commit -m "feat(scope): ✨ description"
-```
-
 ## Shared source
 
 - `{{AGENTIC_ENGINEERING_ROOT}}/CODING_STANDARDS.md` — engineering and workflow rules
 - `{{AGENTIC_ENGINEERING_ROOT}}/skills/` — reusable agent skills
 - `{{AGENTIC_ENGINEERING_ROOT}}/docs/` — setup and operational guidance
 - `{{AGENTIC_ENGINEERING_ROOT}}/tools.md` — workstation tool reference
-
-## Session end
-
-Before ending meaningful work:
-
-- leave instructions and docs consistent with the implementation
-- do not leave stale workflow guidance behind

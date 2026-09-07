@@ -37,19 +37,29 @@ Sources: `skills/*/SKILL.md`, `README.md`, `AGENTS.md`, `AGENTS.local.md`, `scri
   quotations, code, commands, schemas, logs, and user-supplied copy.
 
 ## Implementation and review
-Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implement/SKILL.md`, `skills/agent-review/SKILL.md`, `skills/pr-review-triage/SKILL.md`
+Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implement/SKILL.md`, `skills/agent-review/SKILL.md`, `skills/auto-review/SKILL.md`, `skills/pr-review-triage/SKILL.md`
 
 - Shared guidance defines delegation and model preferences and exposes selected model and effort
   in subagent names where supported. Inherited or unknown settings remain explicit.
 - Delegation depends on independent progress or context savings that justify handoff costs;
   tightly coupled operational work can stay with one executor. Bounded workers do not recurse.
-- `implement` requires independent review for consequential changes, permits focused validation
-  for small reversible edits unless stricter rules apply, and normally uses one review per
-  coherent change. It owns risk-appropriate preparation, finding resolution, and acceptance.
-- Checkpoint review is self-contained: assess the smallest sufficient implementation, established
+- `implement` applies to user-supplied or approved plans, material design decisions, coordination
+  across behavior boundaries, identified risks needing staging, or explicit requests. Routine
+  direct work follows the same scope and verification rules.
+- `CODING_STANDARDS.md` defines independent-review triggers by changes to authorization, credentials,
+  trust boundaries, stored-data formats, destructive writes, shared-interface behavior for
+  identified callers, and the safeguard rules. Ordinary work permits self-review or focused
+  validation as specified there. Reuse an existing non-author when independence is required;
+  do not require both kinds of review. Preparation and reviewer requests do not expand scope.
+- Scope limits apply regardless of review requirements. Consider deletion and suitable existing
+  functionality before adding code; routine reasoning does not require a narrated artifact.
+  Coding standards preserve precise types and existing model conventions without authorizing
+  duplicate representations or unrelated design changes.
+- `auto-review` is self-contained for orchestrators; `agent-review` serves human PR and branch
+  reviews. Implementation review checks the smallest sufficient implementation, established
   contracts, correctness, and verification. Demonstrated scope excess blocks acceptance;
   hypothetical reuse and existing behavior alone do not justify abstractions or compatibility code.
-- Reviewers return concise evidence and gaps without a full PR ledger or raw logs. A missing
+- Implementation reviewers return concise evidence and gaps without a full PR ledger or raw logs. A missing
   required independent review remains pending; self-review cannot satisfy it.
 - Existing authorization carries forward and still-valid verification can be reused under
   `CODING_STANDARDS.md`. Handoffs scale to the task.
