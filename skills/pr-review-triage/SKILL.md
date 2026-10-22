@@ -178,12 +178,24 @@ Before applying reviewer responses later:
 - Confirm all `No response required` rows will be skipped.
 - Confirm relevant validation is current, following the verification reuse rule in
   `CODING_STANDARDS.md`; rerun checks only when justified or explicitly required.
+- Verify every commit attribution against the actual diff, for example with
+  `git show <commit> -- <path>`. A commit title or current branch contents are insufficient.
+- Map each claimed change to its introducing commit and relevant file or symbol. Cite
+  separate commits for changes introduced separately, even when one reply covers them all.
+- Distinguish "introduced in this commit" from "verified at this revision." A revision
+  containing a change does not establish that the revision introduced it.
+- Treat checklist responses as prepared text, not independent evidence. Correct stale or
+  unsupported claims before posting or editing replies. If attribution cannot be verified,
+  omit that attribution or state the uncertainty instead of presenting it as established.
+- Preserve review history in outcome summaries. Report initial findings, fixes, verification,
+  and unresolved findings accurately. "One finding, fixed and independently verified" is
+  different from "no findings"; claim independent verification only when it occurred.
 - Check the worktree and avoid committing unrelated changes.
 
 When applying responses later:
 
 - Reply to human review threads/comments only.
-- Use the checklist's reviewer-response text as the source of truth.
+- Use the corrected, evidence-verified checklist response text.
 - Keep replies concise and tied to actual changes.
 - Include the GitHub issue link for issue-worthy deferred work. If the repository uses
   `DEFERRED.md`, keep the entry in its established format and reference the same issue there.
@@ -196,6 +208,22 @@ For many thread replies, batch GraphQL mutations conservatively to avoid GitHub 
 - Count replies authored by the current GitHub user.
 - Compare intended reply targets with actual `in_reply_to_id` values or thread replies.
 - Delete accidental duplicate replies if they occur.
+
+For post-reply consistency audits, compare the checklist and published replies with the
+actual commit diffs and relevant validation evidence. Check claimed behavior, test counts,
+commit/file or symbol references, review outcomes, and reply targets. Correct stale drafts
+and, when editing replies is authorized, published claims. Correct current code alone does
+not validate a cited commit.
+
+### Attribution examples
+
+- Commit A changes `measure()` in `metrics.py`; commit B updates the final-state description
+  in `docs/results.md`. Inspect both diffs and cite the measurement change under A and the
+  documentation change under B. Do not group both changes under either commit.
+- Current `measure()` is correct, but the cited commit only changes `README.md`. That
+  attribution fails verification. Find and inspect the introducing diff before citing it,
+  or report only what was verified at the current revision without claiming it introduced
+  the fix.
 
 ## Handoff
 

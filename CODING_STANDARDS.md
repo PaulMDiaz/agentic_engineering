@@ -54,6 +54,21 @@ Rules:
 - Add only what the requested outcome or an established affected contract requires. Leave optional improvements out. If completing the request requires expanding its scope, explain the dependency and resolve it with the user before proceeding. Routine implementation choices within the request do not require approval.
 - Before adding code, check whether removing unnecessary behavior solves the problem, then look for suitable existing repository code, standard-library, platform, or installed-dependency functionality. Keep this search focused on the affected behavior. Use the smallest clear implementation that meets the contract; never weaken correctness, security, or required verification to reduce line count.
 
+## Delegation context
+
+Before launching a subagent, choose the context its bounded assignment needs. Prefer a
+self-contained handoff with no conversation history when it preserves the necessary
+requirements, decisions, evidence, and repository instructions. Use selected or full history
+when the assignment depends on prior context that would be costly or unreliable to reconstruct.
+Keep the work with the current executor when neither option justifies the handoff.
+
+Check the available tool contract before launching: context inheritance, model selection, and
+reasoning effort may be coupled. If history inheritance fixes the model or effort, do not request
+an unsupported override. Use a self-contained handoff or selected history with the authorized
+settings only when sufficient context can be preserved. Otherwise continue directly or use an
+already-authorized alternative; follow existing model-choice requirements before changing settings.
+Do not assume inherited context provides cache or token-cost savings.
+
 ## Code Quality
 
 Satisfy these standards with the smallest clear change. They do not authorize unrelated
@@ -67,8 +82,7 @@ modernization, parallel representations, or speculative abstractions.
 - Keep proposed changes focused on the current task. Report optional local refactors instead of including them.
 - In tests, do not define `async def` helpers that contain no asynchronous operation. Use `AsyncMock`, a real awaited operation, or a synchronous helper wrapped by the code under test.
 - In tests, do not compare floating-point values with exact equality. Use an appropriate tolerance or the test framework's approximate-comparison helper (for example, `pytest.approx`).
-- Prefer tests that validate observable behavior, public interfaces, and outcomes over tests tightly coupled to implementation details.
-- Be suspicious of AI-generated tests that mirror code structure, mock too much, or only prove the current implementation path.
+- Apply the Test quality rules below when writing, changing, or reviewing tests.
 - Use `pytest.mark.parametrize` when cases share setup and assertions and differ only by inputs or expected outcomes. Keep behaviorally distinct scenarios as separate tests.
 - Add the smallest existing-framework test that proves the requested behavior or regression; do not test speculative adjacent cases.
 - Do not add tests for docs-only, formatting-only, or mechanically safe changes unless there is real regression risk.
@@ -81,6 +95,74 @@ modernization, parallel representations, or speculative abstractions.
 - Before committing source, test, or build-configuration changes, run the repository's formatter **check** across the complete CI lint scope. Format only files changed by the task; report unrelated failures.
 - Before committing or handing off: run the most relevant validation for the change (lint/typecheck/tests/build). Run the full gate for broad, risky, or pre-merge work. If validation cannot run, say exactly why.
 - Reuse passing validation evidence only while the relevant code, configuration, and environment remain unchanged. Rerun checks affected by new changes, failures, unresolved concerns, or an explicit fresh-check request; always preserve required checks.
+
+## Test quality
+
+Before adding or changing a test, identify the behavior it protects, a plausible defect it
+would catch, and the gap in existing coverage. Missing answers block keeping the test.
+Test through the boundary that owns the behavior; another layer needs a distinct failure
+mode. Extend an existing case or fixture where it covers the requirement without duplication.
+If a test needs a production export, switch, wrapper, or injection hook with no production
+purpose, move the test to the real boundary instead of adding that access path.
+
+For a bug regression, run the test against the pre-fix behavior and confirm it fails for the
+intended reason, then confirm it passes with the fix. An unrelated setup failure does not
+count. If either run is blocked, report verification as incomplete and identify the blocker;
+do not present a passing post-fix run alone as proof of the regression.
+
+Check for these low-value patterns while authoring and reviewing:
+
+- Execution with no meaningful check of the result, including assertions that always pass.
+- Comparing a value to itself or merely checking that a copied value stayed identical.
+- Duplicating fixture contents, manifests, inventories, or export lists as expected values.
+- Grepping source, imports, or exact strings without an independent requirement for that structure.
+- Testing private predicates or internal call arguments already exercised by behavior tests.
+- Repeated cases that detect the same failure already covered elsewhere.
+- Replaying a shared helper's tests inside each provider without a provider-specific risk.
+- Tests maintained only to exercise test-only exports, globals, or wrappers.
+- Production paths kept alive solely by test callers, with no required production behavior.
+- Computing expected output with the helper or renderer being tested.
+- Mocks performing the operation whose correctness is asserted, or one mock erasing meaningful
+  differences between separate APIs.
+- Fixtures prearranging receipts, admission decisions, or callback order the production owner
+  must generate; checking persistence in a store the exercised path never writes.
+- Checking a capability flag's declared value without exercising the behavior it promises.
+- Negative cases passing because a different guard rejects the input or the intended path is
+  unreachable.
+- Test names and fixtures claiming a scenario that the inputs and assertions do not exercise.
+
+For example, stubbing a save operation to return success and checking that return value
+does not verify persistence. Read through the owning operation and check the resulting state.
+A denied-request test must reach the intended permission check; malformed input rejected
+earlier proves a different behavior.
+
+For new or changed tests, a matching pattern fails the authoring gate unless the test
+independently protects a named contract. Rewrite or omit it before acceptance. Assertions
+that fail under a behavior-preserving refactor need that same contract justification.
+For existing tests under audit, a match requires evidence before removal.
+
+Retain independent protection for APIs, SDKs, protocols, configuration, migrations, storage,
+security, platforms, defaults, exact prompt content, generated cross-language output,
+packaging, releases, and architecture. Preserve credible regressions and observable ordering.
+Source inspection can be the cheapest independent guard when it detects a contract change
+while surviving identifier-only renaming. Name that contract and the failure it detects;
+calling a test "structural" or "compatibility" does not by itself justify retention.
+Test length, runtime, and mock count are not deletion criteria. Existing dependency injection
+and test helpers are not defects merely because tests use them.
+
+Rewrite a weak test when its intended behavior needs coverage. Remove or consolidate a test
+only when inspection establishes that it adds no distinct protection. Before recommending
+removal, read the complete test, its production owner, entry points, callers, callees, sibling
+implementations, overlapping tests, CI selection, and relevant history. Inspect dependency
+source or types when the claim relies on dependency behavior. Identify the remaining test
+that catches the same failure, or explain why the asserted behavior needs no protection.
+Check production callers before proposing removal of supporting code. Missing evidence
+blocks deletion; retain the candidate and state what remains unverified.
+
+Reviews must name the test and location, explain what it actually proves, and recommend
+removal, consolidation, or a specific rewrite with evidence. Scope these checks to changed
+tests and coverage affected by production changes. Keep unrelated cleanup as a follow-up;
+broader audits require their own scope. Read-only review does not authorize edits.
 
 ## Review
 

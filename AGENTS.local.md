@@ -18,6 +18,9 @@ doing any work. Treat it as mandatory startup context for all tasks.
 - When a repository-local `AGENTS.md` contains `Second Brain — Primary Repository Guidance`,
   follow that section for repository context and durable-knowledge maintenance. If the
   repository has `SECOND_BRAIN.md` without that section, follow its root policy directly.
+- For source-path test, lint, and type-check commands, use
+  `env PYTHONPATH=src uv run --no-sync <tool>` instead of a leading
+  `PYTHONPATH=src` assignment.
 
 ## Personal workflow
 
@@ -30,7 +33,7 @@ doing any work. Treat it as mandatory startup context for all tasks.
 - Keep delegated reports concise: conclusions, evidence pointers, uncertainties, and validation
   results. Reuse verified findings instead of repeating the worker's investigation. Delegation
   reduces parent context, not necessarily total token use.
-- Prefer GPT-5.6 Luna with Max reasoning for delegated implementation and investigation.
+- Prefer GPT-6 Luna with Max reasoning for delegated implementation and investigation.
   Respect session model choices. If unavailable, pause delegation and ask the user to choose
   a supported alternative: a suitable smaller model, lower effort, or direct execution without
   subagents. Recommend based on available evidence; do not silently substitute. Reuse an
@@ -38,8 +41,10 @@ doing any work. Treat it as mandatory startup context for all tasks.
 - For a new reviewer launch, use an already-authorized model and effort or ask before launching.
   Reuse an eligible existing agent under `CODING_STANDARDS.md` rather than launching by default.
 - Include the task, model, and effort in subagent names where supported, or disclose them before
-  launch. Distinguish requested settings from runtime-confirmed settings; mark unavailable
-  metadata `unknown`. Report changes when continuing an agent. These labels do not measure cost.
+  launch. Also disclose the chosen context: self-contained handoff, selected history, or full
+  history. Follow `CODING_STANDARDS.md` for context choice and tool compatibility. Distinguish
+  requested settings from runtime-confirmed settings; mark unavailable metadata `unknown`.
+  Report changes when continuing an agent. These labels do not measure cost.
 - Keep reusable skills model- and harness-neutral.
 - Follow the coding standards' review requirements for both direct and planned work.
   Bounded workers may self-review when assigned, but do not launch reviewers or own final acceptance.
@@ -62,8 +67,10 @@ doing any work. Treat it as mandatory startup context for all tasks.
 | security-check | Reviewing security-sensitive changes or posture |
 | summarize-transcript | Turning meeting transcripts into concise summaries and action items |
 | sync-second-brain | Syncing `.second_brain/` through a dedicated `second-brain` worktree |
+| test-audit | Authoring tests, auditing or remediating affected tests, and explicit subsystem campaigns |
 | unslop | Removing AI tells from every agent-authored response and document |
 | update-second-brain | Recording important repository changes and decisions after work |
+| work-items-analysis | Investigating Jira, GitHub, and local git work items over a date range |
 
 ## Shared source
 

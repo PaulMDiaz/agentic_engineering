@@ -20,7 +20,16 @@
 | Increment planning and acceptance gates | `skills/implement/SKILL.md` |
 | Human-facing PR review and evidence gates | `skills/agent-review/SKILL.md` |
 | Bounded implementation review for orchestrators | `skills/auto-review/SKILL.md` |
+| Test authoring and audit workflow | `skills/test-audit/SKILL.md` |
+| Subsystem test-audit campaigns | `skills/test-audit/CAMPAIGN.md` |
+| Subagent context choice and tool compatibility | `CODING_STANDARDS.md:L57` |
 | Reusable review-feedback checklists | `skills/pr-review-triage/SKILL.md` |
+
+## Reporting workflows
+
+| What | Where |
+| --- | --- |
+| Jira, GitHub, and local git work-item reports | `skills/work-items-analysis/SKILL.md` |
 
 ## Second-brain workflows
 

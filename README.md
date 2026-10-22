@@ -45,6 +45,27 @@ are agent instructions, not installer-enforced controls.
 `CODING_STANDARDS.md` applies concise, durable writing to comments, repository docs, and
 second-brain entries. Passing verification can be reused while its relevant inputs remain current.
 
+Before delegating, choose a self-contained handoff, selected history, or full history under
+the coding standards' Delegation context rules. Check that the tool supports that context with
+the authorized model and effort; inherited history does not establish cache or token-cost savings.
+
+The [Test quality rules](CODING_STANDARDS.md#test-quality) apply during test authoring and
+both review workflows. New or changed tests matching a junk pattern require a named independent
+contract or must be rewritten or omitted. Regression proof requires failure before the fix
+and success afterward; blocked proof remains incomplete. Removal requires complete candidate
+evidence, and distinct contracts stay covered.
+Installed `test-audit` skills can resolve the checklist from their Agentic Engineering source through the
+mirror's source marker or the resolved skill path, even without shared agent guidance.
+If the source is unavailable, the quality assessment remains incomplete.
+[`test-audit`](skills/test-audit/SKILL.md) supplies three modes. `implement` uses authoring
+mode when writing tests; both review skills use bounded, read-only audit mode within their
+existing findings. Direct authoring can use the same mode without invoking `implement`.
+Request an audit to assess a module, or remediation to apply evidence-backed cleanup.
+An explicitly requested subsystem-wide campaign records baseline results and per-test decisions,
+then plans which suites preserve each contract before editing. Remediation requires independent
+preservation review, mutation proof for coverage restored after review, and final subsystem checks.
+Campaigns do not start automatically during implementation or review.
+
 ## Portable second-brain adoption
 
 `SECOND_BRAIN.md` begins at the versioned `portable-v5` marker and has no dependency on
@@ -81,8 +102,10 @@ symbols.
 | security-check | Perform an evidence-based security review |
 | summarize-transcript | Summarize meeting transcripts, actions, and durable decisions |
 | sync-second-brain | Sync `.second_brain/` through a dedicated worktree |
+| test-audit | Guide test authoring, audit or remediate tests, and run scoped campaigns |
 | unslop | Remove AI tells from agent-authored prose |
 | update-second-brain | Maintain source-verified durable repository knowledge |
+| work-items-analysis | Analyze Jira, GitHub, and local git activity |
 
 `unslop` is the default for original agent prose. It does not rewrite quotations, code,
 commands, schemas, logs, or user-supplied copy unless the user asks.

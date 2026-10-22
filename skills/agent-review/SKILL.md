@@ -321,7 +321,16 @@ demonstrated complexity. Do not propose speculative abstractions.
 - Config loaded but never passed to the component that needs it
 
 ### Tests
-- Tests that mock too much and don't test actual behavior
+
+Use [test-audit](../test-audit/SKILL.md) in audit mode for changed tests and coverage affected
+by production changes. Fold its candidate evidence into this review's existing ledger and
+validation gate. Apply the normal provenance and severity rules to removal, consolidation,
+or rewrite recommendations; keep unrelated existing test debt in follow-up observations.
+Review remains read-only. Do not create a second audit report, remediate, start a campaign,
+or invoke a nested review.
+
+Also check for:
+
 - Missing edge cases only when an affected contract or acceptance criterion requires them
 - Fixtures that don't match production shapes
 - No test for the happy path of a critical component
