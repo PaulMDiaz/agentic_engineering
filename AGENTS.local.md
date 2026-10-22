@@ -18,6 +18,9 @@ doing any work. Treat it as mandatory startup context for all tasks.
 - When a repository-local `AGENTS.md` contains `Second Brain — Primary Repository Guidance`,
   follow that section for repository context and durable-knowledge maintenance. If the
   repository has `SECOND_BRAIN.md` without that section, follow its root policy directly.
+- For source-path test, lint, and type-check commands, use
+  `env PYTHONPATH=src uv run --no-sync <tool>` instead of a leading
+  `PYTHONPATH=src` assignment.
 
 ## Personal workflow
 
