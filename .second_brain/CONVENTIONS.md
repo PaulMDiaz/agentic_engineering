@@ -37,10 +37,12 @@ Sources: `skills/*/SKILL.md`, `README.md`, `AGENTS.md`, `AGENTS.local.md`, `scri
   quotations, code, commands, schemas, logs, and user-supplied copy.
 
 ## Implementation and review
-Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implement/SKILL.md`, `skills/agent-review/SKILL.md`, `skills/auto-review/SKILL.md`, `skills/pr-review-triage/SKILL.md`
+Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implement/SKILL.md`, `skills/agent-review/SKILL.md`, `skills/auto-review/SKILL.md`, `skills/pr-review-triage/SKILL.md`, `skills/test-audit/*.md`
 
-- Shared guidance defines delegation and model preferences and exposes selected model and effort
-  in subagent names where supported. Inherited or unknown settings remain explicit.
+- `AGENTS.local.md` owns model preferences, fallback authorization, and visible task, model,
+  effort, and context disclosure. Delegation must justify its handoff costs through progress
+  or context savings. `CODING_STANDARDS.md` owns context choice and tool compatibility;
+  `implement` applies those rules before worker and reviewer launches.
 - Delegation depends on independent progress or context savings that justify handoff costs;
   tightly coupled operational work can stay with one executor. Bounded workers do not recurse.
 - `implement` applies to user-supplied or approved plans, material design decisions, coordination
@@ -65,6 +67,32 @@ Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implemen
   `CODING_STANDARDS.md`. Handoffs scale to the task.
 - PR triage uses the specified checklist directory or repository-local `tmp/`, retains progress
   and valid response drafts, and permits already-authorized follow-up after its triage phase.
+- `CODING_STANDARDS.md` owns Test quality rules. `implement` uses `test-audit` authoring
+  mode when adding or changing tests, reusing its existing context and verification.
+- `test-audit` resolves missing shared rules through its mirror source marker or source skill
+  path. An unavailable standards file or Test quality section leaves the assessment incomplete;
+  the skill does not carry a duplicate checklist.
+- The authoring gate rejects low-value patterns without a named independent contract.
+  Regression verification requires the intended failure before a fix and success afterward;
+  blocked proof remains incomplete.
+- Both review skills use bounded, read-only `test-audit` audit mode and incorporate evidence
+  into their existing findings. Remediation returns to the caller's verification without
+  recursively invoking a review. Removal recommendations require evidence of remaining
+  protection or why none is needed; distinct contracts stay covered.
+- Audit candidates require complete evidence, including relevant history, non-test callers,
+  and dependency source or types for dependency-backed claims. Remediation requires executable
+  proof for removed source assertions, `auto-review`, and separate production/tooling and
+  test/support LOC reporting. Existing implementation review satisfies the review requirement.
+- `test-audit` campaign mode requires explicit subsystem scope and tracks coverage in a
+  temporary working record. Baseline results, per-test dispositions, and a plan identifying
+  retained coverage precede edits. Remediation requires independent preservation review,
+  mutation proof for contracts restored after review, and final subsystem verification.
+  Campaigns have no deletion targets or campaign state in the second brain.
+- `test-audit` remediation batches follow one production owner or contract, remove obsolete
+  test support, and prefer net-negative production LOC without sacrificing distinct coverage.
+- Reviewer-response commit attributions require actual diff evidence for each claimed change.
+  Checklist drafts are verified before use; consistency audits check commit/file references
+  and distinguish initial review findings from unresolved findings.
 
 ## Workstation synchronization
 Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `tests/install.bash`, `tests/uninstall.bash`, `tests/skills.bash`

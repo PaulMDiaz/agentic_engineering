@@ -67,9 +67,12 @@ Choose direct execution or delegation based on useful work, not task size alone.
 bounded assignment when it can progress alongside other work or materially reduces parent
 context after handoff costs. Keep small lookups and tightly coupled operational sequences with
 one executor. Do not split a sequential task into worker handoffs merely to satisfy a process.
-When delegating, supply owned paths, acceptance criteria, relevant evidence, constraints, and
-validation steps. Workers do not recursively orchestrate. Reuse their verified results; inspect
-only the evidence needed to resolve uncertainty rather than repeating their investigation.
+Before launching a worker or reviewer, follow the Delegation context rules in
+`CODING_STANDARDS.md` to choose sufficient context compatible with the tool contract and authorized
+model and effort. When delegating, supply owned paths, acceptance criteria, relevant evidence,
+constraints, and validation steps. Workers do not recursively orchestrate. Reuse their verified
+results; inspect only the evidence needed to resolve uncertainty rather than repeating their
+investigation.
 
 When requirements change, redirect affected work and preserve valid progress. If a worker stalls,
 obtain its exact state before taking over or reassigning; prevent overlapping mutations. Avoid
@@ -94,9 +97,11 @@ Stop and re-plan smaller if you catch yourself:
 - editing files unrelated to the task
 - using "add tests" as the reason to keep building
 
-Before adding a test, identify the acceptance criterion or affected contract it verifies and
-what existing tests would miss. Test size is a prompt to inspect scope and setup, not evidence
-that the implementation is overbuilt.
+When adding or changing tests, use [test-audit](../test-audit/SKILL.md) in authoring mode
+within this step. Reuse the current acceptance criteria, contract evidence, and validation;
+do not produce a separate audit report. Test size is a prompt to inspect scope and setup,
+not evidence that the implementation is overbuilt. Existing test remediation stays within
+the requested change; broader audits and campaigns require their own scope.
 
 When a changed file crosses about 500 lines, or an increment reaches about 1,000 added lines
 across files, pause to reassess scope. Ask what can be removed while preserving required behavior

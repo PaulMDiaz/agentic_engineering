@@ -27,6 +27,12 @@ Read applicable coding standards when not already available in current context. 
 correctness, acceptance coverage, and changed prose against those standards. Validate suspected issues against the source and affected callers. Reuse current
 passing checks; run another only for a concrete uncertainty or an outstanding requirement.
 
+For changed tests or coverage affected by production changes, use
+[test-audit](../test-audit/SKILL.md) in audit mode as part of this review. Reuse current
+evidence and return removal, consolidation, or rewrite recommendations in the findings below.
+Keep this step read-only and bounded to the assigned change. Do not launch a separate audit
+report, remediation pass, campaign, or nested review.
+
 Identify the review as self-review or independent review. Return actionable findings with
 location, evidence, consequence, and a scoped remedy. For excess
 scope, identify what to remove or reuse and why required behavior remains satisfied. Combine

@@ -59,6 +59,7 @@ mandatory startup context for all tasks.
 | security-check | Reviewing security-sensitive changes or posture |
 | summarize-transcript | Turning meeting transcripts into concise summaries and action items |
 | sync-second-brain | Syncing `.second_brain/` through a dedicated `second-brain` worktree |
+| test-audit | Authoring tests, auditing or remediating affected tests, and explicit subsystem campaigns |
 | unslop | Removing AI tells from agent-authored prose |
 | update-second-brain | Maintaining durable project knowledge organically during change-producing work |
 
