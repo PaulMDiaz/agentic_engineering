@@ -25,12 +25,6 @@
 | Subagent context choice and tool compatibility | `CODING_STANDARDS.md:L57` |
 | Reusable review-feedback checklists | `skills/pr-review-triage/SKILL.md` |
 
-## Reporting workflows
-
-| What | Where |
-| --- | --- |
-| Jira, GitHub, and local git work-item reports | `skills/work-items-analysis/SKILL.md` |
-
 ## Second-brain workflows
 
 | What | Where |

@@ -105,7 +105,6 @@ symbols.
 | test-audit | Guide test authoring, audit or remediate tests, and run scoped campaigns |
 | unslop | Remove AI tells from agent-authored prose |
 | update-second-brain | Maintain source-verified durable repository knowledge |
-| work-items-analysis | Analyze Jira, GitHub, and local git activity |
 
 `unslop` is the default for original agent prose. It does not rewrite quotations, code,
 commands, schemas, logs, or user-supplied copy unless the user asks.

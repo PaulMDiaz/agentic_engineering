@@ -94,14 +94,6 @@ Sources: `AGENTS.md`, `AGENTS.local.md`, `CODING_STANDARDS.md`, `skills/implemen
   Checklist drafts are verified before use; consistency audits check commit/file references
   and distinguish initial review findings from unresolved findings.
 
-## Reporting Skills
-Sources: `skills/work-items-analysis/SKILL.md`, `skills/summarize-transcript/SKILL.md`
-
-- Work-item reports resolve the requested person's identities per source and verify dated
-  contribution evidence within the report window. Connector repairs are separate authorized work.
-- Transcript summaries distinguish participant statements from labelled inference and leave
-  unsupported decision fields unstated.
-
 ## Workstation synchronization
 Sources: `scripts/install`, `scripts/uninstall`, `docs/workstation-setup.md`, `tests/install.bash`, `tests/uninstall.bash`, `tests/skills.bash`
 
@@ -172,6 +164,5 @@ Sources: `AGENTS.md`, `CODING_STANDARDS.md`, `SECOND_BRAIN.md`, `docs/second-bra
 Sources: `README.md`, `AGENTS.md`, `skills/*/SKILL.md`, normative repository policy
 
 - Do not add organization-specific systems, credentials, external work-tracking workflows,
-  or private workstation assumptions outside `skills/work-items-analysis/SKILL.md`.
-  That skill retains its reporting workflow, output defaults, and project examples.
+  or private workstation assumptions to this repository.
 - Do not persist inherited, global, shared, or user-local guidance as repository knowledge.
